@@ -1,9 +1,9 @@
-import './App.css'
-
 function App() {
   return (
     <>
-      <p>hello</p>
+      <h1 className="text-3xl font-bold underline cursor-pointer">
+        Hello world!
+      </h1>
     </>
   )
 }
