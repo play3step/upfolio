@@ -36,7 +36,7 @@
 
 ```bash
 src/
-│
+├── api/                 # api 관리
 ├── assets/              # 이미지, 폰트 등 정적 리소스
 │
 ├── components/          # 재사용 가능한 컴포넌트
@@ -47,7 +47,7 @@ src/
 ├── layouts/             # 페이지 레이아웃
 ├── pages/               # 라우트 페이지 (React Router 기준)
 ├── routes/              # 라우터 설정
-├── store/               # 상태 관리 (Redux, Zustand 등)
+├── store/               # 상태 관리 (ContextAPI, Redux, Zustand 등)
 ├── types/               # 타입 정의
 ├── utils/               # 유틸 함수
 ├── constants/           # 상수 (색상, URL 등)
