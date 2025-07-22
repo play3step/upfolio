@@ -1,0 +1,30 @@
+.input-box{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+
+  label {
+    margin-bottom: var(--sp-2);
+    font-size: var(--fs-sm);
+    font-weight: 400;
+  }
+  
+  input {
+    padding: 13px 16px;
+    height: 48px;
+    font-size: var(--fs-sm);
+    border-radius: 6px;
+    border: 1px solid var(--gray);
+
+    &:read-only {
+      background-color: var(--gray2);
+      color: var(--gray);
+    }
+  }
+
+}
+
+.input-box--err{
+  background-color: red;
+}

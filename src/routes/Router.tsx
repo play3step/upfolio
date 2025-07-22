@@ -10,8 +10,13 @@ import { NewPortfolio } from '@/pages/Portfolio/NewProtfolio'
 import { PortfolioDetail } from '@/pages/Portfolio/PortfolioDetail'
 import { PortfolioList } from '@/pages/Portfolio/PortfolioList'
 import { createBrowserRouter } from 'react-router-dom'
+import FormAndText from '@/pages/Example/FormAndText'
 
 export const router = createBrowserRouter([
+  {
+    path: '/example/form',
+    element: <FormAndText />
+  },
   {
     path: '/',
     element: <Home />
