@@ -1,5 +1,5 @@
 import { Home } from '@/pages/Home'
-import { Login } from '@/pages/Login'
+import { Login } from '@/pages/Login/Login'
 import { Bookmarks } from '@/pages/MyPage/Bookmarks'
 import { EditProfile } from '@/pages/MyPage/EditProfile'
 
