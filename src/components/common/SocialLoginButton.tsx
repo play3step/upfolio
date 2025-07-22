@@ -28,7 +28,7 @@ export function SocialLoginButton({
 
   return (
     <button
-      className={`${S['login__button']} ${S[`login__button--${provider}`]}`}
+      className={S['login__button']}
       onClick={onClick}>
       <img
         src={config.icon}
