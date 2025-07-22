@@ -66,4 +66,5 @@ body {
   font-family: 'Pretendard', sans-serif;
   color: var(--black);
   line-height: 1.4;
+  font-size: 1rem;
 }
