@@ -1,52 +1,31 @@
-import supabase from "@/lib/supabaseClient"
-import { useEffect, useState } from "react"
-
-type UserData = {
-  id: number
-  email: string
-  nickname: string
-  profileimage: string
-  interest: string
-  createAt: string
-}
+import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
 
 function SupaTest() {
-
-  const [userlist, setUserList] = useState<UserData[]>([])
-
-  useEffect(() => {
-    const fetchUserList = async () => {
-      const { data, error } = await supabase
-        .from('user')
-        .select('*')
-
-      if (!error && data) {
-        console.log('연결 성공', data)
-        setUserList(data)
-      } else {
-        console.error('연결 실패:', error?.message)
-      }
-    }
-
-    fetchUserList()
-  }, [])
+  const { authData, handleSignIn, handleSignOut } = useAuthLogin()
 
   return (
-    <div>
-      <h2>사용자 목록 테스트 ㄱㅈㅇ!</h2>
-      {
-        userlist.map((user) => (
-          <ul key={user.id}>
-            <li>아이디 : { user.id }</li>
-            <li>이메일 : { user.email }</li>
-            <li>이름 : { user.nickname }</li>
-            <li>프로필이미지 : { user.profileimage }</li>
-            <li>관심사 : { user.interest }</li>
-            <li>가입일 : { user.createAt }</li>
-          </ul>
-        ))
-      }
-    </div>
+    <>
+      <div>
+        <button onClick={() => handleSignIn('google')}>구글 로그인</button>
+        <button onClick={() => handleSignIn('github')}>깃허브 로그인</button>
+        <button onClick={handleSignOut}>로그아웃</button>
+        {authData && (
+          <div>
+            <p>이름: {authData.name}</p>
+            <p>이메일: {authData.email}</p>
+            <p>유저네임: {authData.user_name}</p>
+            <p>
+              아바타: {authData.avatar_url}
+              <img
+                src={authData.avatar_url}
+                alt="avatar"
+              />
+            </p>
+            <p>프로바이더: {authData.provider}</p>
+          </div>
+        )}
+      </div>
+    </>
   )
 }
 export default SupaTest
