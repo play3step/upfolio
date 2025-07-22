@@ -1,67 +1,27 @@
-import { signInWithGoogle, signInWithGithub } from '@/utils/actions'
-import { useEffect, useState } from 'react'
-import supabase from '@/lib/supabaseClient'
-
-interface UserData {
-  name?: string
-  email?: string
-  user_name?: string
-  avatar_url?: string
-  provider?: string
-}
+import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
 
 function SupaTest() {
-  const googleLogin = signInWithGoogle
-  const githubLogin = signInWithGithub
-  const [userData, setUserData] = useState<UserData | null>(null)
-
-  useEffect(() => {
-    const getSession = async () => {
-      const {
-        data: { session }
-      } = await supabase.auth.getSession()
-      if (session?.user) {
-        setUserData({
-          name: session.user.user_metadata.name,
-          email: session.user.user_metadata.email,
-          user_name: session.user.user_metadata.user_name,
-          avatar_url: session.user.user_metadata.avatar_url,
-          provider: session.user.app_metadata.provider
-        })
-      }
-    }
-
-    getSession()
-  }, [])
-
-  const handleSignIn = async () => {
-    await googleLogin()
-  }
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    setUserData(null)
-  }
+  const { authData, handleSignIn, handleSignOut } = useAuthLogin()
 
   return (
     <>
       <div>
-        <button onClick={handleSignIn}>구글 로그인</button>
-        <button onClick={githubLogin}>깃허브 로그인</button>
+        <button onClick={() => handleSignIn('google')}>구글 로그인</button>
+        <button onClick={() => handleSignIn('github')}>깃허브 로그인</button>
         <button onClick={handleSignOut}>로그아웃</button>
-        {userData && (
+        {authData && (
           <div>
-            <p>이름: {userData.name}</p>
-            <p>이메일: {userData.email}</p>
-            <p>유저네임: {userData.user_name}</p>
+            <p>이름: {authData.name}</p>
+            <p>이메일: {authData.email}</p>
+            <p>유저네임: {authData.user_name}</p>
             <p>
-              아바타: {userData.avatar_url}
+              아바타: {authData.avatar_url}
               <img
-                src={userData.avatar_url}
+                src={authData.avatar_url}
                 alt="avatar"
               />
             </p>
-            <p>프로바이더: {userData.provider}</p>
+            <p>프로바이더: {authData.provider}</p>
           </div>
         )}
       </div>

@@ -1,16 +1,13 @@
 import supabase from '@/lib/supabaseClient'
+import type { AuthProvider } from '@/types/auth'
 
-const signInWith = async (provider: 'google' | 'github') => {
-  const { data, error } = await supabase.auth.signInWithOAuth({
+const signInWith = async (provider: AuthProvider) => {
+  return await supabase.auth.signInWithOAuth({
     provider,
     options: {
       redirectTo: 'http://localhost:5173/'
     }
   })
-  console.log(data, error)
 }
 
-const signInWithGoogle = () => signInWith('google')
-const signInWithGithub = () => signInWith('github')
-
-export { signInWithGoogle, signInWithGithub }
+export { signInWith }
