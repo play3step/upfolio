@@ -1,0 +1,42 @@
+import S from './SocialLoginButton.module.css'
+
+type SocialProvider = 'google' | 'github'
+
+interface SocialLoginButtonProps {
+  provider: SocialProvider
+  onClick?: () => void
+}
+
+const PROVIDER_CONFIG = {
+  google: {
+    icon: '/google-icon.svg',
+    alt: 'Google Icon',
+    text: 'Google로 로그인'
+  },
+  github: {
+    icon: '/github-icon.svg',
+    alt: 'GitHub Icon',
+    text: 'GitHub로 로그인'
+  }
+} as const
+
+export function SocialLoginButton({
+  provider,
+  onClick
+}: SocialLoginButtonProps) {
+  const config = PROVIDER_CONFIG[provider]
+
+  return (
+    <button
+      className={`${S['login__button']} ${S[`login__button--${provider}`]}`}
+      onClick={onClick}>
+      <img
+        src={config.icon}
+        alt={config.alt}
+        className={S['login__button--icon']}
+      />
+      {config.text}
+    </button>
+  )
+}
+export default SocialLoginButton

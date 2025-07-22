@@ -1,3 +1,4 @@
+import { SocialLoginButton } from '@/components/common/SocialLoginButton'
 import S from './Login.module.css'
 
 export function Login() {
@@ -22,22 +23,14 @@ export function Login() {
           Upfolio의 다양한 기능을 이용해 보세요.
         </p>
         <div className={S['login__buttons']}>
-          <button className={S['login__button']}>
-            <img
-              src="/google-icon.svg"
-              alt="Google Icon"
-              className={S['login__button--icon']}
-            />
-            Google로 로그인
-          </button>
-          <button className={S['login__button']}>
-            <img
-              src="/github-icon.svg"
-              alt="GitHub Icon"
-              className={S['login__button--icon']}
-            />
-            GitHub로 로그인
-          </button>
+          <SocialLoginButton
+            provider="google"
+            onClick={() => {}}
+          />
+          <SocialLoginButton
+            provider="github"
+            onClick={() => {}}
+          />
         </div>
       </div>
     </div>
