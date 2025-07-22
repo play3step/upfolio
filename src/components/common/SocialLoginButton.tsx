@@ -1,4 +1,4 @@
-import S from './SocialLoginButton.module.css'
+import S from '@/pages/Portfolio/Login/Login.module.css'
 
 type SocialProvider = 'google' | 'github'
 
