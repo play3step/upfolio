@@ -11,5 +11,6 @@ const signInWith = async (provider: 'google' | 'github') => {
 }
 
 const signInWithGoogle = () => signInWith('google')
+const signInWithGithub = () => signInWith('github')
 
-export { signInWithGoogle }
+export { signInWithGoogle, signInWithGithub }

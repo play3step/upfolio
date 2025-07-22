@@ -1,4 +1,4 @@
-import { signInWithGoogle } from '@/utils/actions'
+import { signInWithGoogle, signInWithGithub } from '@/utils/actions'
 import { useEffect, useState } from 'react'
 import supabase from '@/lib/supabaseClient'
 
@@ -12,6 +12,7 @@ interface UserData {
 
 function SupaTest() {
   const googleLogin = signInWithGoogle
+  const githubLogin = signInWithGithub
   const [userData, setUserData] = useState<UserData | null>(null)
 
   useEffect(() => {
@@ -46,6 +47,7 @@ function SupaTest() {
     <>
       <div>
         <button onClick={handleSignIn}>구글 로그인</button>
+        <button onClick={githubLogin}>깃허브 로그인</button>
         <button onClick={handleSignOut}>로그아웃</button>
         {userData && (
           <div>
