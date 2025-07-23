@@ -7,3 +7,9 @@ export interface AuthData {
   avatar_url: string
   provider: string
 }
+
+export interface AuthContextType {
+  login: () => void
+  logout: () => void
+  isAuthenticated: boolean
+}
