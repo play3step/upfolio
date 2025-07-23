@@ -1,7 +1,9 @@
 import { SocialLoginButton } from '@/components/common/SocialLoginButton'
 import S from './Login.module.css'
+import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
 
 export function Login() {
+  const { handleSignIn } = useAuthLogin()
   return (
     <div className={S['login']}>
       <div className={S['login__card']}>
@@ -25,11 +27,11 @@ export function Login() {
         <div className={S['login__buttons']}>
           <SocialLoginButton
             provider="google"
-            onClick={() => {}}
+            onClick={() => handleSignIn('google')}
           />
           <SocialLoginButton
             provider="github"
-            onClick={() => {}}
+            onClick={() => handleSignIn('github')}
           />
         </div>
       </div>
