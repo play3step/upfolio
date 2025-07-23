@@ -1,7 +1,7 @@
-import type { InputHTMLAttributes } from 'react'
-import S from './Input.module.css'
+import type { TextareaHTMLAttributes } from 'react'
+import S from './Textarea.module.css'
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
+interface Props extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   id: string
   label: string
   hideLabel?: boolean
@@ -10,27 +10,26 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
   error?: string
 }
 
-function Input({
+function Textarea({
   id,
   label,
   hideLabel,
   name,
-  type = 'text',
   readOnly,
   error,
   ...props
 }: Props) {
   return (
-    <div className={`${S['input-wrap']} ${error ? S['input-wrap--err'] : ''}`}>
+    <div
+      className={`${S['textarea-wrap']} ${error ? S['textarea-wrap--err'] : ''}`}>
       <label
         htmlFor={id}
         className={hideLabel ? 'a11y-hidden' : ''}>
         {label}
       </label>
-      <input
+      <textarea
         id={id}
         name={name ?? id}
-        type={type}
         readOnly={readOnly}
         {...props}
       />
@@ -45,4 +44,4 @@ function Input({
     </div>
   )
 }
-export default Input
+export default Textarea
