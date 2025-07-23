@@ -1,20 +1,13 @@
+import S from './Layout.module.css'
+
 import Header from '@/components/common/Header'
 import Footer from '@/components/common/Footer'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div>
+    <div className={S['wrapper']}>
       <Header />
-      <main
-        style={{
-          minHeight: '100vh',
-          minWidth: '100vw',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}>
-        {children}
-      </main>
+      <main className={S['main']}>{children}</main>
       <Footer />
     </div>
   )

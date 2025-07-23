@@ -1,4 +1,7 @@
 import S from './Login.module.css'
+import arrowBack from '../../../assets/icon/arrow-back.svg'
+import github from '../../../assets/icon/github.svg'
+import google from '../../../assets/icon/google.svg'
 
 export function Login() {
   return (
@@ -9,9 +12,8 @@ export function Login() {
           type="button"
           onClick={() => window.history.back()}>
           <img
-            src="/arrow-back.svg"
+            src={arrowBack}
             alt="뒤로가기"
-            className={S['login__button--icon']}
           />
         </button>
         <h2 className={S['login__title']}>로그인</h2>
@@ -24,7 +26,7 @@ export function Login() {
         <div className={S['login__buttons']}>
           <button className={S['login__button']}>
             <img
-              src="/google-icon.svg"
+              src={google}
               alt="Google Icon"
               className={S['login__button--icon']}
             />
@@ -32,7 +34,7 @@ export function Login() {
           </button>
           <button className={S['login__button']}>
             <img
-              src="/github-icon.svg"
+              src={github}
               alt="GitHub Icon"
               className={S['login__button--icon']}
             />
