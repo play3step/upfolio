@@ -1,0 +1,65 @@
+/* 디폴트 */
+.btn {
+  display: flex;
+  padding: 6px 10px;
+  width: auto;
+  min-width: 6.25rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 0.625rem;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  .btn__txt {
+    font-size: var(--fs-sm);
+    color: var(--white);
+  }
+  
+  &:hover {
+    background-color: var(--primary-80);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--black);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    border:none;
+    background-color: var(--gray-80);
+
+    .txt {
+      color: var(--white);
+    }
+    cursor: not-allowed;
+  }
+}
+
+/* 라인 버전 */
+.btn--line {
+  border: 1px solid var(--primary);
+  background-color: var(--white);
+
+  .btn__txt {
+    color: var(--primary);
+  }
+
+  &:hover, &:focus {
+    background-color: var(--teritiary-80);
+  }
+
+  &:disabled {
+    border:none;
+    color: var(--white);
+    background-color: var(--gray);
+  }
+}
+
+/* 버튼 그룹 */
+
+.btn-wrap {
+  
+}
