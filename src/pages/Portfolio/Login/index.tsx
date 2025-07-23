@@ -1,6 +1,7 @@
 import { SocialLoginButton } from '@/components/common/SocialLoginButton'
 import S from './Login.module.css'
 import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
+import arrowIcon from '@//assets/icon/arrow.svg'
 
 export function Login() {
   const { handleSignIn } = useAuthLogin()
@@ -12,7 +13,7 @@ export function Login() {
           type="button"
           onClick={() => window.history.back()}>
           <img
-            src="/arrow-back.svg"
+            src={arrowIcon}
             alt="뒤로가기"
             className={S['login__button--icon']}
           />

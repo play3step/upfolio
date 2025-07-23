@@ -1,4 +1,6 @@
 import S from '@/pages/Portfolio/Login/Login.module.css'
+import googleIcon from '@/assets/icon/google.svg'
+import githubIcon from '@/assets/icon/github.svg'
 
 type SocialProvider = 'google' | 'github'
 
@@ -9,12 +11,12 @@ interface SocialLoginButtonProps {
 
 const PROVIDER_CONFIG = {
   google: {
-    icon: '/google-icon.svg',
+    icon: googleIcon,
     alt: 'Google Icon',
     text: 'Google로 로그인'
   },
   github: {
-    icon: '/github-icon.svg',
+    icon: githubIcon,
     alt: 'GitHub Icon',
     text: 'GitHub로 로그인'
   }
