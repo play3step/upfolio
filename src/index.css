@@ -11,3 +11,16 @@ html {
   margin: 0;
   padding: 0;
 }
+
+.a11y-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+.err-msg {
+  display: block;
+  margin-top: var(--sp-1);
+  color: var(--danger);
+  &::before {
+    content:'✔';
+    display:inline-block;
+    margin-right: var(--sp-1);
+  }
+}
