@@ -1,6 +1,6 @@
 import type { AuthProvider, UserData } from '@/types/auth'
 import supabase from '@/lib/supabaseClient'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { signInWith } from '@/utils/actions'
 import { loginUser } from '@/apis/user/user.controller'
 
@@ -35,9 +35,5 @@ export const useAuthLogin = () => {
     }
   }
 
-  useEffect(() => {
-    getSession()
-  }, [])
-
-  return { authData, handleSignIn, handleSignOut }
+  return { authData, handleSignIn, handleSignOut, getSession }
 }
