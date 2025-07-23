@@ -37,11 +37,11 @@ export function PortfolioCard({
         </svg>
       </button>
 
-      <span> {career} | </span>
-      <h3>{title}</h3>
-      <span>{content}</span>
+      <span className={S.career}> {career} </span>
+      <h3 className={S.title}>{title}</h3>
+      <span className={S.content}> {content}</span>
       <div className={S.meta}>
-        <span>
+        <span className={S.like}>
           <svg
             width="16"
             height="14"
@@ -57,7 +57,7 @@ export function PortfolioCard({
           </svg>
           {likecount}
         </span>
-        <span>
+        <span className={S.view}>
           <svg
             width="14"
             height="11"
