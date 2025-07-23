@@ -17,6 +17,7 @@
   --teritiary: rgba(230, 255, 250, 1);
   --teritiary-80: rgba(230, 255, 250, 0.8);
   --teritiary-50: rgba(230, 255, 250, 0.5);
+  --teritiary-20: rgba(230, 255, 250, 0.2);
 
   --fourth: rgba(205, 255, 244, 1);
   --fourth-80: rgba(205, 255, 244, 0.8);
@@ -33,6 +34,7 @@
   --danger: rgba(239, 68, 68, 1);
   --danger-80: rgba(239, 68, 68, 0.8);
   --danger-50: rgba(239, 68, 68, 0.5);
+  --danger-20: rgba(239, 68, 68, 0.2);
 
   --black: rgba(0, 0, 0, 1);
 

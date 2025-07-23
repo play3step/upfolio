@@ -1,0 +1,128 @@
+.CS-wrap {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  legend {
+    margin-bottom: var(--sp-2);
+  }
+}
+
+.CS__selectedList {
+  display: flex;
+  position: relative;
+  gap: .75rem;
+  flex-wrap: wrap;
+  padding: .375rem 2.5rem .375rem 16px;
+  min-height: 3rem;
+  font-size: var(--fs-sm);
+  border-radius: 4px;
+  border: 1px solid var(--gray);
+}
+
+.CS__selecteditem {
+  display: flex;
+  padding: 0.5rem;
+  align-items: flex-end;
+  width: auto;
+  background-color: var(--primary);
+  border-radius: 6px;
+  color: var(--white);
+
+  > button {
+    gap: .5rem;
+  }
+}
+
+.CS__accordionButton {
+  display: block;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  translate: 0 -50%;
+  width: 24px;
+  height: 24px;
+  background: url('../../assets/icon/downslide.svg')no-repeat center / contain;
+  transition: transform 0.3s ease;
+  span {
+    z-index: -1;
+  }
+
+  &.rotated {
+    transform: rotate(180deg);
+  }
+}
+
+.CS__checkList {
+  display: block;
+  margin-top: var(--sp-2);
+  max-height: 0;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #FFF;
+  
+  transition: all 0.4s ease;
+
+  li {
+    label {
+      display: flex;
+      padding: 12px 16px;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--teritiary-50);
+      }
+    }
+
+    &.checked {
+      background-color: var(--teritiary-50);
+    }
+  }
+
+  &.expanded {
+    max-height: 1000px;
+    overflow-y: auto;
+    border: 1px solid #DEE2E6;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.10), 5px 3px 16px 0px rgba(198, 198, 198, 0.31);
+  }
+}
+
+.CS__checkbox {
+  position: relative;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid var(--gray);
+  border-radius: 6px;
+}
+.CS__checkList input:focus + .CS__checkbox {
+  border: 2px solid var(--primary);
+}
+
+.CS__checkList input:checked + .CS__checkbox {
+  background-color: var(--primary);
+}
+
+.CS__checkList input:checked + .CS__checkbox::after {
+  content:'';
+  position: absolute;
+  left: 50%;
+  top: .625rem;
+  translate:-50% -50%;
+  width: 6px;
+  height: 12px;
+  border: solid var(--white);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.CS-wrap--err {
+  legend {
+    color: var(--danger);
+  }
+  .CS__selectedList {
+    border: 1px solid var(--danger);
+    background-color: var(--danger-20);
+  }
+}
