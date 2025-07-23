@@ -1,29 +1,45 @@
 import type { AuthContextType } from '@/types/auth'
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 
-const AuthContext = createContext<AuthContextType>({
-  login: () => {}, // 로그인
-  logout: () => {}, // 로그아웃
-  isAuthenticated: false // 로그인 여부
+export const AuthContext = createContext<AuthContextType>({
+  login: () => {},
+  logout: () => {},
+  isAuthenticated: false,
+  token: null
 })
 
-// 로그인 상태를 제공하는 컴포넌트
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isAuth, setIsAuth] = useState(false) // 로그인 상태
+  const [isAuth, setIsAuth] = useState(false)
+  const [token, setToken] = useState<string | null>(null)
 
-  const login = () => {
-    setIsAuth(true) // 로그인 상태로 변경
+  const login = (newToken: string) => {
+    setIsAuth(true)
+    setToken(newToken)
+    localStorage.setItem('authToken', newToken)
+
+    console.log('로그인 성공:', newToken)
   }
 
   const logout = () => {
-    setIsAuth(false) // 로그아웃 상태로 변경
+    setIsAuth(false)
+    setToken(null)
+    localStorage.removeItem('authToken')
+
+    console.log('로그아웃 성공')
   }
 
+  useEffect(() => {
+    const storedToken = localStorage.getItem('authToken')
+    if (storedToken) {
+      setIsAuth(true)
+      setToken(storedToken)
+    }
+  }, [])
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated: isAuth, login, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated: isAuth, login, logout, token }}>
       {children}
     </AuthContext.Provider>
   )
 }
-
-export const useAuth = () => useContext(AuthContext)
