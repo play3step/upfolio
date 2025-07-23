@@ -2,6 +2,7 @@ import Button from '@/components/common/Button'
 import Input from '@/components/common/Input'
 import Select from '@/components/common/Select'
 import Header from '@/components/common/Header'
+import Footer from '@/components/common/Footer'
 
 function FormAndText() {
   const h2Style: React.CSSProperties = {
@@ -77,6 +78,9 @@ function FormAndText() {
 
       <h2 style={h2Style}>3. Header</h2>
       <Header />
+
+      <h2 style={h2Style}>5. Footer</h2>
+      <Footer />
     </div>
   )
 }
