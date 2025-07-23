@@ -1,10 +1,11 @@
-import type { AuthData, AuthProvider } from '@/types/auth'
+import type { AuthProvider, UserData } from '@/types/auth'
 import supabase from '@/lib/supabaseClient'
 import { useEffect, useState } from 'react'
 import { signInWith } from '@/utils/actions'
+import { loginUser } from '@/apis/user/user.controller'
 
 export const useAuthLogin = () => {
-  const [authData, setAuthData] = useState<AuthData | null>(null)
+  const [authData, setAuthData] = useState<UserData | null>(null)
 
   const handleSignIn = async (provider: AuthProvider) => {
     const { error } = await signInWith(provider)
@@ -23,13 +24,14 @@ export const useAuthLogin = () => {
       data: { session }
     } = await supabase.auth.getSession()
     if (session?.user) {
-      setAuthData({
+      const authData = {
+        id: session.user.id,
         name: session.user.user_metadata.name,
-        email: session.user.user_metadata.email,
-        user_name: session.user.user_metadata.user_name,
-        avatar_url: session.user.user_metadata.avatar_url,
-        provider: session.user.app_metadata.provider || ''
-      })
+        email: session.user.email ?? '',
+        avatar_url: session.user.user_metadata.avatar_url
+      }
+      const user = await loginUser(authData)
+      setAuthData(user)
     }
   }
 
