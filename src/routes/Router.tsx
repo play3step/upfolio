@@ -10,13 +10,9 @@ import { NewPortfolio } from '@/pages/Portfolio/NewProtfolio'
 import { PortfolioDetail } from '@/pages/Portfolio/PortfolioDetail'
 import { PortfolioList } from '@/pages/Portfolio/PortfolioList'
 import { createBrowserRouter } from 'react-router-dom'
-import FormAndText from '@/pages/Example/FormAndText'
+import Layout from '@/layouts/Layout'
 
-export const router = createBrowserRouter([
-  {
-    path: '/example/form',
-    element: <FormAndText />
-  },
+const routerList = [
   {
     path: '/',
     element: <Home />
@@ -62,4 +58,11 @@ export const router = createBrowserRouter([
     path: '*',
     element: <NotFound />
   }
-])
+]
+
+export const router = createBrowserRouter(
+  routerList.map(item => ({
+    path: item.path,
+    element: <Layout>{item.element}</Layout>
+  }))
+)
