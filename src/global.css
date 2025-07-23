@@ -1,4 +1,6 @@
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -18,7 +20,7 @@
 
   --fourth: rgba(205, 255, 244, 1);
   --fourth-80: rgba(205, 255, 244, 0.8);
-  --fourth-50: rgba(205, 255, 244, 1);
+  --fourth-50: rgba(205, 255, 244, 0.5);
 
   --gray: rgba(117, 117, 117, 1);
   --gray-80: rgba(117, 117, 117, 0.8);
@@ -35,22 +37,23 @@
   --white: rgba(255, 255, 255, 1);
 
   /* --- 간격 (rem 기준) --- */
-  --sp-0: 0rem;     /* 0px */
-  --sp-1: 0.25rem;  /* 4px */
-  --sp-2: 0.5rem;   /* 8px */
-  --sp-3: 0.75rem;  /* 12px */
-  --sp-4: 1rem;     /* 16px */
-  --sp-5: 1.5rem;   /* 24px */
-  --sp-6: 2rem;     /* 32px */
-  --sp-7: 3rem;     /* 48px */
-  --sp-8: 4rem;     /* 64px */
+  --sp-0: 0rem; /* 0px */
+  --sp-1: 0.25rem; /* 4px */
+  --sp-2: 0.5rem; /* 8px */
+  --sp-3: 0.75rem; /* 12px */
+  --sp-4: 1rem; /* 16px */
+  --sp-5: 1.5rem; /* 24px */
+  --sp-6: 2rem; /* 32px */
+  --sp-7: 3rem; /* 48px */
+  --sp-8: 4rem; /* 64px */
 
   /* --- font-size (rem 기준)  --- */
-  --fs-xl: 3rem;    /* 48px */
-  --fs-l: 2rem;    /* 32px */
-  --fs-m: 1.5rem;  /* 24px */
+  --fs-xxl: 3rem;    /* 48px */
+  --fs-xl: 2rem;    /* 32px */
+  --fs-lg: 1.5rem;  /* 24px */
+  --fs-md: 1.25rem;  /* 20px */
   --fs-sm: 1rem;    /* 16px */
-  --fs-s: 0.875rem;/* 14px */
+  --fs-xs: 0.875rem;/* 14px */
 }
 
 @font-face {
@@ -63,6 +66,8 @@
 
 body {
   font-family: 'Pretendard', sans-serif;
+  font-size: 1rem; /* 16px */
   color: var(--black);
   line-height: 1.4;
+  font-size: 1rem;
 }
