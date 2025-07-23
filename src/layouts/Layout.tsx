@@ -8,6 +8,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <main
         style={{
           minHeight: '100vh',
+          minWidth: '100vw',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center'
