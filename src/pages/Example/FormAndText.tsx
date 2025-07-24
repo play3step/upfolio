@@ -52,17 +52,23 @@ function FormAndText() {
           <li>props 필수 속성: 없음</li>
           <li>버튼 기본 type: button</li>
           <li>기본 버튼텍스트: 버튼</li>
-          <li>버튼 막을 시: disabled</li>
         </ul>
 
         <Button />
         <Button
           type="submit"
           onClick={() => console.log('hi')}
+          onMouseEnter={() => console.log('마우스 올림')}
           line>
           라인 스타일
         </Button>
         <Button disabled>disabled</Button>
+
+        {/* 버튼 그룹형 */}
+        <div style={{ display: 'flex', gap: '.75rem' }}>
+          <Button line />
+          <Button />
+        </div>
       </div>
 
       <h2 style={h2Style}>2. input</h2>
