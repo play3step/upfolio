@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import S from './Footer.module.css'
 import logo from '@/assets/logo.svg'
 
@@ -9,10 +10,12 @@ export default function Footer() {
           <p>Copyright 2025. I’m this INC. All rights reserved.</p>
         </div>
         <div className={S.footer__middle}>
-          <img
-            src={logo}
-            alt="logo"
-          />
+          <Link to="/">
+            <img
+              src={logo}
+              alt="logo"
+            />
+          </Link>
         </div>
         <div className={S.footer__right}>
           <p>이용약관</p>

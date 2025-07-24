@@ -1,43 +1,108 @@
 import S from './Header.module.css'
+import Sb from './Button.module.css'
 import logo from '@/assets/logo.svg'
 import person from '@/assets/icon/person.svg'
 import alarm from '@/assets/icon/alarm.svg'
 import search from '@/assets/icon/search.svg'
-import Button from './Button'
+import { Link, NavLink } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
 
 export default function Header() {
+  const [showHeader, setShowHeader] = useState(true)
+  const lastScrollY = useRef(0)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.pageYOffset
+
+      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+        setShowHeader(false)
+      } else {
+        setShowHeader(true)
+      }
+
+      lastScrollY.current = currentScrollY
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  })
+
   return (
-    <header className={S.header}>
-      <div className={S.header__left}>
-        <img
-          src={logo}
-          alt="logo"
-        />
-        <div className={S.header__left__text}>
-          <p>인기 포트폴리오</p>
-          <p>포트폴리오 등록</p>
+    <header className={`${S.header} ${!showHeader ? S.hide : ''}`}>
+      <div className={S.header__inner}>
+        <div className={S.header__left}>
+          <Link
+            to="/"
+            className={S.header__left__logo}>
+            <img
+              src={logo}
+              alt="Upfolio 메인"
+            />
+          </Link>
+          <nav className={S.header__left__nav}>
+            <ul>
+              <li>
+                <NavLink
+                  to="/portfolios"
+                  className={({ isActive }) => (isActive ? S.selected : '')}>
+                  인기 포트폴리오
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/portfolio/new"
+                  className={({ isActive }) => (isActive ? S.selected : '')}>
+                  포트폴리오 등록
+                </NavLink>
+              </li>
+            </ul>
+          </nav>
         </div>
-      </div>
-      <div className={S.header__right}>
-        <div className={S.header__right__search}>
-          <img
-            src={search}
-            alt="search"
-          />
-          <input
-            type="text"
-            placeholder="포트폴리오 검색"
-          />
+        <div className={S.header__right}>
+          <div className={S.header__right__search}>
+            <label
+              htmlFor="headerSearch"
+              className="a11y-hidden">
+              포트폴리오 검색
+            </label>
+            <img
+              src={search}
+              alt="search"
+              aria-hidden="true"
+            />
+            <input
+              id="headerSearch"
+              name="headerSearch"
+              type="text"
+              placeholder="포트폴리오 검색"
+            />
+          </div>
+          <button
+            type="button"
+            className={S['header__iconbtn']}>
+            <img
+              src={person}
+              alt="person"
+            />
+          </button>
+          <button
+            type="button"
+            className={S['header__iconbtn']}>
+            <img
+              src={alarm}
+              alt="alarm"
+            />
+          </button>
+          <Link
+            to="/login"
+            className={Sb.btn}>
+            <span className={Sb.btn__txt}>Login</span>
+          </Link>
         </div>
-        <img
-          src={person}
-          alt="person"
-        />
-        <img
-          src={alarm}
-          alt="alarm"
-        />
-        <Button type="button">Login</Button>
       </div>
     </header>
   )
