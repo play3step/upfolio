@@ -8,12 +8,12 @@
 .login__card {
   position: relative;
   background: var(--white);
-  padding: var(--sp-6);
+  padding: var(--sp-8);
   border-radius: var(--sp-3);
   text-align: center;
   max-width: 400px;
   width: 90%;
-  box-shadow: var(--bs-drop)
+  box-shadow: var(--bs-drop);
 }
 
 .login__button--back {
@@ -26,7 +26,7 @@
   width: 2.25rem;
   height: 2.25rem;
   background: transparent;
-  border: .0625rem solid var(--gray-300);
+  border: 1px solid var(--gray-300);
   border-radius: var(--sp-2);
   cursor: pointer;
   transition: 0.2s;
@@ -44,7 +44,7 @@
 
 .login__description {
   font-size: var(--fs-sm);
-  margin-bottom: var(--sp-6);
+  margin-bottom: var(--sp-10);
   line-height: 1.6;
 }
 
@@ -65,7 +65,7 @@
   cursor: pointer;
   color: var(--primary);
   transition: 0.2s;
-  box-shadow: 0 .125rem .25rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
 
   &:hover {
     background-color: var(--primary);
@@ -79,7 +79,7 @@
 
   &:active {
     transform: translateY(0);
-    box-shadow: 0 .0625rem .125rem rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 0.125rem rgba(0, 0, 0, 0.1);
   }
 }
 

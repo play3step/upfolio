@@ -9,7 +9,6 @@
 /* pc: 64rem (1024px) */
 
 :root {
-
   /* --- 컬러 --- */
   --primary: rgba(53, 87, 73, 1);
   --primary-80: rgba(53, 87, 73, 0.8);
@@ -51,10 +50,18 @@
   --sp-2: 0.5rem; /* 8px */
   --sp-3: 0.75rem; /* 12px */
   --sp-4: 1rem; /* 16px */
-  --sp-5: 1.5rem; /* 24px */
-  --sp-6: 2rem; /* 32px */
-  --sp-7: 3rem; /* 48px */
-  --sp-8: 4rem; /* 64px */
+  --sp-5: 1.25rem; /* 20px */
+  --sp-6: 1.5rem; /* 24px */
+  --sp-7: 1.75rem; /* 28px */
+  --sp-8: 2rem; /* 32px */
+  --sp-9: 2.25rem; /* 36px */
+  --sp-10: 2.5rem; /* 40px */
+  --sp-11: 2.75rem; /* 44px */
+  --sp-12: 3rem; /* 48px */
+  --sp-13: 3.25rem; /* 52px */
+  --sp-14: 3.5rem; /* 56px */
+  --sp-15: 3.75rem; /* 60px */
+  --sp-16: 4rem; /* 64px */
 
   /* --- font-size (rem 기준)  --- */
   --fs-xxl: 3rem; /* 48px */

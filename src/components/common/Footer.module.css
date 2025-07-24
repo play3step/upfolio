@@ -26,7 +26,7 @@
   }
 }
 
-.footer__middle{
+.footer__middle {
   display: block;
   position: absolute;
   left: 50%;
@@ -39,10 +39,8 @@
   display: flex;
   justify-content: flex-end;
   width: 30%;
-  gap: var(--sp-5);
+  gap: var(--sp-8);
   p {
-      font-size: var(--fs-xs);
+    font-size: var(--fs-xs);
   }
 }
-
-

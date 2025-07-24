@@ -13,9 +13,9 @@
   position: relative;
 }
 
-.dm--button-position {  
+.dm--button-position {
   position: absolute;
-  bottom: var(--sp-5);
+  bottom: var(--sp-6);
   right: 2.25rem;
   z-index: 100;
 }
