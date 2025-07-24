@@ -1,9 +1,9 @@
-import S from './DMToggleButton.module.css'
+import S from './DmToggleButton.module.css'
 import dmIcon from '@/assets/icon/dm.svg'
 import closeIcon from '@/assets/icon/delete.svg'
 import { useState } from 'react'
 
-export default function DMToggleButton() {
+export default function DmToggleButton() {
   const [isOpen, setIsOpen] = useState(false)
   const handleToggle = () => {
     setIsOpen(prev => !prev)

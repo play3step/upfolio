@@ -2,8 +2,7 @@ import S from './Layout.module.css'
 
 import Header from '@/components/common/Header'
 import Footer from '@/components/common/Footer'
-import DMToggleButton from '@/components/domain/dm/DMToggleButton'
-import DmChatContainer from '@/components/domain/dm/DmChatContainer'
+import DmDropdownWrapper from '@/components/domain/dm/DmDropdownWrapper'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,8 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <main className={S['main']}>
         {children}
         <div className={S['dm--button-position']}>
-          <DmChatContainer />
-          <DMToggleButton />
+          <DmDropdownWrapper />
         </div>
       </main>
       <Footer />
