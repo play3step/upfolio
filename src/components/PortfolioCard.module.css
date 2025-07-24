@@ -18,6 +18,7 @@
   background: var(--white);
   position: relative;
   min-height: 240px;
+  height: 240px;
 
   h3 {
     font-size: 20px;
@@ -44,10 +45,10 @@
   .interest {
     background-color: var(--primary);
     color: white;
-    padding: 4px 12px;
+    padding: var(--sp-2) var(--sp-4);
     border-radius: 6px;
     font-size: 14px;
-    max-width: 130px;
+    max-width: 140px;
     text-align: center;
   }
 
@@ -56,8 +57,8 @@
     background-color: transparent;
     cursor: pointer;
     position: absolute;
-    top: 4px;
-    right: 0px;
+    top: var(--sp-1);
+    right: var(--sp-1);
   }
 
   .career {
@@ -73,10 +74,10 @@
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    gap: 12px;
+    gap: var(--sp-4);
     width: 100%;
     position: absolute;
-    bottom: 8px;
+    bottom: var(--sp-3);
     right: 10px;
 
     .like,
@@ -85,7 +86,7 @@
       flex-direction: row;
       justify-content: center;
       align-items: center;
-      gap: 8px;
+      gap: var(--sp-3);
     }
   }
 }
