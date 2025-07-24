@@ -13,6 +13,7 @@ interface Props {
   checked: string
   onChange: (value: string) => void
   error?: string
+  className?: string
 }
 
 function RadioGroup({
@@ -22,11 +23,12 @@ function RadioGroup({
   name,
   checked,
   error,
+  className = '',
   onChange
 }: Props) {
   return (
     <fieldset
-      className={`${S['radio-group']} ${error ? S['radio-group--err'] : ''}`}>
+      className={`${S['radio-group']} ${error ? S['radio-group--err'] : ''} ${className}`}>
       <legend className={hideLabel ? 'a11y-hidden' : ''}>{label}</legend>
       <ul>
         {options.map(option => (

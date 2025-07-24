@@ -3,6 +3,7 @@ import S from './CheckboxSelect.module.css'
 
 interface Props {
   hideLabel?: boolean
+  className?: string
   error?: string
 }
 
@@ -15,7 +16,7 @@ const TECHSTACK_LIST = [
   'figma'
 ]
 
-function CheckboxSelect({ hideLabel, error }: Props) {
+function CheckboxSelect({ hideLabel, className, error }: Props) {
   const [techStack, setTechStack] = useState<string[]>([])
 
   const [isExpanded, setIsExpanded] = useState(false)
@@ -29,7 +30,8 @@ function CheckboxSelect({ hideLabel, error }: Props) {
   }
 
   return (
-    <fieldset className={`${S['CS-wrap']} ${error ? S['CS-wrap--err'] : ''}`}>
+    <fieldset
+      className={`${S['CS-wrap']} ${error ? S['CS-wrap--err'] : ''} ${className}`}>
       <legend className={hideLabel ? 'a11y-hidden' : ''}>기술스택</legend>
       <div className={S['CS__selectedList']}>
         {techStack.map(stack => (
