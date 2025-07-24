@@ -1,0 +1,29 @@
+.dm-chat-list-item{
+    width: 100%;
+    padding: var(--sp-2);
+    display: flex;
+    gap: var(--sp-2);
+    align-items: center;
+}
+
+.dm-chat-list-item-left-profile{
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dm-chat-list-item-right{
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    width: 100%;
+    span{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
