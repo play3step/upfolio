@@ -1,0 +1,14 @@
+
+.dm-buatton{
+    padding: var(--sp-2);
+    background-color: var(--primary);
+    border-radius: var(--sp-4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dm-button-icon{
+    width: 2.5rem;
+    height: 2.5rem;
+}
