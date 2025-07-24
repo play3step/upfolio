@@ -1,24 +1,25 @@
 .portfolio-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--sp-4);
+  gap: var(--sp-4) var(--sp-4);
   padding: var(--sp-4);
   max-width: 1200px;
-  margin: 0 auto;
+  margin: var(--sp-4) auto;
+  grid-auto-rows: 1fr;
+  align-items: stretch;
 }
 
 .container {
   display: flex;
-  padding: 8px 8px 8px 12px;
+  padding: var(--sp-3) var(--sp-3) var(--sp-3) var(--sp-4);
   flex-direction: column;
-  gap: 16px;
+  gap: var(--sp-5);
   flex-shrink: 0;
   border-radius: 6px;
   border: 1px solid var(--gray-50);
   background: var(--white);
   position: relative;
-  min-height: 240px;
-  height: 240px;
+  height: 100%;
 
   h3 {
     font-size: 20px;
@@ -57,8 +58,8 @@
     background-color: transparent;
     cursor: pointer;
     position: absolute;
-    top: var(--sp-1);
-    right: var(--sp-1);
+    top: var(--sp-2);
+    right: var(--sp-2);
   }
 
   .career {
@@ -74,10 +75,10 @@
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    gap: var(--sp-4);
+    gap: var(--sp-3);
     width: 100%;
     position: absolute;
-    bottom: var(--sp-3);
+    bottom: var(--sp-2);
     right: 10px;
 
     .like,
@@ -86,7 +87,7 @@
       flex-direction: row;
       justify-content: center;
       align-items: center;
-      gap: var(--sp-3);
+      gap: var(--sp-2);
     }
   }
 }
