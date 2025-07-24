@@ -6,10 +6,14 @@ import alarm from '@/assets/icon/alarm.svg'
 import search from '@/assets/icon/search.svg'
 import { Link, NavLink } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
+import { useAuth } from '@/hooks/auth/useAuth'
 
 export default function Header() {
   const [showHeader, setShowHeader] = useState(true)
   const lastScrollY = useRef(0)
+  const { isAuthenticated, logout } = useAuth()
+
+  console.log('Header 렌더링됨, isAuthenticated:', isAuthenticated)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -97,11 +101,19 @@ export default function Header() {
               alt="alarm"
             />
           </button>
-          <Link
-            to="/login"
-            className={Sb.btn}>
-            <span className={Sb.btn__txt}>Login</span>
-          </Link>
+          {isAuthenticated ? (
+            <button
+              onClick={logout}
+              className={Sb.btn}>
+              <span className={Sb.btn__txt}>Logout</span>
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className={Sb.btn}>
+              <span className={Sb.btn__txt}>Login</span>
+            </Link>
+          )}
         </div>
       </div>
     </header>

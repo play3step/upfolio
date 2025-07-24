@@ -4,7 +4,6 @@ export interface AuthData {
   id: string
   name: string
   email: string
-
   avatar_url: string
 }
 
@@ -20,7 +19,8 @@ export interface UserData {
 }
 
 export interface AuthContextType {
-  login: (token: string) => void
+  login: (userData: AuthData) => void
   logout: () => void
   isAuthenticated: boolean
+  authData: AuthData | null
 }
