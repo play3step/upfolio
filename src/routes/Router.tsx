@@ -11,8 +11,13 @@ import { PortfolioDetail } from '@/pages/Portfolio/PortfolioDetail'
 import { PortfolioList } from '@/pages/Portfolio/PortfolioList'
 import { createBrowserRouter } from 'react-router-dom'
 import Layout from '@/layouts/Layout'
+import FormAndText from '@/pages/Example/FormAndText'
 
 const routerList = [
+  {
+    path: '/example/form',
+    element: <FormAndText />
+  },
   {
     path: '/',
     element: <Home />

@@ -1,9 +1,26 @@
 export type AuthProvider = 'google' | 'github'
 
 export interface AuthData {
+  id: string
   name: string
   email: string
-  user_name: string
+
   avatar_url: string
-  provider: string
+}
+
+export interface UserData {
+  id: string
+  email: string
+  nickname: string
+  profileimage: string
+  interest?: string
+  techstack?: string[]
+  createdat?: string
+  career?: string
+}
+
+export interface AuthContextType {
+  login: (token: string) => void
+  logout: () => void
+  isAuthenticated: boolean
 }
