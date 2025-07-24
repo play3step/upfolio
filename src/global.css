@@ -58,6 +58,10 @@
   --fs-md: 1.25rem;  /* 20px */
   --fs-sm: 1rem;    /* 16px */
   --fs-xs: 0.875rem;/* 14px */
+
+  /* --- box-shadow --- */
+  --bs-drop : 0 .25rem .375rem rgba(0, 0, 0, 0.1);
+
 }
 
 @font-face {
