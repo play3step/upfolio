@@ -13,7 +13,7 @@
   text-align: center;
   max-width: 400px;
   width: 90%;
-  box-shadow: 0 .25rem .375rem rgba(0, 0, 0, 0.1);
+  box-shadow: var(--bs-drop)
 }
 
 .login__button--back {
