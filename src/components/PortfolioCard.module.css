@@ -22,7 +22,7 @@
   height: 100%;
 
   h3 {
-    font-size: 20px;
+    font-size: var(--fs-md);
     font-weight: 500;
     line-height: 140%;
   }
