@@ -23,5 +23,4 @@ export interface AuthContextType {
   login: (token: string) => void
   logout: () => void
   isAuthenticated: boolean
-  token: string | null
 }

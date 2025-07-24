@@ -1,8 +1,7 @@
 import { SocialLoginButton } from '@/components/common/SocialLoginButton'
 import S from './Login.module.css'
 import arrowBack from '../../../assets/icon/arrow-back.svg'
-import github from '../../../assets/icon/github.svg'
-import google from '../../../assets/icon/google.svg'
+import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
 
 export function Login() {
   const { handleSignIn } = useAuthLogin()
@@ -26,22 +25,14 @@ export function Login() {
           Upfolio의 다양한 기능을 이용해 보세요.
         </p>
         <div className={S['login__buttons']}>
-          <button className={S['login__button']}>
-            <img
-              src="/google-icon.svg"
-              alt="Google Icon"
-              className={S['login__button--icon']}
-            />
-            Google로 로그인
-          </button>
-          <button className={S['login__button']}>
-            <img
-              src="/github-icon.svg"
-              alt="GitHub Icon"
-              className={S['login__button--icon']}
-            />
-            GitHub로 로그인
-          </button>
+          <SocialLoginButton
+            provider="google"
+            onClick={() => handleSignIn('google')}
+          />
+          <SocialLoginButton
+            provider="github"
+            onClick={() => handleSignIn('github')}
+          />
         </div>
       </div>
     </div>
