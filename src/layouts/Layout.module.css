@@ -15,6 +15,5 @@
 }
 
 .main > * {
-  padding: 0 var(--sp-3);
   min-height: calc(100vh - 10.5rem);
 }
