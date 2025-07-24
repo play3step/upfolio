@@ -4,5 +4,6 @@ import { createContext } from 'react'
 export const AuthContext = createContext<AuthContextType>({
   login: () => {},
   logout: () => {},
-  isAuthenticated: false
+  isAuthenticated: false,
+  authData: null
 })
