@@ -4,6 +4,7 @@ import S from './Input.module.css'
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   id: string
   label: string
+  className?: string
   hideLabel?: boolean
   name?: string
   readOnly?: boolean
@@ -18,10 +19,12 @@ function Input({
   type = 'text',
   readOnly,
   error,
+  className = '',
   ...props
 }: Props) {
   return (
-    <div className={`${S['input-wrap']} ${error ? S['input-wrap--err'] : ''}`}>
+    <div
+      className={`${S['input-wrap']} ${error ? S['input-wrap--err'] : ''} ${className}`}>
       <label
         htmlFor={id}
         className={hideLabel ? 'a11y-hidden' : ''}>
