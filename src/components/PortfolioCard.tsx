@@ -3,8 +3,7 @@ import bookmarkIcon from '../assets/icon/bookmark-empty.svg'
 import bookmarkFilledIcon from '../assets/icon/bookmark-fill.svg'
 import grayHeart from '../assets/icon/grayHeart.svg'
 import eye from '../assets/icon/eye.svg'
-import { useState } from 'react'
-import supabase from '@/lib/supabaseClient'
+import { useState, useEffect } from 'react'
 
 export interface Props {
   id: string
@@ -15,45 +14,41 @@ export interface Props {
   viewcount: number
   interest: string
   career: string
+  isBookmarked: boolean
+}
+
+interface PortfolioCardProps extends Props {
+  onToggleBookmark: (id: string, next: boolean) => void
 }
 
 export function PortfolioCard({
   id,
-  userid,
   title,
   content,
   likecount,
   viewcount,
   interest,
-  career
-}: Props) {
-  const [bookmarked, setBookmarked] = useState(false);
+  career,
+  isBookmarked,
+  onToggleBookmark,
+}: PortfolioCardProps) {
+  const [bookmarked, setBookmarked] = useState(isBookmarked)
 
-  const toggleBookmark = async () => {
-    setBookmarked(!bookmarked);
+  useEffect(() => {
+    // 새로고침 후 북마크 상태 반영
+    setBookmarked(isBookmarked)
+  }, [isBookmarked])
 
-    const user = await supabase.auth.getUser();
-    const userId = user.data.user?.id;
-
-    if (!userId) return;
-
-    if (!bookmarked) {
-      await supabase.from('BookMark').insert({
-        userid: userId,
-        portfolioid: id
-      });
-    } else {
-      await supabase
-        .from('BookMark')
-        .delete()
-        .eq('userid', userId)
-        .eq('portfolioid', id);
-    }
-  };
+  const toggleBookmark = () => {
+    const next = !bookmarked
+    setBookmarked(next)
+    onToggleBookmark(id, next)
+  }
 
   return (
     <div className={S.container}>
       <div className={S.interest}>{interest}</div>
+
       <button onClick={toggleBookmark} className={S.bookmark}>
         <img
           src={bookmarked ? bookmarkFilledIcon : bookmarkIcon}
@@ -61,7 +56,7 @@ export function PortfolioCard({
         />
       </button>
 
-      <span className={S.career}> {career} </span>
+      <span className={S.career}>{career}</span>
       <h3 className={S.title}>{title}</h3>
       <span className={S.content}>{content}</span>
 
@@ -76,5 +71,5 @@ export function PortfolioCard({
         </span>
       </div>
     </div>
-  );
+  )
 }
