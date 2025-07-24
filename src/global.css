@@ -5,6 +5,11 @@
 }
 
 :root {
+  /* --- 반응형 화면 --- */
+  --breakpoint-sm: 40rem; /* 640px */
+  --breakpoint-md: 48rem; /* 768px */
+  --breakpoint-lg: 64rem; /* 1024px */
+  
   /* --- 컬러 --- */
   --primary: rgba(53, 87, 73, 1);
   --primary-80: rgba(53, 87, 73, 0.8);
