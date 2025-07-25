@@ -40,6 +40,7 @@ const routerList = [
   },
   {
     path: '/mypage',
+    element: <Layout />,
     children: [
       {
         path: '',
