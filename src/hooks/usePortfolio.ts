@@ -1,58 +1,67 @@
-// src/hooks/usePortfolio.ts
-import { useEffect, useState } from 'react';
-import supabase from '@/lib/supabaseClient';
-import { type Props } from '@/components/PortfolioCard';
+import { useEffect, useState } from 'react'
+import supabase from '@/lib/supabaseClient'
 
-interface UsePortfolioResult {
-  portfolio: Props[];
-  interest: string;
-  career: string;
+export interface PortfolioItem {
+  id: string
+  userid: string
+  title: string
+  content: string
+  likecount: number
+  viewcount: number
+  interest: string
+  career: string
+  isBookmarked: boolean
 }
 
-export const usePortfolio = (): UsePortfolioResult => {
-  const [portfolio, setPortfolio] = useState<Props[]>([]);
-  const [interest, setInterest] = useState('');
-  const [career, setCareer] = useState('');
+export const usePortfolio = (userId: string | null) => {
+  const [portfolio, setPortfolio] = useState<PortfolioItem[]>([])
 
   useEffect(() => {
-    const fetchInterestAndCareer = async (userid: string) => {
-      const { data, error } = await supabase
-        .from('User')
-        .select('interest, career')
-        .eq('id', userid)
-        .single();
+    if (!userId) return
 
-      if (error) {
-        console.error('Error fetching interest and career:', error);
-      } else {
-        setInterest(data?.interest || '');
-        setCareer(data?.career || '');
+    const fetchData = async () => {
+      // 1. 북마크 가져오기
+      const { data: bookmarks, error: bookmarkError } = await supabase
+        .from('BookMark')
+        .select('portfolioid')
+        .eq('userid', userId)
+
+      if (bookmarkError) {
+        console.error('Bookmark fetch error:', bookmarkError.message)
+        return
       }
-    };
 
-    const fetchPortfolio = async () => {
-      const { data: portfolios, error } = await supabase
-        .from('Portfolio')
-        .select('id, title, content, likecount, viewcount, userid');
+      const bookmarkedIds = bookmarks?.map(b => b.portfolioid) || []
 
-      if (error) {
-        console.error('Error fetching portfolio:', error);
-      } else {
-        if (portfolios && portfolios.length > 0) {
-          setPortfolio(portfolios as Props[]);
+      // 2. 포트폴리오 + 유저 정보 가져오기
+      const { data: portfolios, error: portfolioError } = await supabase.from(
+        'Portfolio'
+      ).select(`
+          *,
+          User:userid (
+            interest,
+            career
+          )
+        `)
 
-          const firstUserId = portfolios[0]?.userid;
-          if (firstUserId) {
-            fetchInterestAndCareer(firstUserId);
-          } else {
-            console.warn('userId is missing from portfolio');
-          }
-        }
+      if (portfolioError) {
+        console.error('Portfolio fetch error:', portfolioError.message)
+        return
       }
-    };
 
-    fetchPortfolio();
-  }, []);
+      // 3. 병합해서 isBookmarked 붙이기
+      const combined = (portfolios ?? []).map(p => ({
+        ...p,
+        interest: p.User?.interest || '',
+        career: p.User?.career || '',
+        isBookmarked: bookmarkedIds.includes(p.id)
+      })) as PortfolioItem[]
 
-  return { portfolio, interest, career };
-};
+      setPortfolio(combined)
+    }
+
+    fetchData()
+  }, [userId])
+
+  return { portfolio, setPortfolio }
+}
