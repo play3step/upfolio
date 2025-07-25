@@ -1,14 +1,13 @@
 import S from './DmToggleButton.module.css'
 import dmIcon from '@/assets/icon/dm.svg'
 import closeIcon from '@/assets/icon/delete.svg'
-import { useState } from 'react'
 
-export default function DmToggleButton() {
-  const [isOpen, setIsOpen] = useState(false)
-  const handleToggle = () => {
-    setIsOpen(prev => !prev)
-  }
+interface Props {
+  isOpen: boolean
+  handleToggle: () => void
+}
 
+export default function DmToggleButton({ isOpen, handleToggle }: Props) {
   return (
     <button
       className={S['dm-buatton']}
