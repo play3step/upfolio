@@ -34,6 +34,9 @@ function CheckboxSelect({ hideLabel, className, error }: Props) {
       className={`${S['CS-wrap']} ${error ? S['CS-wrap--err'] : ''} ${className}`}>
       <legend className={hideLabel ? 'a11y-hidden' : ''}>기술스택</legend>
       <div className={S['CS__selectedList']}>
+        {techStack.length === 0 && (
+          <span className={S['CS__placeholder']}>1개 이상 선택해주세요.</span>
+        )}
         {techStack.map(stack => (
           <div
             key={stack}
