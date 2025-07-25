@@ -11,7 +11,7 @@ export const Home = () => {
 
   useEffect(() => {
     getSession()
-  }, [getSession]) // getSession 추가
+  }, []) // getSession 추가
 
   useEffect(() => {
     if (authData?.id) {
