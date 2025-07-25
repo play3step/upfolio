@@ -5,8 +5,11 @@ interface Props {
   hideLabel?: boolean
   className?: string
   error?: string
+  items: string[]
+  onChange: (selectedOptions: string[]) => void
 }
 
+/* 기존 하드 코딩 데이터 삭제
 const TECHSTACK_LIST = [
   'React',
   'Html5',
@@ -14,9 +17,15 @@ const TECHSTACK_LIST = [
   'JavaScript',
   'TypeScript',
   'figma'
-]
+] */
 
-function CheckboxSelect({ hideLabel, className, error }: Props) {
+function CheckboxSelect({
+  hideLabel,
+  className,
+  error,
+  items,
+  onChange
+}: Props) {
   const [techStack, setTechStack] = useState<string[]>([])
 
   const [isExpanded, setIsExpanded] = useState(false)
@@ -27,6 +36,7 @@ function CheckboxSelect({ hideLabel, className, error }: Props) {
     } else {
       setTechStack([...techStack, stack])
     }
+    onChange(techStack)
   }
 
   return (
@@ -66,7 +76,7 @@ function CheckboxSelect({ hideLabel, className, error }: Props) {
 
       <ul
         className={`${S['CS__checkList']} ${isExpanded ? S['expanded'] : ''}`}>
-        {TECHSTACK_LIST.map(stack => (
+        {items.map(stack => (
           <li
             key={stack}
             className={`${techStack.includes(stack) ? `${S['checked']}` : ''}`}>
