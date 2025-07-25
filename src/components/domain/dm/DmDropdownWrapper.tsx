@@ -4,9 +4,16 @@ import { useState } from 'react'
 
 export default function DmDropdownWrapper() {
   const [isOpen, setIsOpen] = useState(false)
+  const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null)
+
   const handleToggle = () => {
     setIsOpen(prev => !prev)
   }
+
+  const handleSelectChatRoom = (threadId: string) => {
+    setSelectedThreadId(threadId)
+  }
+
   return (
     <div
       style={{
@@ -15,7 +22,11 @@ export default function DmDropdownWrapper() {
         alignItems: 'flex-end',
         gap: 'var(--sp-4)'
       }}>
-      <DmChatContainer isOpen={isOpen} />
+      <DmChatContainer
+        isOpen={isOpen}
+        selectedThreadId={selectedThreadId}
+        handleSelectChatRoom={handleSelectChatRoom}
+      />
       <DmToggleButton
         isOpen={isOpen}
         handleToggle={handleToggle}

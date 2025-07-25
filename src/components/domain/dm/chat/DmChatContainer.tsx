@@ -5,17 +5,48 @@ import DmChatMessage from './DmChatMessage'
 
 interface Props {
   isOpen: boolean
+  selectedThreadId: string | null
+  handleSelectChatRoom: (threadId: string) => void
 }
 
-export default function DmChatContainer({ isOpen }: Props) {
+const threadList = [
+  {
+    id: '1',
+    name: 'John Doe',
+    lastMessage: 'Hello, how are you?'
+  },
+  {
+    id: '2',
+    name: 'Jane Doe',
+    lastMessage: 'I am fine, thank you.'
+  },
+  {
+    id: '3',
+    name: 'John Doe',
+    lastMessage: 'Hello, how are you?'
+  }
+]
+
+export default function DmChatContainer({
+  isOpen,
+  selectedThreadId,
+  handleSelectChatRoom
+}: Props) {
   return (
     <div
       className={S['dm-chat-container']}
       style={{ display: isOpen ? 'flex' : 'none' }}>
       <div className={S['dm-chat-container-left']}>
-        <DmChatListItem />
-        <DmChatListItem />
-        <DmChatListItem />
+        {threadList.map(thread => (
+          <DmChatListItem
+            key={thread.id}
+            id={thread.id}
+            isSelected={selectedThreadId === thread.id}
+            name={thread.name}
+            lastMessage={thread.lastMessage}
+            handleSelectChatRoom={handleSelectChatRoom}
+          />
+        ))}
       </div>
       <div className={S['dm-chat-container-right']}>
         <div className={S['dm-chat-conversation']}>
