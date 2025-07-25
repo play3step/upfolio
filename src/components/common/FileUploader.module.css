@@ -1,0 +1,10 @@
+.uploader {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sp-2);
+
+  .uploader__textarea > textarea {
+    min-height: 3rem;
+    height: auto;
+  }
+}
