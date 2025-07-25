@@ -2,6 +2,7 @@ import S from './DmChatContainer.module.css'
 import dmSendIcon from '@/assets/icon/dm.svg'
 import DmChatListItem from './DmChatListItem'
 import DmChatMessage from './DmChatMessage'
+import { useThreads } from '@/hooks/dm/useThreads'
 
 interface Props {
   isOpen: boolean
@@ -32,6 +33,8 @@ export default function DmChatContainer({
   selectedThreadId,
   handleSelectChatRoom
 }: Props) {
+  const { threads } = useThreads()
+  console.log(threads)
   return (
     <div
       className={S['dm-chat-container']}
@@ -47,6 +50,7 @@ export default function DmChatContainer({
             handleSelectChatRoom={handleSelectChatRoom}
           />
         ))}
+        <div>채팅방생성</div>
       </div>
       <div className={S['dm-chat-container-right']}>
         <div className={S['dm-chat-conversation']}>
