@@ -12,6 +12,14 @@
   &:first-child {
     padding-top: 0;
   }
+
+  .sec__tit {
+    margin-bottom: var(--sp-2);
+  }
+
+  &:last-of-type {
+    border: none;
+  }
 }
 
 .sec__profile {
@@ -37,4 +45,26 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+/* prefix 있는 input */
+.input-prefix {
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+
+.prefix {
+  display: block;
+  position: absolute;
+  left: 16px;
+  top: 56px;
+  translate: 0 -50%;
+  color: var(--gray);
+}
+
+.input-prefix .input-wrap {
+  input {
+    padding-left: 68px;
+  }
 }

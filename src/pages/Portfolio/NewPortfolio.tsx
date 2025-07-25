@@ -6,6 +6,7 @@ import RadioGroup from '@/components/common/RadioGroup'
 import { useState } from 'react'
 import CheckboxSelect from '@/components/common/CheckboxSelect'
 import Textarea from '@/components/common/Textarea'
+import FileUploader from '@/components/common/FileUploader'
 
 export const NewPortfolio = () => {
   /* --- 라디오 그룹 상태 및 옵션 --- */
@@ -64,7 +65,6 @@ export const NewPortfolio = () => {
               label="전화번호"
               value="010-1234-5678"
               readOnly
-              className={S.hi}
             />
           </div>
         </section>
@@ -91,6 +91,23 @@ export const NewPortfolio = () => {
               id="exText"
               label="포트폴리오 소개"
             />
+          </div>
+        </section>
+
+        <section className={S['sec']}>
+          <h3 className={S['sec__tit']}>포트폴리오 자료</h3>
+          <div className={S['sec__form']}>
+            <div className={S['input-prefix']}>
+              <span className={S['prefix']}>https://</span>
+              <Input
+                type="text"
+                id="exId05"
+                label="URL"
+                className={S['input-wrap']}
+              />
+            </div>
+
+            <FileUploader id="exIdFileUpload"></FileUploader>
           </div>
         </section>
       </form>
