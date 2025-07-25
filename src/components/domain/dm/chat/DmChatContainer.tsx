@@ -27,6 +27,30 @@ export default function DmChatContainer({ isOpen }: Props) {
             message="그렇게 하는거 아닌데 뭐 하는거야"
             isMine={false}
           />
+          <DmChatMessage
+            message="에헤이 귀찮아"
+            isMine={true}
+          />
+          <DmChatMessage
+            message="그렇게 하는거 아닌데 뭐 하는거야"
+            isMine={false}
+          />
+          <DmChatMessage
+            message="에헤이 귀찮아"
+            isMine={true}
+          />
+          <DmChatMessage
+            message="그렇게 하는거 아닌데 뭐 하는거야"
+            isMine={false}
+          />
+          <DmChatMessage
+            message="에헤이 귀찮아"
+            isMine={true}
+          />
+          <DmChatMessage
+            message="그렇게 하는거 아닌데 뭐 하는거야"
+            isMine={false}
+          />
         </div>
         <div className={S['dm-chat-input']}>
           <textarea
