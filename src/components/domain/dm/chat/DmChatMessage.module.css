@@ -1,0 +1,54 @@
+.wrapper {
+  min-height: 6.375rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-2);
+}
+
+.mine {
+  align-items: flex-end;
+}
+
+.other {
+  align-items: flex-start;
+}
+
+.header {
+  display: flex;
+  align-items: end;
+  gap: var(--sp-2);
+}
+
+.profile {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid black;
+  border-radius: 50%;
+}
+
+.name {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+
+.content {
+  width: fit-content;
+  word-break: break-word;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  hyphens: auto;
+
+  padding: var(--sp-2) var(--sp-3);
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  border-radius: var(--sp-1);
+
+  background-color: white;
+  color: black;
+}
+
+.mineContent {
+  background-color: var(--primary);
+  color: white;
+}

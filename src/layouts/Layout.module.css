@@ -15,6 +15,7 @@
 
 .dm--button-position {
   position: absolute;
+  min-height: 0;
   bottom: var(--sp-6);
   right: 2.25rem;
   z-index: 100;
