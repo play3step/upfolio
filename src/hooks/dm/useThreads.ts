@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import { fetchThreads } from '@/apis/dm/dm.controller'
+import { addThreads, fetchThreads } from '@/apis/dm/threads.controller'
 import { AuthContext } from '@/context/AuthContext'
 
 interface Thread {
@@ -21,5 +21,14 @@ export const useThreads = () => {
     handleFetchThreads()
   }, [])
 
-  return { threads }
+  const handleAddThreads = async (otherUserId: string) => {
+    const threads = await addThreads(
+      authData?.id ?? '',
+      otherUserId,
+      new Date().toISOString()
+    )
+    console.log(threads)
+  }
+
+  return { threads, handleAddThreads }
 }

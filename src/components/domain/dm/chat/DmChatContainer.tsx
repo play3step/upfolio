@@ -33,7 +33,7 @@ export default function DmChatContainer({
   selectedThreadId,
   handleSelectChatRoom
 }: Props) {
-  const { threads } = useThreads()
+  const { threads, handleAddThreads } = useThreads()
   console.log(threads)
   return (
     <div
@@ -50,7 +50,12 @@ export default function DmChatContainer({
             handleSelectChatRoom={handleSelectChatRoom}
           />
         ))}
-        <div>채팅방생성</div>
+        <button
+          onClick={() =>
+            handleAddThreads('b4c5d98b-1b22-4cad-a1b1-fa60e170fd99')
+          }>
+          채팅방생성
+        </button>
       </div>
       <div className={S['dm-chat-container-right']}>
         <div className={S['dm-chat-conversation']}>
