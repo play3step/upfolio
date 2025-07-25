@@ -4,6 +4,7 @@ import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
 import { PortfolioCard } from '@/components/PortfolioCard'
 import styles from '@/components/PortfolioCard.module.css'
 import supabase from '@/lib/supabaseClient'
+import { SearchBar } from '@/components/SearchBar'
 
 export const Home = () => {
   const { authData, getSession } = useAuthLogin()
@@ -11,7 +12,7 @@ export const Home = () => {
 
   useEffect(() => {
     getSession()
-  }, [getSession]) // getSession 추가
+  }, [getSession])
 
   useEffect(() => {
     if (authData?.id) {
@@ -64,14 +65,17 @@ export const Home = () => {
   }
 
   return (
-    <div className={styles['portfolio-grid']}>
-      {portfolio?.map(p => (
-        <PortfolioCard
-          key={p.id}
-          {...p}
-          onToggleBookmark={handleToggleBookmark}
-        />
-      ))}
-    </div>
+    <>
+      <SearchBar />
+      <div className={styles['portfolio-grid']}>
+        {portfolio?.map(p => (
+          <PortfolioCard
+            key={p.id}
+            {...p}
+            onToggleBookmark={handleToggleBookmark}
+          />
+        ))}
+      </div>
+    </>
   )
 }

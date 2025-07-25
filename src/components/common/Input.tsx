@@ -2,8 +2,8 @@ import type { InputHTMLAttributes } from 'react'
 import S from './Input.module.css'
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
-  id: string
-  label: string
+  id?: string
+  label?: string
   className?: string
   hideLabel?: boolean
   name?: string
