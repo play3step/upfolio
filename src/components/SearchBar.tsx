@@ -3,6 +3,7 @@ import S from './SearchBar.module.css'
 import search from '../assets/icon/search.svg'
 import RadioGroup from './common/RadioGroup'
 import { useState } from 'react'
+import CareerSelect from './common/CareerSelect'
 
 const INTEREST_SELECT = [
   { label: '전체', value: 'all' },
@@ -19,6 +20,7 @@ const INTEREST_SELECT = [
 
 export const SearchBar = () => {
   const [interest, setInterest] = useState<string>('all')
+  const [career, setCareer] = useState('')
 
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInterest(e.target.value)
@@ -28,11 +30,12 @@ export const SearchBar = () => {
     <div className={S.container}>
       <div className={S.filters}>
         <div className={S.container2}>
-          <select className={S.select}>
-            <option>경력 수준</option>
-            <option>신입</option>
-            <option>경력</option>
-          </select>
+          <div style={{ padding: '2rem 2rem 2rem 0' }}>
+            <CareerSelect
+              value={career}
+              onChange={setCareer}
+            />
+          </div>
           <div className={S.searchBar}>
             <Input
               id="exInputId"
