@@ -1,7 +1,6 @@
 .dm-chat-container {
   width: 34.125rem;
   height: 31.4375rem;
-  border: 1px solid var(--primary);
   border-radius: var(--sp-2);
   box-shadow: var(--bs-drop);
   background-color: white;
@@ -11,7 +10,6 @@
 .dm-chat-container-left {
   width: 10rem;
   height: 100%;
-  border-right: 1px solid var(--primary);
 }
 
 .dm-chat-container-right {

@@ -29,8 +29,8 @@ export default function DmChatListItem({
         style={{
           color: isSelected ? 'white' : ''
         }}>
-        <span>{name}</span>
-        <span>{lastMessage}</span>
+        <span className={S['name']}>{name}</span>
+        <span className={S['last-message']}>{lastMessage}</span>
       </div>
     </div>
   )
