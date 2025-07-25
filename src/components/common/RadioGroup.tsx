@@ -1,3 +1,4 @@
+import type React from 'react'
 import S from './RadioGroup.module.css'
 
 interface Option {
@@ -11,7 +12,7 @@ interface Props {
   options: Option[]
   name: string
   checked: string
-  onChange: (value: string) => void
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   error?: string
   className?: string
 }
@@ -38,8 +39,8 @@ function RadioGroup({
                 type="radio"
                 name={name}
                 value={option.value}
-                checked={checked == option.value}
-                onChange={() => onChange(option.value)}
+                checked={checked === option.value}
+                onChange={onChange}
                 className="a11y-hidden"
               />
               <span>{option.label}</span>
