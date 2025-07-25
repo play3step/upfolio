@@ -1,18 +1,17 @@
 .container {
   background: var(--tertiary);
-  padding: 1.5rem;
+  padding: 3rem 0.75rem 1rem;
   border-radius: 0.75rem;
   margin-bottom: 1.5rem;
   width: 100%;
-  min-height: 272px !important;
+  min-height: 200px;
 }
 
 .filters {
-  padding-top: 3rem;
   max-width: 1200px;
-  margin: 0 auto 1rem auto;
+  margin: 0 auto;
   display: flex;
-  gap: 0.75rem;
+  gap: var(--sp-6) 0;
   align-items: center;
   justify-content: center;
   flex-direction: column;
@@ -24,46 +23,48 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-width: calc(1200px - 1.5rem);
-  gap: 1.5rem;
+  gap: 0.75rem;
+
+  @media (max-width: 40rem) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .select {
+      width: 100%;
+    }
+  }
 }
+
 .select {
   display: flex;
-  width: 268px;
-  padding: 0.5rem;
-  line-height: 2rem;
-  border-radius: 0.5rem;
-  border: 1px solid var(--primary);
+  width: 18.75rem;
+  padding: 0.8125rem 1rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--gray);
   height: 3rem;
-  box-sizing: border-box;
+  cursor: pointer;
 }
 
 .searchBar {
   display: flex;
   position: relative;
+  gap: var(--sp-3);
   width: 100%;
-  height: 3rem;
-  box-sizing: border-box;
-  padding: 0.5rem;
-  line-height: 2rem;
 }
 
 .searchInput {
-  flex: 1;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
-  border: 1px solid var(--gray2);
+  & > input {
+    padding-right: 3rem;
+  }
 }
 
 .searchIcon {
   position: absolute;
-  right: 1.75rem;
-  top: 2.25rem;
+  right: 1rem;
+  top: 50%;
+  translate: 0 -50%;
 }
 
 .radioGroup {
-  max-width: 1200px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
 }

@@ -12,7 +12,7 @@ export const Home = () => {
 
   useEffect(() => {
     getSession()
-  }, [getSession])
+  }, [])
 
   useEffect(() => {
     if (authData?.id) {
@@ -65,7 +65,7 @@ export const Home = () => {
   }
 
   return (
-    <>
+    <div>
       <SearchBar />
       <div className={styles['portfolio-grid']}>
         {portfolio?.map(p => (
@@ -76,6 +76,6 @@ export const Home = () => {
           />
         ))}
       </div>
-    </>
+    </div>
   )
 }
