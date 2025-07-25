@@ -5,6 +5,8 @@
   margin-bottom: 1.5rem;
   width: 100%;
   min-height: 200px;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .filters {
@@ -15,6 +17,8 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .container2 {
@@ -24,14 +28,12 @@
   align-items: center;
   width: 100%;
   gap: 0.75rem;
+  overflow-x: hidden;
+  box-sizing: border-box;
 
-  @media (max-width: 40rem) {
-    flex-direction: column;
-    align-items: flex-start;
-
-    .select {
-      width: 100%;
-    }
+> div {
+    width: 100%;
+    box-sizing: border-box;
   }
 }
 
@@ -68,5 +70,15 @@
 .radioGroup {
   width: 100%;
   position: relative;
-  top: -2rem;
 }
+
+@media (max-width: 40rem) {
+    .container2 {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .container2 > div {
+      width: 100%;
+    }
+  }

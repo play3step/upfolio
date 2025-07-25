@@ -30,7 +30,7 @@ export const SearchBar = () => {
     <div className={S.container}>
       <div className={S.filters}>
         <div className={S.container2}>
-          <div style={{ padding: '2rem 2rem 2rem 0' }}>
+          <div>
             <CareerSelect
               value={career}
               onChange={setCareer}
