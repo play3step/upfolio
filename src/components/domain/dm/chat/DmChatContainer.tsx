@@ -2,9 +2,15 @@ import S from './DmChatContainer.module.css'
 import dmSendIcon from '@/assets/icon/dm.svg'
 import DmChatListItem from './DmChatListItem'
 
-export default function DmChatContainer() {
+interface Props {
+  isOpen: boolean
+}
+
+export default function DmChatContainer({ isOpen }: Props) {
   return (
-    <div className={S['dm-chat-container']}>
+    <div
+      className={S['dm-chat-container']}
+      style={{ display: isOpen ? 'flex' : 'none' }}>
       <div className={S['dm-chat-container-left']}>
         <DmChatListItem />
         <DmChatListItem />
