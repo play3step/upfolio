@@ -5,11 +5,8 @@ interface Props {
   hideLabel?: boolean
   className?: string
   error?: string
-  items: string[]
-  onChange: (selectedOptions: string[]) => void
 }
 
-/* 기존 하드 코딩 데이터 삭제
 const TECHSTACK_LIST = [
   'React',
   'Html5',
@@ -17,15 +14,9 @@ const TECHSTACK_LIST = [
   'JavaScript',
   'TypeScript',
   'figma'
-] */
+]
 
-function CheckboxSelect({
-  hideLabel,
-  className,
-  error,
-  items,
-  onChange
-}: Props) {
+function CheckboxSelect({ hideLabel, className, error }: Props) {
   const [techStack, setTechStack] = useState<string[]>([])
 
   const [isExpanded, setIsExpanded] = useState(false)
@@ -36,7 +27,6 @@ function CheckboxSelect({
     } else {
       setTechStack([...techStack, stack])
     }
-    onChange(techStack)
   }
 
   return (
@@ -44,9 +34,6 @@ function CheckboxSelect({
       className={`${S['CS-wrap']} ${error ? S['CS-wrap--err'] : ''} ${className}`}>
       <legend className={hideLabel ? 'a11y-hidden' : ''}>기술스택</legend>
       <div className={S['CS__selectedList']}>
-        {techStack.length === 0 && (
-          <span className={S['CS__placeholder']}>1개 이상 선택해주세요.</span>
-        )}
         {techStack.map(stack => (
           <div
             key={stack}
@@ -79,7 +66,7 @@ function CheckboxSelect({
 
       <ul
         className={`${S['CS__checkList']} ${isExpanded ? S['expanded'] : ''}`}>
-        {items.map(stack => (
+        {TECHSTACK_LIST.map(stack => (
           <li
             key={stack}
             className={`${techStack.includes(stack) ? `${S['checked']}` : ''}`}>
