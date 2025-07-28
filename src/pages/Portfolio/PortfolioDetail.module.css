@@ -1,0 +1,127 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 2.5rem;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-left: 12.5rem;
+  margin-top: 2.5rem;
+  gap: 2rem;
+  width: 8.75rem;
+}
+
+.activeButton {
+  background-color: var(--primary);
+  color: var(--white);
+  width: 10rem;
+}
+
+.inactiveButton {
+  background-color: var(--white);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  width: 10rem;
+  visibility: visible;
+  display: block;
+}
+
+.detailWrapper {
+  max-width: 800px;
+  padding: 2rem;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 2.5rem;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 1.5rem;
+}
+
+.profile img {
+  width: 100px;
+  height: 100px;
+  border-radius: 9999px;
+  object-fit: cover;
+}
+
+.profileInfo p {
+  margin: 0.3rem 0;
+  color: #333;
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+section p,
+section a {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--gray);
+}
+
+section h4 {
+  font-size: 1.25rem;
+}
+
+.emailPhone,
+.interestStack,
+.description,
+.urlFile {
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.interest {
+  background-color: var(--primary);
+  border-radius: 6rem;
+  padding: 0.25rem 2rem;
+  max-width: 9.375rem;
+  text-align: center;
+  margin-bottom: 1rem;
+
+  p {
+    color: var(--white);
+    font-weight: 500;
+    line-height: 1.25rem;
+  }
+}
+
+.techStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.techStack span {
+  background: #f2f4f6;
+  color: #222;
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.875rem;
+}
+
+.urlFile {
+  a {
+    margin-bottom: 1rem;
+  }
+}
