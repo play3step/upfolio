@@ -4,6 +4,8 @@ import search from '../assets/icon/search.svg'
 import RadioGroup from './common/RadioGroup'
 import { useState } from 'react'
 import CareerSelect from './common/CareerSelect'
+import { useDebounce } from '../hooks/useDebounce'
+import { type SearchParams } from '../pages/Home'
 
 const INTEREST_SELECT = [
   { label: '전체', value: 'all' },
@@ -18,10 +20,15 @@ const INTEREST_SELECT = [
   { label: '일러스트', value: 'Illustration' }
 ]
 
-export const SearchBar = ({ onSearch }) => {
+interface SearchBarProps {
+    onSearch: (params: SearchParams) => void
+  }
+  
+export const SearchBar = ({ onSearch }:SearchBarProps) => {
   const [interest, setInterest] = useState<string>('all')
   const [career, setCareer] = useState('')
   const [keyword, setKeyword] = useState('')
+  const debouncedKeyword = useDebounce(keyword, 300)
 
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInterest(e.target.value)
@@ -31,7 +38,7 @@ export const SearchBar = ({ onSearch }) => {
     const params = {
       interest,
       career,
-      keyword: keyword.trim()
+      keyword: debouncedKeyword.trim()
     }
     onSearch(params)
   }
