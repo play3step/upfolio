@@ -5,15 +5,18 @@ import { useThreads } from '@/hooks/dm/useThreads'
 import { useMessage } from '@/hooks/dm/useMessage'
 import { useContext } from 'react'
 import { AuthContext } from '@/context/AuthContext'
+import { usePollingMessages } from '@/hooks/dm/usePollingMessages'
 
 export default function DmDropdownWrapper() {
   const { authData } = useContext(AuthContext)
 
-  const { threads, handleFetchThreads, handleAddThreads } = useThreads()
-  const { messages, handleFetchMessages, handleAddMessages } = useMessage()
+  const { handleFetchThreads, handleAddThreads } = useThreads()
+  const { handleFetchMessages, handleAddMessages } = useMessage()
 
   const [isOpen, setIsOpen] = useState(false)
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null)
+
+  const { threads, messages } = usePollingMessages(selectedThreadId ?? '')
 
   useEffect(() => {
     handleFetchThreads()

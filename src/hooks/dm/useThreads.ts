@@ -1,12 +1,10 @@
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import { addThreads, fetchThreads } from '@/apis/dm/threads.controller'
 import { AuthContext } from '@/context/AuthContext'
-import type { Thread } from '@/types/thread'
+
 import supabase from '@/lib/supabaseClient'
 
 export const useThreads = () => {
-  const [threads, setThreads] = useState<Thread[]>([])
-
   const { authData } = useContext(AuthContext)
 
   const handleFetchThreads = async () => {
@@ -39,7 +37,7 @@ export const useThreads = () => {
       })
     )
 
-    setThreads(threadList)
+    return threadList
   }
 
   const handleAddThreads = async (otherUserId: string) => {
@@ -51,5 +49,5 @@ export const useThreads = () => {
     console.log(threads)
   }
 
-  return { threads, handleFetchThreads, handleAddThreads }
+  return { handleFetchThreads, handleAddThreads }
 }

@@ -1,31 +1,10 @@
 import { addMessage, fetchMessages } from '@/apis/dm/message.controller'
-import supabase from '@/lib/supabaseClient'
-import type { Message } from '@/types/thread'
-import { useState } from 'react'
 
 export const useMessage = () => {
-  const [messages, setMessages] = useState<Message[]>([])
-
   const handleFetchMessages = async (userId: string) => {
     const messages = await fetchMessages(userId)
 
-    const messageList = Promise.all(
-      messages.map(async message => {
-        const { data: user } = await supabase
-          .from('User')
-          .select('*')
-          .eq('id', message.senderid)
-          .single()
-
-        return {
-          ...message,
-          name: user?.nickname,
-          profile: user?.profileimage
-        }
-      })
-    )
-
-    setMessages(await messageList)
+    return messages
   }
 
   const handleAddMessages = async (
@@ -39,5 +18,5 @@ export const useMessage = () => {
     return messages
   }
 
-  return { messages, handleFetchMessages, handleAddMessages }
+  return { handleFetchMessages, handleAddMessages }
 }

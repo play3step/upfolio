@@ -58,8 +58,14 @@ export default function DmChatContainer({
               key={message.id}
               message={message.message}
               isMine={message.senderid === authData?.id}
-              name={message.name}
-              profile={message.profile}
+              name={
+                threads?.find(thread => thread.id === message.threadid)?.name ??
+                ''
+              }
+              profile={
+                threads?.find(thread => thread.id === message.threadid)
+                  ?.profile ?? ''
+              }
             />
           ))}
         </div>
