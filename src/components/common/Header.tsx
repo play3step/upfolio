@@ -4,17 +4,33 @@ import logo from '@/assets/logo.svg'
 import person from '@/assets/icon/person.svg'
 import alarm from '@/assets/icon/alarm.svg'
 import search from '@/assets/icon/search.svg'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import { useAuth } from '@/hooks/auth/useAuth'
+import { useSearch } from '@/context/SearchContext'
 
-export default function Header() {
+export const Header = ({
+  onSearch
+}: {
+  onSearch: (keyword: string) => void
+}) => {
   const [showHeader, setShowHeader] = useState(true)
   const lastScrollY = useRef(0)
   const { isAuthenticated, logout } = useAuth()
+  const [searchKeyword, setSearchKeyword] = useState('')
+  const { setKeyword } = useSearch()
+  const navigate = useNavigate()
 
   console.log('Header 렌더링됨, isAuthenticated:', isAuthenticated)
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchKeyword(e.target.value)
+  }
+
+  const handleSearchSubmit = () => {
+    setKeyword(searchKeyword)
+    navigate('/')
+  }
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.pageYOffset
@@ -73,16 +89,28 @@ export default function Header() {
               className="a11y-hidden">
               포트폴리오 검색
             </label>
-            <img
-              src={search}
-              alt="search"
-              aria-hidden="true"
-            />
+            <button
+              type="button"
+              onClick={handleSearchSubmit}>
+              <img
+                src={search}
+                alt="search"
+                aria-hidden="true"
+              />
+            </button>
+
             <input
               id="headerSearch"
               name="headerSearch"
               type="text"
               placeholder="포트폴리오 검색"
+              value={searchKeyword}
+              onChange={handleSearchChange}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  handleSearchSubmit()
+                }
+              }}
             />
           </div>
           <Link

@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
-import { usePortfolio, type PortfolioItem } from '@/hooks/usePortfolio'
+import { usePortfolio } from '@/hooks/usePortfolio'
 import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
+import { useSearch } from '@/context/SearchContext'
 import { PortfolioCard } from '@/components/PortfolioCard'
 import styles from '@/components/PortfolioCard.module.css'
 import supabase from '@/lib/supabaseClient'
 import { SearchBar } from '@/components/SearchBar'
 
-interface SearchParams {
+export interface SearchParams {
   interest: string
   career?: string
   keyword?: string
@@ -31,6 +32,7 @@ export const Home = () => {
 
   const { portfolio, setPortfolio } = usePortfolio(userId)
   const [filteredPortfolio, setFilteredPortfolio] = useState(portfolio)
+  const { keyword } = useSearch()
 
   useEffect(() => {
     getSession()
@@ -41,15 +43,22 @@ export const Home = () => {
   }, [authData])
 
   useEffect(() => {
-    // 처음 로딩되었을 때 전체 보여주기
     setFilteredPortfolio(portfolio)
   }, [portfolio])
+
+  useEffect(() => {
+    if (keyword) {
+      handleSearch({
+        interest: 'all',
+        keyword,
+      })
+    }
+  }, [keyword])
 
   const handleSearch = ({ interest, career, keyword }: SearchParams) => {
     const filtered = (portfolio || []).filter(item => {
       const matchInterest =
         interest === 'all' || item.interest === INTEREST_MAP[interest as keyof typeof INTEREST_MAP]
-      console.log(item.interest);
       const matchCareer =
         !career || item.career === career
       const matchKeyword =
@@ -60,6 +69,7 @@ export const Home = () => {
       return matchInterest && matchCareer && matchKeyword
     })
 
+    console.log('setFilteredPortfolio 호출됨: ', filtered.length)
     setFilteredPortfolio(filtered)
   }
 
@@ -88,7 +98,6 @@ export const Home = () => {
       if (error) console.error('Error removing bookmark:', error.message)
     }
 
-    // UI 상태 동기화
     setPortfolio(prev =>
       prev.map(p => (p.id === id ? { ...p, isBookmarked: next } : p))
     )
@@ -98,7 +107,7 @@ export const Home = () => {
     <div>
       <SearchBar onSearch={handleSearch} />
       <div className={styles['portfolio-grid']}>
-        {filteredPortfolio?.map(p => (
+        {filteredPortfolio.map(p => (
           <PortfolioCard
             key={p.id}
             {...p}
