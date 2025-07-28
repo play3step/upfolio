@@ -2,18 +2,26 @@ import DmChatContainer from './chat/DmChatContainer'
 import DmToggleButton from './button/DmToggleButton'
 import { useEffect, useState } from 'react'
 import { useThreads } from '@/hooks/dm/useThreads'
+import { useMessage } from '@/hooks/dm/useMessage'
 
 export default function DmDropdownWrapper() {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null)
 
   const { threads, handleFetchThreads, handleAddThreads } = useThreads()
+  const { messages, handleFetchMessages } = useMessage()
 
   useEffect(() => {
     handleFetchThreads()
   }, [isOpen])
 
-  console.log(threads)
+  useEffect(() => {
+    if (selectedThreadId) {
+      handleFetchMessages(selectedThreadId)
+    }
+  }, [selectedThreadId])
+
+  console.log(messages)
 
   const handleToggle = () => {
     setIsOpen(prev => !prev)
