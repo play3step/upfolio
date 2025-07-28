@@ -5,6 +5,7 @@ interface Props {
   isSelected: boolean
 
   name: string
+  profile: string
   lastMessage: string
   handleSelectChatRoom: (threadId: string) => void
 }
@@ -13,6 +14,7 @@ export default function DmChatListItem({
   id,
   isSelected,
   name,
+  profile,
   lastMessage,
   handleSelectChatRoom
 }: Props) {
@@ -22,7 +24,11 @@ export default function DmChatListItem({
       style={{ backgroundColor: isSelected ? 'var(--primary)' : 'white' }}
       onClick={() => handleSelectChatRoom(id)}>
       <div className={S['dm-chat-list-item-left']}>
-        <div className={S['dm-chat-list-item-left-profile']}></div>
+        <img
+          className={S['dm-chat-list-item-left-profile']}
+          src={profile}
+          alt={name}
+        />
       </div>
       <div
         className={S['dm-chat-list-item-right']}
