@@ -2,51 +2,35 @@ import S from './DmChatContainer.module.css'
 import dmSendIcon from '@/assets/icon/dm.svg'
 import DmChatListItem from './DmChatListItem'
 import DmChatMessage from './DmChatMessage'
-import { useThreads } from '@/hooks/dm/useThreads'
+import type { Thread } from '@/types/thread'
 
 interface Props {
   isOpen: boolean
   selectedThreadId: string | null
   handleSelectChatRoom: (threadId: string) => void
+  handleAddThreads: (otherUserId: string) => void
+  threads: Thread[] | null
 }
-
-const threadList = [
-  {
-    id: '1',
-    name: 'John Doe',
-    lastMessage: 'Hello, how are you?'
-  },
-  {
-    id: '2',
-    name: 'Jane Doe',
-    lastMessage: 'I am fine, thank you.'
-  },
-  {
-    id: '3',
-    name: 'John Doe',
-    lastMessage: 'Hello, how are you?'
-  }
-]
 
 export default function DmChatContainer({
   isOpen,
   selectedThreadId,
-  handleSelectChatRoom
+  handleSelectChatRoom,
+  handleAddThreads,
+  threads
 }: Props) {
-  const { threads, handleAddThreads } = useThreads()
-  console.log(threads)
   return (
     <div
       className={S['dm-chat-container']}
       style={{ display: isOpen ? 'flex' : 'none' }}>
       <div className={S['dm-chat-container-left']}>
-        {threadList.map(thread => (
+        {threads?.map(thread => (
           <DmChatListItem
             key={thread.id}
             id={thread.id}
             isSelected={selectedThreadId === thread.id}
             name={thread.name}
-            lastMessage={thread.lastMessage}
+            lastMessage={thread.lastMessage ?? '내용이 없습니다.'}
             handleSelectChatRoom={handleSelectChatRoom}
           />
         ))}
