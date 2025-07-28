@@ -18,12 +18,22 @@ const INTEREST_SELECT = [
   { label: '일러스트', value: 'Illustration' }
 ]
 
-export const SearchBar = () => {
+export const SearchBar = ({ onSearch }) => {
   const [interest, setInterest] = useState<string>('all')
   const [career, setCareer] = useState('')
+  const [keyword, setKeyword] = useState('')
 
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInterest(e.target.value)
+  }
+
+  const handleSearch = () => {
+    const params = {
+      interest,
+      career,
+      keyword: keyword.trim()
+    }
+    onSearch(params)
   }
 
   return (
@@ -43,10 +53,13 @@ export const SearchBar = () => {
               placeholder="포트폴리오 검색"
               className={S.searchInput}
               hideLabel
+              value={keyword}
+              onChange={e => setKeyword(e.target.value)}
             />
             <button
               type="button"
-              className={S.searchIcon}>
+              className={S.searchIcon}
+              onClick={handleSearch}>
               <img
                 src={search}
                 alt="검색 아이콘"
