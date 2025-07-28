@@ -24,3 +24,12 @@
 .main > * {
   min-height: calc(100vh - 10.5rem);
 }
+
+.layout {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-grow: 1;
+}

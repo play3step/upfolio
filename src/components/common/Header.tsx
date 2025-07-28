@@ -85,14 +85,15 @@ export default function Header() {
               placeholder="포트폴리오 검색"
             />
           </div>
-          <button
+          <Link
+            to="/mypage"
             type="button"
             className={S['header__iconbtn']}>
             <img
               src={person}
               alt="person"
             />
-          </button>
+          </Link>
           <button
             type="button"
             className={S['header__iconbtn']}>
