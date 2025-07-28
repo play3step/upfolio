@@ -4,6 +4,7 @@ import Textarea from '@/components/common/Textarea'
 import CheckboxSelect from '@/components/common/CheckboxSelect'
 import RadioGroup from '@/components/common/RadioGroup'
 import { useState } from 'react'
+import ImageUploader from '@/components/common/ImageUploader'
 
 function FormAndText() {
   /* --- component 스타일 --- */
@@ -141,6 +142,17 @@ function FormAndText() {
           checked={interest}
           onChange={setInterest}
         />
+      </div>
+
+      <h2 style={h2Style}>6. ImageUploader</h2>
+
+      <div style={divStyle}>
+        <ul style={ulStyle}>
+          <li>props 필수 속성: id</li>
+          <li>이미지 등록 안할 시 기본이미지 있음</li>
+        </ul>
+
+        <ImageUploader id="exImageUploader" />
       </div>
     </div>
   )
