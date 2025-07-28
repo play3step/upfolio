@@ -10,4 +10,6 @@ export interface Message {
   senderid: string
   message: string
   createdat: string
+  name: string
+  profile: string
 }

@@ -57,6 +57,8 @@ export default function DmChatContainer({
               key={message.id}
               message={message.message}
               isMine={message.senderid === authData?.id}
+              name={message.name}
+              profile={message.profile}
             />
           ))}
         </div>
