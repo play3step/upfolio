@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { usePortfolio } from '@/hooks/usePortfolio'
 import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
-import { useSearch } from '@/context/SearchContext'
+
 import { PortfolioCard } from '@/components/PortfolioCard'
 import styles from '@/components/PortfolioCard.module.css'
 import supabase from '@/lib/supabaseClient'
 import { SearchBar } from '@/components/SearchBar'
+import { SearchContext } from '@/context/search/SearchContext'
 
 export interface SearchParams {
   interest: string
@@ -32,7 +33,7 @@ export const Home = () => {
 
   const { portfolio, setPortfolio } = usePortfolio(userId)
   const [filteredPortfolio, setFilteredPortfolio] = useState(portfolio)
-  const { keyword } = useSearch()
+  const { keyword } = useContext(SearchContext)
 
   useEffect(() => {
     getSession()
@@ -50,7 +51,7 @@ export const Home = () => {
     if (keyword) {
       handleSearch({
         interest: 'all',
-        keyword,
+        keyword
       })
     }
   }, [keyword])
@@ -58,9 +59,9 @@ export const Home = () => {
   const handleSearch = ({ interest, career, keyword }: SearchParams) => {
     const filtered = (portfolio || []).filter(item => {
       const matchInterest =
-        interest === 'all' || item.interest === INTEREST_MAP[interest as keyof typeof INTEREST_MAP]
-      const matchCareer =
-        !career || item.career === career
+        interest === 'all' ||
+        item.interest === INTEREST_MAP[interest as keyof typeof INTEREST_MAP]
+      const matchCareer = !career || item.career === career
       const matchKeyword =
         !keyword ||
         item.title?.toLowerCase().includes(keyword.toLowerCase()) ||
