@@ -2,79 +2,96 @@ import { useEffect, useRef, useState } from 'react'
 import defaultProfile from '../../assets/images/default-profile.png'
 import S from './ImageUploader.module.css'
 import supabase from '@/lib/supabaseClient'
+import sanitizeFileName from '@/utils/sanitizeFileName'
 
 interface Props {
   id: string
-  value?: string
+  value: string
   onChange?: (imageSrc: string) => void
+  status?: 'profile' | 'portfolio'
 }
 
-function ImageUploader({ id, value, onChange }: Props) {
+function ImageUploader({ id, value, onChange, status = 'profile' }: Props) {
   const [imageSrc, setImageSrc] = useState('')
 
   const fileInput = useRef<HTMLInputElement>(null)
 
   const handleAddImage = () => {
-    console.log('버튼 클릭')
     fileInput.current?.click()
   }
 
-  const handleDeleteImage = () => {
+  const handleDeleteImage = async () => {
+    if (!imageSrc) return
     const check = confirm('등록한 이미지를 삭제하시겠습니까?')
     if (!check) return
+    try {
+      const url = new URL(imageSrc)
+      const fileName = url.pathname.split('/').pop() || ''
+
+      if (fileName) {
+        const { error } = await supabase.storage
+          .from('project-images')
+          .remove([fileName])
+
+        if (error) {
+          alert('이미지 삭제 실패')
+          console.error(error)
+
+          return
+        }
+      }
+    } catch (error) {
+      console.error(error)
+    }
 
     onChange?.('')
+    setImageSrc('')
     fileInput.current!.value = ''
   }
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-
     if (!file) return
 
-    const fileName = `${Date.now()}_${file.name}`
+    const localUrl = URL.createObjectURL(file)
+    setImageSrc(localUrl)
+    const fileName = `${status}_${Date.now()}_${sanitizeFileName(file.name)}`
 
-    const { data, error } = await supabase.storage
-      .from('profileImage')
-      .upload(fileName, file)
+    const { error } = await supabase.storage
+      .from('project-images')
+      .upload(fileName, file, {
+        upsert: true,
+        metadata: { status }
+      })
 
     if (error) {
       alert('이미지 업로드 실패')
+      console.error(error)
       return
     }
 
+    e.target.value = ''
+
     const { data: urlData } = supabase.storage
-      .from('profileImage')
+      .from('project-images')
       .getPublicUrl(fileName)
 
-    onChange?.(urlData.publicUrl || '')
-    setImageSrc(urlData.publicUrl || '')
+    const publicUrl = urlData?.publicUrl ?? ''
+
+    onChange?.(publicUrl)
+    setImageSrc(publicUrl)
   }
 
   useEffect(() => {
-    setImageSrc(value)
+    if (value) setImageSrc(value)
   }, [value])
-
-  useEffect(() => {
-    //이 안 코드: 컴포넌트가 mount 되거나 의존성 바뀔 때 실행
-
-    return () => {
-      // useEffect 안에서 return은 clean-up 함수 역할
-      // 이 안 코드: 컴포넌트가 unmount or 의존성 바꾸기 직전에 실행
-
-      if (value) {
-        // 임시 url 만든걸 메모리 해제해야함 안그러면 누수생김
-        URL.revokeObjectURL(imageSrc)
-      }
-    }
-  }, [value, imageSrc])
 
   return (
     <div className={S['img-uploader']}>
       <div className={S['img__profile']}>
         <img
           src={imageSrc ? imageSrc : defaultProfile}
-          alt="00님의 포트폴리오 프로필"
+          alt=""
         />
       </div>
       <input
