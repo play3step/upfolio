@@ -7,7 +7,8 @@ const fetchThreads = async (userId: string) => {
   const { data, error } = await supabase
     .from('DMThread')
     .select('*')
-    .eq('useraid', userId)
+    .or(`useraid.eq.${userId},userbid.eq.${userId}`)
+
   if (error) {
     throw error
   }
