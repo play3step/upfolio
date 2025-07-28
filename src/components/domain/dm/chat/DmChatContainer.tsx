@@ -39,6 +39,7 @@ export default function DmChatContainer({
             id={thread.id}
             isSelected={selectedThreadId === thread.id}
             name={thread.name}
+            profile={thread.profile}
             lastMessage={thread.lastMessage ?? '내용이 없습니다.'}
             handleSelectChatRoom={handleSelectChatRoom}
           />

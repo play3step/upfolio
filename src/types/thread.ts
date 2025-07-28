@@ -2,6 +2,7 @@ export interface Thread {
   id: string
   name: string
   lastMessage: string | null
+  profile: string
 }
 
 export interface Message {

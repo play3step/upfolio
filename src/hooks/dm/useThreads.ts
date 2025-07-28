@@ -30,10 +30,10 @@ export const useThreads = () => {
           .eq('threadid', d.id)
           .order('createdat', { ascending: false })
           .limit(1)
-
         return {
           id: d.id,
           name: userB?.nickname,
+          profile: userB?.profileimage,
           lastMessage: lastMessage?.[0]?.message
         }
       })

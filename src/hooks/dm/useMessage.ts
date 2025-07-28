@@ -11,7 +11,7 @@ export const useMessage = () => {
 
     const messageList = Promise.all(
       messages.map(async message => {
-        const user = await supabase
+        const { data: user } = await supabase
           .from('User')
           .select('*')
           .eq('id', message.senderid)
@@ -19,8 +19,8 @@ export const useMessage = () => {
 
         return {
           ...message,
-          name: user?.data?.name,
-          profile: user?.data?.profile
+          name: user?.nickname,
+          profile: user?.profileimage
         }
       })
     )
