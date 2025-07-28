@@ -40,6 +40,8 @@ function FormAndText() {
     { label: '일러스트', value: 'Illustration' }
   ]
 
+  const [selectedStack, setSelectedStack] = useState<string[]>([])
+
   return (
     <div style={{ padding: '2rem' }}>
       <h1 style={{ fontSize: 'var(--fs-xxl)', marginBottom: 'var(--sp-4)' }}>
@@ -123,7 +125,10 @@ function FormAndText() {
           <li>레이블 숨기고 싶을때: hideLabel</li>
           <li>에러: error=""</li>
         </ul>
-        <CheckboxSelect />
+        <CheckboxSelect
+          value={selectedStack}
+          onChange={setSelectedStack}
+        />
       </div>
 
       <h2 style={h2Style}>5. Radio</h2>

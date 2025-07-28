@@ -5,9 +5,10 @@ import Textarea from './Textarea'
 
 interface Props {
   id: string
+  onChange?: (fileNames: string[]) => void
 }
 
-function FileUploader({ id }: Props) {
+function FileUploader({ id, onChange }: Props) {
   const [fileNames, setFileNames] = useState<string[]>([])
 
   const fileInput = useRef<HTMLInputElement>(null)
@@ -22,7 +23,7 @@ function FileUploader({ id }: Props) {
     if (!files) return
 
     const names = Array.from(files).map(file => file.name)
-
+    onChange?.(names)
     setFileNames(names)
   }
 

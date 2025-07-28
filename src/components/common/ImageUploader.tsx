@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 import defaultProfile from '../../assets/images/default-profile.png'
 import S from './ImageUploader.module.css'
+import supabase from '@/lib/supabaseClient'
 
 interface Props {
   id: string
+  value?: string
+  onChange?: (imageSrc: string) => void
 }
 
-function ImageUploader({ id }: Props) {
+function ImageUploader({ id, value, onChange }: Props) {
   const [imageSrc, setImageSrc] = useState('')
 
   const fileInput = useRef<HTMLInputElement>(null)
@@ -20,19 +23,37 @@ function ImageUploader({ id }: Props) {
     const check = confirm('등록한 이미지를 삭제하시겠습니까?')
     if (!check) return
 
-    setImageSrc('')
+    onChange?.('')
     fileInput.current!.value = ''
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
 
     if (!file) return
 
-    const imageURL = URL.createObjectURL(file)
+    const fileName = `${Date.now()}_${file.name}`
 
-    setImageSrc(imageURL)
+    const { data, error } = await supabase.storage
+      .from('profileImage')
+      .upload(fileName, file)
+
+    if (error) {
+      alert('이미지 업로드 실패')
+      return
+    }
+
+    const { data: urlData } = supabase.storage
+      .from('profileImage')
+      .getPublicUrl(fileName)
+
+    onChange?.(urlData.publicUrl || '')
+    setImageSrc(urlData.publicUrl || '')
   }
+
+  useEffect(() => {
+    setImageSrc(value)
+  }, [value])
 
   useEffect(() => {
     //이 안 코드: 컴포넌트가 mount 되거나 의존성 바뀔 때 실행
@@ -41,10 +62,12 @@ function ImageUploader({ id }: Props) {
       // useEffect 안에서 return은 clean-up 함수 역할
       // 이 안 코드: 컴포넌트가 unmount or 의존성 바꾸기 직전에 실행
 
-      // 임시 url 만든걸 메모리 해제해야함 안그러면 누수생김
-      URL.revokeObjectURL(imageSrc)
+      if (value) {
+        // 임시 url 만든걸 메모리 해제해야함 안그러면 누수생김
+        URL.revokeObjectURL(imageSrc)
+      }
     }
-  }, [imageSrc])
+  }, [value, imageSrc])
 
   return (
     <div className={S['img-uploader']}>
@@ -68,7 +91,7 @@ function ImageUploader({ id }: Props) {
         className={S['img__addBtn']}
         aria-label="포트폴리오 프로필 이미지 업로드"
       />
-      {imageSrc ? (
+      {value ? (
         <button
           type="button"
           onClick={handleDeleteImage}

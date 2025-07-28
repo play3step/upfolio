@@ -2,6 +2,8 @@ import { useState } from 'react'
 import S from './CheckboxSelect.module.css'
 
 interface Props {
+  value: string[]
+  onChange: (newTechStack: string[]) => void
   hideLabel?: boolean
   className?: string
   error?: string
@@ -16,16 +18,20 @@ const TECHSTACK_LIST = [
   'figma'
 ]
 
-function CheckboxSelect({ hideLabel, className, error }: Props) {
-  const [techStack, setTechStack] = useState<string[]>([])
-
+function CheckboxSelect({
+  value,
+  onChange,
+  hideLabel,
+  className,
+  error
+}: Props) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   const toggleTech = (stack: string) => {
-    if (techStack.includes(stack)) {
-      setTechStack(techStack.filter(g => g !== stack))
+    if (value.includes(stack)) {
+      onChange(value.filter(g => g !== stack))
     } else {
-      setTechStack([...techStack, stack])
+      onChange([...value, stack])
     }
   }
 
@@ -34,10 +40,10 @@ function CheckboxSelect({ hideLabel, className, error }: Props) {
       className={`${S['CS-wrap']} ${error ? S['CS-wrap--err'] : ''} ${className}`}>
       <legend className={hideLabel ? 'a11y-hidden' : ''}>기술스택</legend>
       <div className={S['CS__selectedList']}>
-        {techStack.length === 0 && (
+        {value.length === 0 && (
           <span className={S['CS__placeholder']}>1개 이상 선택해주세요.</span>
         )}
-        {techStack.map(stack => (
+        {value.map(stack => (
           <div
             key={stack}
             className={S['CS__selecteditem']}>
@@ -72,12 +78,12 @@ function CheckboxSelect({ hideLabel, className, error }: Props) {
         {TECHSTACK_LIST.map(stack => (
           <li
             key={stack}
-            className={`${techStack.includes(stack) ? `${S['checked']}` : ''}`}>
+            className={`${value.includes(stack) ? `${S['checked']}` : ''}`}>
             <label>
               <input
                 type="checkbox"
                 name="stacks"
-                checked={techStack.includes(stack)}
+                checked={value.includes(stack)}
                 onChange={() => toggleTech(stack)}
                 className="a11y-hidden"
               />
