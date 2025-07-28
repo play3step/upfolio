@@ -3,13 +3,16 @@ import DmToggleButton from './button/DmToggleButton'
 import { useEffect, useState } from 'react'
 import { useThreads } from '@/hooks/dm/useThreads'
 import { useMessage } from '@/hooks/dm/useMessage'
+import { useContext } from 'react'
+import { AuthContext } from '@/context/AuthContext'
 
 export default function DmDropdownWrapper() {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null)
+  const { authData } = useContext(AuthContext)
 
   const { threads, handleFetchThreads, handleAddThreads } = useThreads()
-  const { messages, handleFetchMessages } = useMessage()
+  const { messages, handleFetchMessages, handleAddMessages } = useMessage()
 
   useEffect(() => {
     handleFetchThreads()
@@ -21,14 +24,19 @@ export default function DmDropdownWrapper() {
     }
   }, [selectedThreadId])
 
-  console.log(messages)
-
   const handleToggle = () => {
     setIsOpen(prev => !prev)
   }
 
   const handleSelectChatRoom = (threadId: string) => {
     setSelectedThreadId(threadId)
+  }
+
+  const sendMessage = async (message: string) => {
+    if (!selectedThreadId || !authData?.id) {
+      return
+    }
+    handleAddMessages(selectedThreadId, message, authData?.id, new Date())
   }
 
   return (
@@ -45,6 +53,8 @@ export default function DmDropdownWrapper() {
         handleSelectChatRoom={handleSelectChatRoom}
         handleAddThreads={handleAddThreads}
         threads={threads}
+        messages={messages}
+        sendMessage={sendMessage}
       />
       <DmToggleButton
         isOpen={isOpen}
