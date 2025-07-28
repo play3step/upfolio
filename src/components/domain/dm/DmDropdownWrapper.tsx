@@ -10,7 +10,7 @@ import { usePollingMessages } from '@/hooks/dm/usePollingMessages'
 export default function DmDropdownWrapper() {
   const { authData } = useContext(AuthContext)
 
-  const { handleFetchThreads, handleAddThreads } = useThreads()
+  const { handleFetchThreads } = useThreads()
   const { handleFetchMessages, handleAddMessages } = useMessage()
 
   const [isOpen, setIsOpen] = useState(false)
@@ -64,7 +64,6 @@ export default function DmDropdownWrapper() {
         isOpen={isOpen}
         selectedThreadId={selectedThreadId}
         handleSelectChatRoom={handleSelectChatRoom}
-        handleAddThreads={handleAddThreads}
         threads={threads}
         messages={messages}
         sendMessage={sendMessage}

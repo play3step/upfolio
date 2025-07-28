@@ -10,7 +10,6 @@ interface Props {
   isOpen: boolean
   selectedThreadId: string | null
   handleSelectChatRoom: (threadId: string) => void
-  handleAddThreads: (otherUserId: string) => void
   threads: Thread[] | null
   messages: Message[] | null
   sendMessage: (message: string) => void
@@ -20,7 +19,7 @@ export default function DmChatContainer({
   isOpen,
   selectedThreadId,
   handleSelectChatRoom,
-  handleAddThreads,
+
   threads,
   messages,
   sendMessage
@@ -44,12 +43,6 @@ export default function DmChatContainer({
             handleSelectChatRoom={handleSelectChatRoom}
           />
         ))}
-        <button
-          onClick={() =>
-            handleAddThreads('b4c5d98b-1b22-4cad-a1b1-fa60e170fd99')
-          }>
-          채팅방생성
-        </button>
       </div>
       <div className={S['dm-chat-container-right']}>
         <div className={S['dm-chat-conversation']}>
