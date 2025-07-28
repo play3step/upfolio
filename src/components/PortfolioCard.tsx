@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react'
 
 export interface Props {
   id: string
-  userid: number
+  userid: string
   title: string
   content: string
   likecount: number

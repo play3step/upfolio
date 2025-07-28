@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { usePortfolio, type PortfolioItem } from '@/hooks/usePortfolio'
+import { usePortfolio } from '@/hooks/usePortfolio'
 import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
 import { PortfolioCard } from '@/components/PortfolioCard'
 import styles from '@/components/PortfolioCard.module.css'
 import supabase from '@/lib/supabaseClient'
 import { SearchBar } from '@/components/SearchBar'
 
-interface SearchParams {
+export interface SearchParams {
   interest: string
   career?: string
   keyword?: string
@@ -49,7 +49,6 @@ export const Home = () => {
     const filtered = (portfolio || []).filter(item => {
       const matchInterest =
         interest === 'all' || item.interest === INTEREST_MAP[interest as keyof typeof INTEREST_MAP]
-      console.log(item.interest);
       const matchCareer =
         !career || item.career === career
       const matchKeyword =
@@ -60,6 +59,7 @@ export const Home = () => {
       return matchInterest && matchCareer && matchKeyword
     })
 
+    console.log('setFilteredPortfolio 호출됨: ', filtered.length)
     setFilteredPortfolio(filtered)
   }
 
