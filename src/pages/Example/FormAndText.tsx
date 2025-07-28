@@ -140,7 +140,7 @@ function FormAndText() {
           name="fieldOfSupport"
           options={INTEREST_SELECT}
           checked={interest}
-          onChange={setInterest}
+          onChange={e => setInterest(e.target.value)}
         />
       </div>
 

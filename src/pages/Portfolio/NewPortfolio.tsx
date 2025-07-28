@@ -2,13 +2,21 @@ import Button from '@/components/common/Button'
 import S from './NewPortfolio.module.css'
 import Input from '@/components/common/Input'
 import RadioGroup from '@/components/common/RadioGroup'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CheckboxSelect from '@/components/common/CheckboxSelect'
 import Textarea from '@/components/common/Textarea'
 import FileUploader from '@/components/common/FileUploader'
 import ImageUploader from '@/components/common/ImageUploader'
+import supabase from '@/lib/supabaseClient'
+
+interface Props {
+  id: string
+  email: string
+}
 
 export const NewPortfolio = () => {
+  const [userInfo, setUserInfo] = useState<Props | null>(null)
+
   /* --- 라디오 그룹 상태 및 옵션 --- */
   const [interest, setInterest] = useState('')
   const INTEREST_SELECT = [
@@ -22,6 +30,27 @@ export const NewPortfolio = () => {
     { label: '모션 디자인', value: 'Motion' },
     { label: '일러스트', value: 'Illustration' }
   ]
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const {
+        data: { user },
+        error
+      } = await supabase.auth.getUser()
+
+      if (error) {
+        console.error('유저 정보 불러오기 실패:', error)
+
+        return
+      }
+
+      if (user && user.email) {
+        setUserInfo({ id: user.id, email: user.email })
+      }
+    }
+
+    fetchUserInfo()
+  }, [])
 
   return (
     <div className={S.container}>
@@ -51,7 +80,7 @@ export const NewPortfolio = () => {
             <Input
               id="exId01"
               label="이메일"
-              value="example@github.com"
+              value={userInfo?.email || ''}
               readOnly
             />
 
@@ -73,7 +102,7 @@ export const NewPortfolio = () => {
               name="fieldOfSupport"
               options={INTEREST_SELECT}
               checked={interest}
-              onChange={setInterest}
+              onChange={e => setInterest(e.target.value)}
             />
 
             <CheckboxSelect />
