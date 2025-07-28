@@ -17,7 +17,7 @@ interface UserInfo {
 interface PortfolioData {
   id: string
   userId: string
-  profileimage: string
+  profileImage: string
   name: string
   birthDate: string
   phone: string
@@ -28,13 +28,13 @@ interface PortfolioData {
   interest: string
   techStack: string[]
   linkUrl: string
-  imageUrls: string[]
+  imageUrls: { name: string; url: string }[]
 }
 
 const TempData: PortfolioData = {
   id: '',
   userId: '',
-  profileimage: '',
+  profileImage: '',
   name: '홍길동',
   birthDate: '2000.04.03',
   phone: '010-0000-0000',
@@ -127,6 +127,10 @@ export const NewPortfolio = () => {
     }
   }
 
+  useEffect(() => {
+    console.log('imageUrls 상태:', portfolioData.imageUrls)
+  }, [portfolioData.imageUrls])
+
   return (
     <div className={S.container}>
       <div className="tit-withBtn">
@@ -154,8 +158,8 @@ export const NewPortfolio = () => {
           <div className={S['sec__profile']}>
             <ImageUploader
               id="exImage"
-              value={portfolioData.profileimage}
-              onChange={image => handleChangeForm('profileimage', image)}
+              value={portfolioData.profileImage}
+              onChange={image => handleChangeForm('profileImage', image)}
             />
             <dl className={S['sec__profile__info']}>
               <dt className="a11y-hidden">이름</dt>
@@ -236,7 +240,6 @@ export const NewPortfolio = () => {
             </div>
 
             <FileUploader
-              id="exIdFileUpload"
               onChange={files =>
                 handleChangeForm('imageUrls', files)
               }></FileUploader>

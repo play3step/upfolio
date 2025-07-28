@@ -1,10 +1,49 @@
 .uploader {
+}
+
+.uploader__cont {
   display: flex;
   align-items: flex-end;
+  position: relative;
   gap: var(--sp-2);
 
-  .uploader__textarea > textarea {
-    min-height: 3rem;
-    height: auto;
+  > p {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    translate: 0 -50%;
+    color: #757575;
   }
+}
+
+.uploader__txt {
+  margin-bottom: var(--sp-2);
+}
+
+.uploader__fileList {
+  padding: 0.8125rem 1rem;
+  min-height: 3rem;
+  border: 1px solid var(--gray);
+  border-radius: 0.25rem;
+  width: 100%;
+
+  > li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .uploader__fileName {
+      width: calc(100% - 1.5rem);
+    }
+    .uploader__deleteBtn {
+      width: 1.5rem;
+      height: 1.5rem;
+      background: url(../../assets/icon/close-circle-red.svg) no-repeat
+        center/contain;
+    }
+  }
+}
+
+.uploader__btn {
+  height: 3rem;
 }

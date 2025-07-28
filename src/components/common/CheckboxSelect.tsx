@@ -19,7 +19,7 @@ const TECHSTACK_LIST = [
 ]
 
 function CheckboxSelect({
-  value,
+  value = [],
   onChange,
   hideLabel,
   className,
