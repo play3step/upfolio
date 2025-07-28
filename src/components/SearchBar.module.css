@@ -5,7 +5,6 @@
     margin-bottom: 1.5rem;
     width: 100%;
     min-height: 200px;
-    overflow-x: hidden;
     box-sizing: border-box;
   }
   
@@ -17,7 +16,6 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    overflow-x: hidden;
     box-sizing: border-box;
   }
   
@@ -28,7 +26,6 @@
     align-items: center;
     width: 100%;
     gap: 0.75rem;
-    overflow-x: hidden;
     box-sizing: border-box;
   }
   
