@@ -7,15 +7,19 @@ import { useContext } from 'react'
 import { AuthContext } from '@/context/AuthContext'
 
 export default function DmDropdownWrapper() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null)
   const { authData } = useContext(AuthContext)
 
   const { threads, handleFetchThreads, handleAddThreads } = useThreads()
   const { messages, handleFetchMessages, handleAddMessages } = useMessage()
 
+  const [isOpen, setIsOpen] = useState(false)
+  const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null)
+
   useEffect(() => {
     handleFetchThreads()
+    if (threads.length > 0) {
+      setSelectedThreadId(threads[0].id)
+    }
   }, [isOpen])
 
   useEffect(() => {
@@ -33,9 +37,15 @@ export default function DmDropdownWrapper() {
   }
 
   const sendMessage = async (message: string) => {
+    if (message.trim() === '') {
+      alert('메시지를 입력해주세요.')
+      return
+    }
+
     if (!selectedThreadId || !authData?.id) {
       return
     }
+
     handleAddMessages(selectedThreadId, message, authData?.id, new Date())
   }
 
