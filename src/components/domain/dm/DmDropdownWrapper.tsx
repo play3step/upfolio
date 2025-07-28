@@ -16,13 +16,13 @@ export default function DmDropdownWrapper() {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null)
 
-  const { threads, messages } = usePollingMessages(selectedThreadId ?? '')
+  const { threads, messages } = usePollingMessages({
+    threadId: selectedThreadId ?? '',
+    isOpen
+  })
 
   useEffect(() => {
     handleFetchThreads()
-    if (threads.length > 0) {
-      setSelectedThreadId(threads[0].id)
-    }
   }, [isOpen])
 
   useEffect(() => {

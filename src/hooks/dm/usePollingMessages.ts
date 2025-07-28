@@ -3,10 +3,17 @@ import type { Message, Thread } from '@/types/thread'
 import { useEffect, useState } from 'react'
 import { useThreads } from './useThreads'
 
-export const usePollingMessages = (
-  threadId: string,
-  interval: number = 3000
-) => {
+interface Props {
+  threadId: string
+  interval?: number
+  isOpen: boolean
+}
+
+export const usePollingMessages = ({
+  threadId,
+  interval = 3000,
+  isOpen
+}: Props) => {
   const [messages, setMessages] = useState<Message[]>([])
   const [threads, setThreads] = useState<Thread[]>([])
 
@@ -33,6 +40,8 @@ export const usePollingMessages = (
   }
 
   useEffect(() => {
+    if (!isOpen) return
+
     loadMessages()
     loadThreads()
     const timer = setInterval(() => {
@@ -41,7 +50,10 @@ export const usePollingMessages = (
     }, interval)
 
     return () => clearInterval(timer)
-  }, [threadId])
+  }, [threadId, isOpen])
 
-  return { messages, threads }
+  return {
+    messages,
+    threads
+  }
 }
