@@ -32,7 +32,7 @@ export function MyPageSidebar() {
           </li>
           <li>
             <NavLink
-              to="/mypage/drafts"
+              to="/mypage/edit"
               className={({ isActive }) => (isActive ? S.active : '')}>
               임시저장한 글
             </NavLink>
