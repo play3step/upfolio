@@ -40,6 +40,7 @@ const routerList = [
   },
   {
     path: '/mypage',
+    element: <Layout />,
     children: [
       {
         path: '',
@@ -66,8 +67,18 @@ const routerList = [
 ]
 
 export const router = createBrowserRouter(
-  routerList.map(item => ({
-    path: item.path,
-    element: <Layout>{item.element}</Layout>
-  }))
+  routerList.map(item => {
+    if (item.children) {
+      return {
+        path: item.path,
+        element: <Layout />,
+        children: item.children
+      }
+    }
+
+    return {
+      path: item.path,
+      element: <Layout>{item.element}</Layout>
+    }
+  })
 )
