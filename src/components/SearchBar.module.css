@@ -1,0 +1,76 @@
+.container {
+    background: var(--tertiary);
+    padding: 3rem 0.75rem 1rem;
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    min-height: 200px;
+    box-sizing: border-box;
+  }
+  
+  .filters {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: var(--sp-6) 0;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  
+  .container2 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 0.75rem;
+    box-sizing: border-box;
+  }
+  
+  .select {
+    display: flex;
+    width: 18.75rem;
+    padding: 0.8125rem 1rem;
+    border-radius: 0.25rem;
+    border: 1px solid var(--gray);
+    height: 3rem;
+    cursor: pointer;
+  }
+  
+  .searchBar {
+    display: flex;
+    position: relative;
+    gap: var(--sp-3);
+    width: 100%;
+  }
+  
+  .searchInput {
+    & > input {
+      padding-right: 3rem;
+    }
+  }
+  
+  .searchIcon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    translate: 0 -50%;
+  }
+  
+  .radioGroup {
+    width: 100%;
+    position: relative;
+  }
+  
+  @media (max-width: 40rem) {
+      .container2 {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    
+      .container2 > div {
+        width: 100%;
+      }
+    }
