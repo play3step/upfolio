@@ -22,7 +22,7 @@
   align-items: flex-start;
   padding: var(--sp-3) 0;
   border-bottom: 1px solid var(--gray);
-  transition: background-color 0.2s ease;
+  transition: 0.2s ease;
 }
 
 .item:hover {
@@ -33,6 +33,7 @@
 .left {
   display: flex;
   gap: var(--sp-3);
+  min-width: 0;
 }
 
 .itemTitle {
@@ -42,7 +43,7 @@
 .itemContent {
   font-size: var(--fs-sm);
   color: var(--black);
-  max-width: clamp(300px, 50%, 500px); /* 반응형 처리 */
+  max-width: 500px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

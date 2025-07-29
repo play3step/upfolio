@@ -6,7 +6,7 @@ const dummyBookmarks = [
     id: 1,
     title: '북마크된 글 1',
     content:
-      'Lorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit amet',
+      'Lorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit amet',
     date: '2023.07.28'
   },
   {
