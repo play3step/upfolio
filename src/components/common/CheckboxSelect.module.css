@@ -125,9 +125,6 @@
 }
 
 .CS-wrap--err {
-  legend {
-    color: var(--danger);
-  }
   .CS__selectedList {
     border: 1px solid var(--danger);
     background-color: var(--danger-20);

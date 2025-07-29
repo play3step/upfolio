@@ -40,6 +40,10 @@ function FormAndText() {
     { label: '일러스트', value: 'Illustration' }
   ]
 
+  /* --- 기술스택, 이미지업로드 초기값 설정 --- */
+  const [selectedStack, setSelectedStack] = useState<string[]>([])
+  const [selectedImage, setSelectedImage] = useState('')
+
   return (
     <div style={{ padding: '2rem' }}>
       <h1 style={{ fontSize: 'var(--fs-xxl)', marginBottom: 'var(--sp-4)' }}>
@@ -120,10 +124,14 @@ function FormAndText() {
       <h2 style={h2Style}>4. CheckboxSelect</h2>
       <div style={divStyle}>
         <ul style={ulStyle}>
+          <li>props 필수 속성: value, onChange</li>
           <li>레이블 숨기고 싶을때: hideLabel</li>
           <li>에러: error=""</li>
         </ul>
-        <CheckboxSelect />
+        <CheckboxSelect
+          value={selectedStack}
+          onChange={setSelectedStack}
+        />
       </div>
 
       <h2 style={h2Style}>5. Radio</h2>
@@ -140,7 +148,7 @@ function FormAndText() {
           name="fieldOfSupport"
           options={INTEREST_SELECT}
           checked={interest}
-          onChange={setInterest}
+          onChange={e => setInterest(e.target.value)}
         />
       </div>
 
@@ -148,11 +156,18 @@ function FormAndText() {
 
       <div style={divStyle}>
         <ul style={ulStyle}>
-          <li>props 필수 속성: id</li>
+          <li>props 필수 속성: id, value, onChange</li>
           <li>이미지 등록 안할 시 기본이미지 있음</li>
+          <li>기본 status: profile</li>
+          <li>status 종류: profile, portfolio</li>
         </ul>
 
-        <ImageUploader id="exImageUploader" />
+        <ImageUploader
+          id="exImageUploader2"
+          value={selectedImage}
+          onChange={src => setSelectedImage(src)}
+          status="portfolio"
+        />
       </div>
     </div>
   )
