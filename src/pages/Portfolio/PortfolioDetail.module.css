@@ -1,8 +1,51 @@
 .container {
   display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 2.5rem;
+}
+
+.bookmarkLike {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  max-width: 1000px;
+  width: 100%;
+  gap: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.like,
+.bookmark,
+.dm {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+
+  > button > img {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  > span {
+    font-size: 1rem;
+  }
+}
+
+.navDetail {
+  display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
+  margin: 0 auto;
+  max-width: 1000px;
+  width: 100%;
   gap: 2.5rem;
 }
 
@@ -11,7 +54,6 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  margin-left: 12.5rem;
   margin-top: 2.5rem;
   gap: 2rem;
   width: 8.75rem;
@@ -39,10 +81,45 @@
 }
 
 .detailWrapper {
-  max-width: 800px;
-  padding: 2rem;
+  max-width: 1000px;
+  width: 100%;
+  padding: 2rem 0 2rem 2rem;
   background: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.titleWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.editButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-direction: row;
+  margin-bottom: 2.5rem;
+
+  .activeButton {
+    background-color: var(--primary);
+    color: var(--white);
+    width: 8rem;
+  }
+
+  .inactiveButton {
+    background-color: var(--white);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    width: 8rem;
+    visibility: visible;
+    display: block;
+
+    > span {
+      color: var(--primary);
+    }
+  }
 }
 
 .title {

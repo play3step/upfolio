@@ -35,7 +35,7 @@ export const usePortfolio = (userId: string | null) => {
 
       // 2. 포트폴리오 + 유저 정보 가져오기
       const { data: portfolios, error: portfolioError } = await supabase.from(
-        'Portfolio2'
+        'Portfolio'
       ).select(`
           *,
           User:userId
