@@ -175,6 +175,20 @@ export const NewPortfolio = () => {
       alert('빠진 부분이 있는지 확인해주세요.')
       return
     }
+    try {
+      const { error } = await supabase.from('Portfolio').insert({
+        ...portfolioData,
+        userId: userInfo?.id,
+        id: undefined,
+        viewCount: 0,
+        likeCount: 0
+      })
+      if (error) throw error
+      alert('포트폴리오가 저장되었습니다.')
+    } catch (error) {
+      alert('저장에 실패하였습니다. 다시 시도해주세요.')
+      console.error(error)
+    }
   }
 
   return (
