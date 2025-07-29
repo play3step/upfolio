@@ -30,8 +30,8 @@ interface PortfolioData {
   techStack: string[]
   linkUrl: string
   fileList: { name: string; url: string }[]
-  viewCount: number
-  likeCount: number
+  viewCount?: number
+  likeCount?: number
 }
 
 const TempData: PortfolioData = {
@@ -155,10 +155,13 @@ export const NewPortfolio = () => {
   /* --- 임시저장 --- */
   const handleSaveTemp = async () => {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { viewCount, likeCount, ...rest } = portfolioData
+
       const { error } = await supabase
         .from('TempPortfolio')
         .upsert(
-          { ...portfolioData, userId: userInfo?.id, id: undefined },
+          { ...rest, userId: userInfo?.id, id: undefined },
           { onConflict: 'id' }
         )
       if (error) throw error
