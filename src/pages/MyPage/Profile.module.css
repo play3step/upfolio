@@ -15,7 +15,7 @@
 
 .profile__title {
   font-size: var(--fs-xl);
-  font-weight: var(--fw-bold);
+  font-weight: bold;
   margin-bottom: var(--sp-4);
   display: flex;
   justify-content: space-between;
@@ -35,7 +35,7 @@
 
 .profile__greeting {
   font-size: var(--fs-md);
-  line-height: var(--lh-md);
+  line-height: 1.4;
   margin: 0;
 }
 
@@ -44,22 +44,23 @@
   border: 1px solid var(--gray);
 }
 
-.profile__tagPreview {
+.profile__details {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-2);
-  margin-bottom: var(--sp-4);
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-6);
+  background-color: var(--gray2);
+  border-radius: var(--sp-2);
+  box-shadow: var(--bs-drop);
 }
 
-.profile__tag {
-  background-color: var(--primary);
-  color: var(--white);
-  padding: var(--sp-1) var(--sp-3);
-  border-radius: var(--radius-lg);
-  font-size: var(--fs-sm);
+.profile__details p {
+  font-size: var(--fs-md);
+  color: var(--black);
+  margin: 0;
 }
 
-.profile__empty {
-  font-size: var(--fs-sm);
-  color: var(--gray-500);
+.profile__details strong {
+  font-weight: bold;
+  color: var(--black);
 }
