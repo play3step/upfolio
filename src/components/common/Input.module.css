@@ -1,34 +1,30 @@
-.input-wrap{
+.input-wrap {
   display: flex;
   flex-direction: column;
   width: 100%;
-
 
   label {
     margin-bottom: var(--sp-2);
     font-size: var(--fs-sm);
     font-weight: 400;
   }
-  
+
   input {
     padding: 13px 16px;
     height: 3rem;
     font-size: var(--fs-sm);
     border-radius: 4px;
     border: 1px solid var(--gray);
+    background-color: var(--white);
 
     &:read-only {
       background-color: var(--gray2);
       color: var(--gray);
     }
   }
-
 }
 
-.input-wrap--err{
-  label {
-    color: var(--danger);
-  }
+.input-wrap--err {
   input {
     border: 1px solid var(--danger);
     background-color: var(--danger-20);

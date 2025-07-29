@@ -1,4 +1,7 @@
-.uploader {
+.uploader--error {
+  .uploader__txt {
+    color: var(--danger);
+  }
 }
 
 .uploader__cont {
@@ -6,14 +9,6 @@
   align-items: flex-end;
   position: relative;
   gap: var(--sp-2);
-
-  > p {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    translate: 0 -50%;
-    color: #757575;
-  }
 }
 
 .uploader__txt {
@@ -21,16 +16,20 @@
 }
 
 .uploader__fileList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
   padding: 0.8125rem 1rem;
+  width: 100%;
   min-height: 3rem;
   border: 1px solid var(--gray);
   border-radius: 0.25rem;
-  width: 100%;
 
   > li {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    line-height: 1.2;
 
     .uploader__fileName {
       width: calc(100% - 1.5rem);
@@ -40,6 +39,10 @@
       height: 1.5rem;
       background: url(../../assets/icon/close-circle-red.svg) no-repeat
         center/contain;
+    }
+
+    &.notice {
+      color: #757575;
     }
   }
 }

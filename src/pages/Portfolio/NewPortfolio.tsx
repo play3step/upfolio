@@ -28,7 +28,9 @@ interface PortfolioData {
   interest: string
   techStack: string[]
   linkUrl: string
-  imageUrls: { name: string; url: string }[]
+  fileList: { name: string; url: string }[]
+  viewCount: number
+  likeCount: number
 }
 
 const TempData: PortfolioData = {
@@ -41,12 +43,16 @@ const TempData: PortfolioData = {
   email: '',
   title: '',
   content: '',
-  career: 'junior',
-  interest: 'FE',
+  career: '',
+  interest: '',
   techStack: [],
   linkUrl: '',
-  imageUrls: []
+  fileList: [],
+  viewCount: 0,
+  likeCount: 0
 }
+
+type ValidationError = Partial<Record<keyof PortfolioData, string>>
 
 export const NewPortfolio = () => {
   /* --- 지원분야 라디오 그룹 상태 및 옵션 --- */
@@ -70,7 +76,30 @@ export const NewPortfolio = () => {
 
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(TempData)
+  const [errors, setErrors] = useState<ValidationError>({})
 
+  /* --- error 체크 --- */
+  const validate = () => {
+    const newErrors: ValidationError = {}
+
+    if (!portfolioData.title.trim()) newErrors.title = '제목을 입력해주세요.'
+    if (!portfolioData.career.trim())
+      newErrors.career = '경력수준을 선택해주세요.'
+    if (!portfolioData.interest.trim())
+      newErrors.interest = '지원분야를 선택해주세요.'
+    if (portfolioData.techStack.length === 0)
+      newErrors.techStack = '기술스택을 선택해주세요.'
+    if (!portfolioData.content.trim())
+      newErrors.content = '소개를 입력해주세요.'
+    if (!portfolioData.linkUrl.trim() && portfolioData.fileList.length === 0)
+      newErrors.linkUrl = 'URL 또는 파일 첨부 중 하나는 반드시 입력해주세요.'
+
+    setErrors(newErrors)
+
+    return Object.keys(newErrors).length == 0
+  }
+
+  /* --- 로그인 시 유저정보 불러오기 --- */
   useEffect(() => {
     if (userInfo?.email) {
       setPortfolioData(prev => ({
@@ -100,7 +129,7 @@ export const NewPortfolio = () => {
     fetchUserInfo()
   }, [])
 
-  // 데이터 바뀔때마다 저장 핸들러
+  /* --- 입력값 변경 시 상태 저장 및 관련 에러 제거 --- */
   const handleChangeForm = <K extends keyof PortfolioData>(
     key: K,
     value: PortfolioData[K]
@@ -109,8 +138,21 @@ export const NewPortfolio = () => {
       ...prev,
       [key]: value
     }))
+
+    setErrors(prevErrors => {
+      const newErrors = { ...prevErrors }
+
+      if (key === 'linkUrl' || key === 'fileList') {
+        delete newErrors.linkUrl
+        delete newErrors.fileList
+      } else if (newErrors[key]) {
+        delete newErrors[key]
+      }
+      return newErrors
+    })
   }
 
+  /* --- 임시저장 --- */
   const handleSaveTemp = async () => {
     try {
       const { error } = await supabase
@@ -127,20 +169,27 @@ export const NewPortfolio = () => {
     }
   }
 
-  useEffect(() => {
-    console.log('imageUrls 상태:', portfolioData.imageUrls)
-  }, [portfolioData.imageUrls])
+  /* --- 저장 --- */
+  const handleSave = async () => {
+    if (!validate()) {
+      alert('빠진 부분이 있는지 확인해주세요.')
+      return
+    }
+  }
 
   return (
     <div className={S.container}>
       <div className="tit-withBtn">
         <h2 className="a11y-hidden">포트폴리오 등록</h2>
-        <input
-          className="tit__txt"
+        <Input
+          className={`'tit__txt' ${S['tit__input']}`}
           id="exTitle"
           type="text"
+          value={portfolioData.title}
           placeholder="포트폴리오 제목을 입력해주세요."
           onChange={e => handleChangeForm('title', e.target.value)}
+          error={errors.title}
+          hideLabel
         />
         <div style={{ display: 'flex', gap: '.75rem' }}>
           <Button
@@ -148,7 +197,7 @@ export const NewPortfolio = () => {
             line>
             임시저장
           </Button>
-          <Button>저장</Button>
+          <Button onClick={handleSave}>저장</Button>
         </div>
       </div>
 
@@ -182,7 +231,7 @@ export const NewPortfolio = () => {
               type="tel"
               id="exId02"
               label="전화번호"
-              value="010-1234-5678"
+              value={portfolioData.phone}
               readOnly
             />
           </div>
@@ -197,6 +246,7 @@ export const NewPortfolio = () => {
               options={CAREER_SELECT}
               checked={portfolioData.career}
               onChange={e => handleChangeForm('career', e.target.value)}
+              error={errors.career}
             />
 
             <RadioGroup
@@ -205,11 +255,13 @@ export const NewPortfolio = () => {
               options={INTEREST_SELECT}
               checked={portfolioData.interest}
               onChange={e => handleChangeForm('interest', e.target.value)}
+              error={errors.interest}
             />
 
             <CheckboxSelect
               value={portfolioData.techStack}
               onChange={stack => handleChangeForm('techStack', stack)}
+              error={errors.techStack}
             />
           </div>
         </section>
@@ -220,7 +272,9 @@ export const NewPortfolio = () => {
             <Textarea
               id="exText"
               label="포트폴리오 소개"
+              value={portfolioData.content}
               onChange={e => handleChangeForm('content', e.target.value)}
+              error={errors.content}
             />
           </div>
         </section>
@@ -234,15 +288,17 @@ export const NewPortfolio = () => {
                 type="text"
                 id="exId05"
                 label="URL"
+                value={portfolioData.linkUrl}
                 className={S['input-wrap']}
                 onChange={e => handleChangeForm('linkUrl', e.target.value)}
+                error={errors.linkUrl}
               />
             </div>
 
             <FileUploader
-              onChange={files =>
-                handleChangeForm('imageUrls', files)
-              }></FileUploader>
+              onChange={files => handleChangeForm('fileList', files)}
+              error={errors.linkUrl}
+            />
           </div>
         </section>
       </form>

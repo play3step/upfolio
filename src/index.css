@@ -24,6 +24,7 @@ html {
 /* form 요소 에러메세지 */
 .err-msg {
   display: block;
+  font-size: var(--fs-xs);
   margin-top: var(--sp-1);
   color: var(--danger);
   &::before {

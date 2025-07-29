@@ -11,9 +11,11 @@ interface FileList {
 
 interface Props {
   onChange?: (fileList: FileList[]) => void
+  error?: string
+  className?: string
 }
 
-function FileUploader({ onChange }: Props) {
+function FileUploader({ onChange, error, className }: Props) {
   const [fileList, setFileList] = useState<FileList[]>([])
 
   const fileInput = useRef<HTMLInputElement>(null)
@@ -78,7 +80,8 @@ function FileUploader({ onChange }: Props) {
   }
 
   return (
-    <div className={S['uploader']}>
+    <div
+      className={`${S['uploader']} ${error ? S['uploader-error'] : ''} ${className}`}>
       <input
         type="file"
         ref={fileInput}
@@ -88,10 +91,12 @@ function FileUploader({ onChange }: Props) {
       />
       <p className={S['uploader__txt']}>첨부파일</p>
       <div className={S['uploader__cont']}>
-        {fileList.length === 0 && (
-          <p>파일별 최대 10MB까지 업로드 가능합니다.</p>
-        )}
         <ul className={S['uploader__fileList']}>
+          {fileList.length === 0 && (
+            <li className={S['notice']}>
+              파일별 최대 10MB까지 업로드 가능합니다.
+            </li>
+          )}
           {fileList.map((file, index) => (
             <li key={index}>
               <a
@@ -115,6 +120,8 @@ function FileUploader({ onChange }: Props) {
           업로드
         </Button>
       </div>
+
+      {error && <span className={'err-msg'}>{error}</span>}
     </div>
   )
 }
