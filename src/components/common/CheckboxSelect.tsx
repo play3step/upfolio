@@ -7,10 +7,11 @@ import S from './CheckboxSelect.module.css'
   이 컴포넌트는 선택된 값만 관리하고, 상위 컴포넌트에서 상태를 관리합니다.
 */
 interface Props {
+  value: string[]
+  onChange: (newTechStack: string[]) => void
   hideLabel?: boolean
   className?: string
   error?: string
-  onChange: (selectedItems: string[]) => void // 선택된 항목을 상위 컴포넌트로 전달
 }
 
 const TECHSTACK_LIST = [
@@ -22,18 +23,21 @@ const TECHSTACK_LIST = [
   'figma'
 ]
 
-function CheckboxSelect({ hideLabel, className, error, onChange }: Props) {
-  const [techStack, setTechStack] = useState<string[]>([])
-
+function CheckboxSelect({
+  value = [],
+  onChange,
+  hideLabel,
+  className,
+  error
+}: Props) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   const toggleTech = (stack: string) => {
-    const updatedTechStack = techStack.includes(stack)
-      ? techStack.filter(g => g !== stack)
-      : [...techStack, stack]
-
-    setTechStack(updatedTechStack)
-    onChange(updatedTechStack) // 선택된 항목을 상위 컴포넌트로 전달
+    if (value.includes(stack)) {
+      onChange(value.filter(g => g !== stack))
+    } else {
+      onChange([...value, stack])
+    }
   }
 
   return (
@@ -41,7 +45,10 @@ function CheckboxSelect({ hideLabel, className, error, onChange }: Props) {
       className={`${S['CS-wrap']} ${error ? S['CS-wrap--err'] : ''} ${className}`}>
       <legend className={hideLabel ? 'a11y-hidden' : ''}>기술스택</legend>
       <div className={S['CS__selectedList']}>
-        {techStack.map(stack => (
+        {value.length === 0 && (
+          <span className={S['CS__placeholder']}>1개 이상 선택해주세요.</span>
+        )}
+        {value.map(stack => (
           <div
             key={stack}
             className={S['CS__selecteditem']}>
@@ -76,12 +83,12 @@ function CheckboxSelect({ hideLabel, className, error, onChange }: Props) {
         {TECHSTACK_LIST.map(stack => (
           <li
             key={stack}
-            className={`${techStack.includes(stack) ? `${S['checked']}` : ''}`}>
+            className={`${value.includes(stack) ? `${S['checked']}` : ''}`}>
             <label>
               <input
                 type="checkbox"
                 name="stacks"
-                checked={techStack.includes(stack)}
+                checked={value.includes(stack)}
                 onChange={() => toggleTech(stack)}
                 className="a11y-hidden"
               />

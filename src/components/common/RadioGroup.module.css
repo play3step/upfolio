@@ -41,10 +41,6 @@
 }
 
 .radio-group--err {
-  legend {
-    color: var(--danger);
-  }
-
   ul {
     border: 1px dashed var(--danger-50);
     border-radius: 20px;
