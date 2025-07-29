@@ -39,9 +39,10 @@ html {
   display: flex;
   justify-content: space-between;
   margin-bottom: 2.5rem;
-  gap: 0.75rem;
+  gap: var(--sp-3);
   align-items: center;
   background-color: var(--white);
+  transition: all 0.3s ease;
 
   .tit__txt {
     font-size: var(--fs-xl);
@@ -52,6 +53,7 @@ html {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+    gap: var(--sp-1);
 
     .tit__txt {
       font-size: var(--fs-lg);
@@ -63,9 +65,10 @@ html {
     top: 0;
     left: 0;
     margin: 0 -0.75rem;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    box-shadow: var(--bs-drop);
     z-index: 4;
-    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+    background-color: var(--white);
+    border-radius: 0 0 1.25rem 1.25rem;
   }
 }

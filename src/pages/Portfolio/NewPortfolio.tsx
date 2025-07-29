@@ -2,12 +2,13 @@ import Button from '@/components/common/Button'
 import S from './NewPortfolio.module.css'
 import Input from '@/components/common/Input'
 import RadioGroup from '@/components/common/RadioGroup'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import CheckboxSelect from '@/components/common/CheckboxSelect'
 import Textarea from '@/components/common/Textarea'
 import FileUploader from '@/components/common/FileUploader'
 import ImageUploader from '@/components/common/ImageUploader'
 import supabase from '@/lib/supabaseClient'
+import throttle from 'lodash.throttle'
 
 interface UserInfo {
   id: string
@@ -77,7 +78,6 @@ export const NewPortfolio = () => {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(TempData)
   const [errors, setErrors] = useState<ValidationError>({})
-
   /* --- error 체크 --- */
   const validate = () => {
     const newErrors: ValidationError = {}
@@ -191,9 +191,32 @@ export const NewPortfolio = () => {
     }
   }
 
+  /* --- 타이틀 및 버튼 sticky --- */
+  const stickyRef = useRef<HTMLDivElement | null>(null)
+  const [isSticky, setIsSticky] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = throttle(() => {
+      if (!stickyRef.current) return
+
+      const stickyPosition = stickyRef.current.getBoundingClientRect().top ?? 0
+      const yes = stickyPosition <= 0
+      setIsSticky(yes)
+    }, 200)
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      handleScroll.cancel()
+    }
+  }, [])
+
   return (
     <div className={S.container}>
-      <div className="tit-withBtn">
+      <div
+        ref={stickyRef}
+        className={`tit-withBtn ${isSticky ? 'sticky' : ''}`}>
         <h2 className="a11y-hidden">포트폴리오 등록</h2>
         <Input
           className={`'tit__txt' ${S['tit__input']}`}
