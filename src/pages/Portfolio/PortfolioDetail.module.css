@@ -15,21 +15,27 @@
   margin-top: 2.5rem;
   gap: 2rem;
   width: 8.75rem;
-}
+  position: sticky;
+  top: 2.5rem;
 
-.activeButton {
-  background-color: var(--primary);
-  color: var(--white);
-  width: 10rem;
-}
+  .activeButton {
+    background-color: var(--primary);
+    color: var(--white);
+    width: 10rem;
+  }
 
-.inactiveButton {
-  background-color: var(--white);
-  color: var(--primary);
-  border: 1px solid var(--primary);
-  width: 10rem;
-  visibility: visible;
-  display: block;
+  .inactiveButton {
+    background-color: var(--white);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    width: 10rem;
+    visibility: visible;
+    display: block;
+
+    > span {
+      color: var(--primary);
+    }
+  }
 }
 
 .detailWrapper {

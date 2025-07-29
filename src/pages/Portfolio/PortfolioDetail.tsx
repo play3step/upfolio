@@ -1,9 +1,10 @@
 import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import supabase from '@/lib/supabaseClient'
 import S from './PortfolioDetail.module.css'
 import defaultProfileImage from '@/assets/images/default-profile.png'
 import Button from '@/components/common/Button'
+import { scrollToSection } from '@/utils/scrollToSection'
 
 interface PortfolioData {
   id: string
@@ -28,10 +29,16 @@ export default function PortfolioDetail() {
   const [data, setData] = useState<PortfolioData | null>(null)
   const [activeButton, setActiveButton] = useState('기본 정보')
 
-  const handleButtonClick = (buttonName: string) => {
-    setActiveButton(buttonName)
+  const basicInfoRef = useRef<HTMLDivElement>(null)
+  const techStackRef = useRef<HTMLDivElement>(null)
+  const introductionRef = useRef<HTMLDivElement>(null)
+  const portfolioRef = useRef<HTMLDivElement>(null)
+
+  const handleButtonClick = (buttonName: string, ref: React.RefObject<HTMLDivElement>) => {
+    scrollToSection(buttonName, ref, setActiveButton, 200)
   }
 
+  
   useEffect(() => {
     if (!decodedId) return
     const fetchPortfolio = async () => {
@@ -62,7 +69,7 @@ export default function PortfolioDetail() {
           className={
             activeButton === '기본 정보' ? S.activeButton : S.inactiveButton
           }
-          onClick={() => handleButtonClick('기본 정보')}
+          onClick={() => handleButtonClick('기본 정보', basicInfoRef)}
         />
         <Button
           children="지원 분야 / 기술 스택"
@@ -71,16 +78,18 @@ export default function PortfolioDetail() {
               ? S.activeButton
               : S.inactiveButton
           }
-          onClick={() => handleButtonClick('지원 분야 / 기술 스택')}
+          onClick={() =>
+            handleButtonClick('지원 분야 / 기술 스택', techStackRef)
+          }
         />
         <Button
-          children="포트폴리오 소개"    
+          children="포트폴리오 소개"
           className={
             activeButton === '포트폴리오 소개'
               ? S.activeButton
               : S.inactiveButton
           }
-          onClick={() => handleButtonClick('포트폴리오 소개')}
+          onClick={() => handleButtonClick('포트폴리오 소개', introductionRef)}
         />
         <Button
           children="포트폴리오 자료"
@@ -89,70 +98,78 @@ export default function PortfolioDetail() {
               ? S.activeButton
               : S.inactiveButton
           }
-          onClick={() => handleButtonClick('포트폴리오 자료')}
+          onClick={() => handleButtonClick('포트폴리오 자료', portfolioRef)}
         />
       </nav>
       <div className={S.detailWrapper}>
-        <h1 className={S.title}>{data.title}</h1>
+        <div ref={basicInfoRef}>
+          <h1 className={S.title}>{data.title}</h1>
 
-        <section className={S.profile}>
-          <img
-            src={data.profileimage ? data.profileimage : defaultProfileImage}
-            alt="프로필"
-          />
-          <div>
-            <h4>{data.name}</h4>
-            <h4>{data.birthDate}</h4>
-          </div>
-        </section>
+          <section className={S.profile}>
+            <img
+              src={data.profileimage ? data.profileimage : defaultProfileImage}
+              alt="프로필"
+            />
+            <div>
+              <h4>{data.name}</h4>
+              <h4>{data.birthDate}</h4>
+            </div>
+          </section>
 
-        <section className={S.emailPhone}>
-          <h3>이메일</h3>
-          <p>{data.email}</p>
-          <h3>전화번호</h3>
-          <p>{data.phone}</p>
-        </section>
-
-        <hr />
-
-        <section className={S.interestStack}>
-          <h3>지원 분야</h3>
-          <div className={S.interest}>
-            <p>{data.interest}</p>
-          </div>
-
-          <h3>경력</h3>
-          <p>{data.career === 'junior' ? '신입' : '경력'}</p>
-
-          <h3>기술 스택</h3>
-          <p>{data.techStack.join(' | ')}</p>
-        </section>
+          <section className={S.emailPhone}>
+            <h3>이메일</h3>
+            <p>{data.email}</p>
+            <h3>전화번호</h3>
+            <p>{data.phone}</p>
+          </section>
+        </div>
 
         <hr />
 
-        <section className={S.description}>
-          <h3>소개</h3>
-          <p>{data.content}</p>
-        </section>
+        <div ref={techStackRef}>
+          <section className={S.interestStack}>
+            <h3>지원 분야</h3>
+            <div className={S.interest}>
+              <p>{data.interest}</p>
+            </div>
+
+            <h3>경력</h3>
+            <p>{data.career === 'junior' ? '신입' : '경력'}</p>
+
+            <h3>기술 스택</h3>
+            <p>{data.techStack.join(' | ')}</p>
+          </section>
+        </div>
 
         <hr />
 
-        <section className={S.urlFile}>
-          <h3>포트폴리오 자료</h3>
-          <h3>URL</h3>
-          <a
-            href={
-              data.linkUrl.startsWith('http')
-                ? data.linkUrl
-                : `https://${data.linkUrl}`
-            }
-            target="_blank"
-            rel="noreferrer">
-            {data.linkUrl}
-          </a>
+        <div ref={introductionRef}>
+          <section className={S.description}>
+            <h3>소개</h3>
+            <p>{data.content}</p>
+          </section>
+        </div>
 
-          <h3>첨부파일</h3>
-        </section>
+        <hr />
+
+        <div ref={portfolioRef}>
+          <section className={S.urlFile}>
+            <h3>포트폴리오 자료</h3>
+            <h3>URL</h3>
+            <a
+              href={
+                data.linkUrl.startsWith('http')
+                  ? data.linkUrl
+                  : `https://${data.linkUrl}`
+              }
+              target="_blank"
+              rel="noreferrer">
+              {data.linkUrl}
+            </a>
+
+            <h3>첨부파일</h3>
+          </section>
+        </div>
       </div>
     </div>
   )
