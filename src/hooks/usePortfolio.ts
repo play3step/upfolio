@@ -5,50 +5,45 @@ import { AuthContext } from '@/context/AuthContext'
 
 export const usePortfolio = (userId: string | null) => {
   const [portfolio, setPortfolio] = useState<PortfolioItem[]>([])
-  const [bookmarkList, setBookmarkList] = useState<string[]>([])
+
   const { isAuthenticated } = useContext(AuthContext)
 
-  const handleFetchPortfolio = async () => {
-    const { data, error } = await supabase.from('Portfolio').select('*')
-    if (error) {
-      console.error('Portfolio fetch error:', error.message)
-      return
-    }
-    setPortfolio(data)
-  }
-
-  const handleBookmarkList = async () => {
-    const { data: bookmarks, error: bookmarkError } = await supabase
-      .from('BookMark')
-      .select('portfolioid')
-      .eq('userid', userId)
-
-    if (bookmarkError) {
-      console.error('Bookmark fetch error:', bookmarkError.message)
-      return
-    }
-    setBookmarkList(bookmarks?.map(b => b.portfolioid) || [])
-  }
-
-  // 첫 렌더링 시 포트폴리오 가져오기
   useEffect(() => {
-    handleFetchPortfolio()
-  }, [])
+    const fetchData = async () => {
+      const { data: portfolioData, error: portfolioError } = await supabase
+        .from('Portfolio')
+        .select('*')
 
-  // 로그인 시 포트폴리오 + 북마크 가져오기
-  useEffect(() => {
-    if (isAuthenticated) {
-      const handleCombinedPortfolio = async () => {
-        await handleBookmarkList()
-        const combinedPortfolio = portfolio.map(p => ({
-          ...p,
-          isBookmarked: bookmarkList.includes(p.id)
-        }))
-        setPortfolio(combinedPortfolio)
+      if (portfolioError) {
+        console.error('Portfolio fetch error:', portfolioError.message)
+        return
       }
-      handleCombinedPortfolio()
+
+      let bookmarkIds: string[] = []
+
+      if (isAuthenticated && userId) {
+        const { data: bookmarks, error: bookmarkError } = await supabase
+          .from('BookMark')
+          .select('portfolioid')
+          .eq('userid', userId)
+
+        if (bookmarkError) {
+          console.error('Bookmark fetch error:', bookmarkError.message)
+        } else {
+          bookmarkIds = bookmarks?.map(b => b.portfolioid) || []
+        }
+      }
+
+      const mergedPortfolio = portfolioData.map(p => ({
+        ...p,
+        isBookmarked: bookmarkIds.includes(p.id)
+      }))
+
+      setPortfolio(mergedPortfolio)
     }
-  }, [isAuthenticated])
+
+    fetchData()
+  }, [isAuthenticated, userId])
 
   // useEffect(() => {
   //   if (!userId) return
