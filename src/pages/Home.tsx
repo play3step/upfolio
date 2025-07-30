@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import { usePortfolio } from '@/hooks/usePortfolio'
 import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
 
@@ -9,15 +9,11 @@ import { SearchBar } from '@/components/SearchBar'
 
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '@/context/AuthContext'
-import { SearchContext } from '@/context/search/searchContext'
 
-export interface SearchParams {
-  interest: string
-  career?: string
-  keyword?: string
-}
+import { useSearchPortfoilo } from '@/hooks/useSearchPortfoilo'
+import type { PortfolioItem } from '@/types/portfolio'
 
-const INTEREST_MAP = {
+export const INTEREST_MAP = {
   all: '전체',
   FE: '프론트엔드',
   BE: '백엔드',
@@ -35,8 +31,7 @@ export const Home = () => {
   const { isAuthenticated } = useContext(AuthContext)
   const navigate = useNavigate()
   const { portfolio } = usePortfolio(authData?.id ?? null)
-  const [filteredPortfolio, setFilteredPortfolio] = useState(portfolio)
-  const { keyword } = useContext(SearchContext)
+  const { filteredPortfolio, handleSearch } = useSearchPortfoilo({ portfolio })
 
   useEffect(() => {
     getSession()
@@ -44,36 +39,6 @@ export const Home = () => {
       navigate('/signup')
     }
   }, [authData?.phone, authData?.birthDate, isAuthenticated])
-
-  useEffect(() => {
-    setFilteredPortfolio(portfolio)
-  }, [portfolio])
-
-  useEffect(() => {
-    if (keyword) {
-      handleSearch({
-        interest: 'all',
-        keyword
-      })
-    }
-  }, [keyword])
-
-  const handleSearch = ({ interest, career, keyword }: SearchParams) => {
-    const filtered = (portfolio || []).filter(item => {
-      const matchInterest =
-        interest === 'all' ||
-        item.interest === INTEREST_MAP[interest as keyof typeof INTEREST_MAP]
-      const matchCareer = !career || item.career === career
-      const matchKeyword =
-        !keyword ||
-        item.title?.toLowerCase().includes(keyword.toLowerCase()) ||
-        item.content?.toLowerCase().includes(keyword.toLowerCase())
-
-      return matchInterest && matchCareer && matchKeyword
-    })
-
-    setFilteredPortfolio(filtered)
-  }
 
   const handleToggleBookmark = async (id: string, next: boolean) => {
     const {
@@ -99,15 +64,14 @@ export const Home = () => {
         .eq('portfolioid', id)
       if (error) console.error('Error removing bookmark:', error.message)
     }
-
-    // 북마크 상태 업데이트 후 북마크 리스트 다시 가져오기
   }
 
   return (
     <div>
       <SearchBar onSearch={handleSearch} />
       <div className={styles['portfolio-grid']}>
-        {filteredPortfolio.map(p => (
+        {filteredPortfolio.length === 0 && <div>검색 결과가 없습니다.</div>}
+        {filteredPortfolio.map((p: PortfolioItem) => (
           <PortfolioCard
             key={p.id}
             {...p}
