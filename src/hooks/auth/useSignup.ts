@@ -1,5 +1,7 @@
+import { signupUser } from '@/apis/user/signup.controller'
+import { AuthContext } from '@/context/AuthContext'
 import { formatPhoneNumber } from '@/utils/format'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 
 export const useSignup = () => {
   const [birthDate, setBirthDate] = useState({
@@ -8,6 +10,7 @@ export const useSignup = () => {
     day: ''
   })
   const [phone, setPhone] = useState('')
+  const { authData } = useContext(AuthContext)
 
   const handleBirthChange = (
     field: 'year' | 'month' | 'day',
@@ -32,6 +35,25 @@ export const useSignup = () => {
       setPhone(formattedValue)
     }
   }
+  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!phone || !birthDate.year || !birthDate.month || !birthDate.day) {
+      alert('모든 필수 정보를 입력해주세요.')
+      return
+    }
+    const signupData = {
+      phone,
+      birthDate: `${birthDate.year}.${birthDate.month}.${birthDate.day}`,
+      id: authData?.id ?? ''
+    }
+    await signupUser(signupData.phone, signupData.birthDate, signupData.id)
+  }
 
-  return { birthDate, phone, handleBirthChange, handlePhoneChange }
+  return {
+    birthDate,
+    phone,
+    handleBirthChange,
+    handlePhoneChange,
+    handleSignup
+  }
 }

@@ -12,6 +12,8 @@ export interface UserData {
   email: string
   nickname: string
   profileimage: string
+  phone?: string
+  birthDate?: string
   interest?: string
   techstack?: string[]
   createdat?: string

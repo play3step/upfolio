@@ -1,9 +1,20 @@
 import Input from '@/components/common/Input'
 import S from './Signup.module.css'
 import { useSignup } from '@/hooks/auth/useSignup'
+import Button from '@/components/common/Button'
+import { useContext } from 'react'
+import { AuthContext } from '@/context/AuthContext'
 
 export function Signup() {
-  const { birthDate, phone, handleBirthChange, handlePhoneChange } = useSignup()
+  const {
+    birthDate,
+    phone,
+    handleBirthChange,
+    handlePhoneChange,
+    handleSignup
+  } = useSignup()
+
+  const { authData } = useContext(AuthContext)
 
   return (
     <div className={S['signup']}>
@@ -12,7 +23,9 @@ export function Signup() {
         <p className={S['signup__description']}>
           추가적인 정보를 입력하여 회원가입을 진행해주세요.
         </p>
-        <form className={S['signup__form']}>
+        <form
+          className={S['signup__form']}
+          onSubmit={handleSignup}>
           <Input
             id="exId01"
             label="이메일"
@@ -62,6 +75,7 @@ export function Signup() {
               <span>일</span>
             </div>
           </div>
+          <Button type="submit">회원가입</Button>
         </form>
       </div>
     </div>
