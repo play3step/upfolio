@@ -20,11 +20,9 @@ export const useAuthLogin = () => {
   }
 
   const getSession = async (): Promise<UserData | null> => {
-    console.log('getSession 호출됨')
     const {
       data: { session }
     } = await supabase.auth.getSession()
-    console.log('session:', session)
     if (session?.user) {
       const authData = {
         id: session.user.id,
