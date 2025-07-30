@@ -7,27 +7,27 @@ import { Outlet } from 'react-router-dom'
 import { MyPageSidebar } from '@/components/domain/mypage/MyPageSidebar'
 
 import DmDropdownWrapper from '@/components/domain/dm/DmDropdownWrapper'
-import { useState } from 'react'
-import { usePortfolio, type PortfolioItem } from '@/hooks/usePortfolio'
+// import { useState } from 'react'
+// import { usePortfolio, type PortfolioItem } from '@/hooks/usePortfolio'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const [userId, setUserId] = useState<string | null>(null)
-  const { portfolio, setPortfolio } = usePortfolio(userId)
-  const [filteredPortfolio, setFilteredPortfolio] = useState<PortfolioItem[]>(
-    []
-  )
+  // const [userId, setUserId] = useState<string | null>(null)
+  // const { portfolio, setPortfolio } = usePortfolio(userId)
+  // const [filteredPortfolio, setFilteredPortfolio] = useState<PortfolioItem[]>(
+  //   []
+  // )
   const showSidebar = window.location.pathname.includes('/mypage')
 
-  const handleSearch = (keyword: string) => {
-    const filtered = portfolio.filter(item =>
-      item.title.toLowerCase().includes(keyword.toLowerCase())
-    )
-    setFilteredPortfolio(filtered)
-  }
+  // const handleSearch = (keyword: string) => {
+  //   const filtered = portfolio.filter(item =>
+  //     item.title.toLowerCase().includes(keyword.toLowerCase())
+  //   )
+  //   setFilteredPortfolio(filtered)
+  // }
 
   return (
     <div className={S['wrapper']}>
-      <Header onSearch={handleSearch} />
+      <Header />
       <div className={S['layout']}>
         {showSidebar && <MyPageSidebar />}
         <main className={S['main']}>

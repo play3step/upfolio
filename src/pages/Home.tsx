@@ -33,9 +33,8 @@ const INTEREST_MAP = {
 export const Home = () => {
   const { authData, getSession } = useAuthLogin()
   const { isAuthenticated } = useContext(AuthContext)
-  const [userId, setUserId] = useState<string | null>(null)
   const navigate = useNavigate()
-  const { portfolio, setPortfolio } = usePortfolio(userId)
+  const { portfolio, setPortfolio } = usePortfolio(authData?.id ?? null)
   const [filteredPortfolio, setFilteredPortfolio] = useState(portfolio)
   const { keyword } = useContext(SearchContext)
 
@@ -45,10 +44,6 @@ export const Home = () => {
       navigate('/signup')
     }
   }, [authData?.phone, authData?.birthDate, isAuthenticated])
-
-  useEffect(() => {
-    if (authData?.id) setUserId(authData.id)
-  }, [authData])
 
   useEffect(() => {
     setFilteredPortfolio(portfolio)
