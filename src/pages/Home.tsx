@@ -4,8 +4,8 @@ import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
 import { useSearch } from '@/context/SearchContext'
 import { PortfolioCard } from '@/components/PortfolioCard'
 import styles from '@/components/PortfolioCard.module.css'
-import supabase from '@/lib/supabaseClient'
 import { SearchBar } from '@/components/SearchBar'
+import { handleToggleBookmark } from '@/utils/bookmarkUtils'
 
 export interface SearchParams {
   interest: string
@@ -73,36 +73,16 @@ export const Home = () => {
     setFilteredPortfolio(filtered)
   }
 
-  const handleToggleBookmark = async (id: string, next: boolean) => {
-    const {
-      data: { user }
-    } = await supabase.auth.getUser()
-    const userId = user?.id
-
-    if (!userId) {
-      console.error('User not authenticated')
-      return
+  const handleBookmarkToggle = async (id: string, next: boolean) => {
+    const success = await handleToggleBookmark(id, next, userId)
+    if(success) {
+      setPortfolio(prev =>
+        prev.map(p => (p.id === id ? { ...p, isBookmarked: next } : p))
+      )
     }
-
-    if (next) {
-      const { error } = await supabase
-        .from('BookMark')
-        .upsert({ portfolioid: id, userid: userId })
-      if (error) console.error('Error adding bookmark:', error.message)
-    } else {
-      const { error } = await supabase
-        .from('BookMark')
-        .delete()
-        .eq('userid', userId)
-        .eq('portfolioid', id)
-      if (error) console.error('Error removing bookmark:', error.message)
-    }
-
-    setPortfolio(prev =>
-      prev.map(p => (p.id === id ? { ...p, isBookmarked: next } : p))
-    )
   }
 
+  
   return (
     <div>
       <SearchBar onSearch={handleSearch} />
@@ -111,7 +91,7 @@ export const Home = () => {
           <PortfolioCard
             key={p.id}
             {...p}
-            onToggleBookmark={handleToggleBookmark}
+            onToggleBookmark={handleBookmarkToggle}
           />
         ))}
       </div>

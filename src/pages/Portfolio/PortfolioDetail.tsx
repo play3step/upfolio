@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { useEffect, useState, useRef } from 'react'
+import { handleToggleBookmark } from '@/utils/bookmarkUtils'
 import supabase from '@/lib/supabaseClient'
 import S from './PortfolioDetail.module.css'
 import defaultProfileImage from '@/assets/images/default-profile.png'
@@ -35,18 +36,170 @@ export default function PortfolioDetail() {
   const [data, setData] = useState<PortfolioData | null>(null)
   const [activeNavButton, setActiveNavButton] = useState('기본 정보')
   const [activeEditButton, setActiveEditButton] = useState('수정')
+  const [like, setLike] = useState(false)
+  const [bookmark, setBookmark] = useState(false)
+  const [likeCount, setLikeCount] = useState(0)
+  const [userId, setUserId] = useState<string | null>(null)
 
   const basicInfoRef = useRef<HTMLDivElement>(null)
   const techStackRef = useRef<HTMLDivElement>(null)
   const introductionRef = useRef<HTMLDivElement>(null)
   const portfolioRef = useRef<HTMLDivElement>(null)
 
-  const handleButtonClick = (
+  const handleNavButtonClick = (
     buttonName: string,
     ref: React.RefObject<HTMLDivElement>
   ) => {
     scrollToSection(buttonName, ref, setActiveNavButton, 200)
   }
+
+  // 좋아요 개수 supabase에서 불러오기
+  useEffect(() => {
+    if (!data?.id) return
+  
+    const fetchLikeCount = async () => {
+      const { count, error } = await supabase
+        .from('Like')
+        .select('*', { count: 'exact', head: true })
+        .eq('portfolioid', data.id)
+  
+      if (!error) {
+        setLikeCount(count || 0)
+      } else {
+        console.error('좋아요 개수 불러오기 실패:', error.message)
+      }
+    }
+  
+    fetchLikeCount()
+  }, [data?.id])
+
+
+  // 좋아요 상태 초기화
+  useEffect(() => {
+    const fetchLikeState = async () => {
+      if (!userId || !decodedId) return
+
+      const { data: likeData, error: likeError } = await supabase
+        .from('Like')
+        .select('id')
+        .eq('userid', userId)
+        .eq('portfolioid', decodedId)
+        .single()
+
+      if (likeError && likeError.code !== 'PGRST116') {
+        console.error('좋아요 상태 조회 실패:', likeError.message)
+        return
+      }
+
+      setLike(!!likeData)
+    }
+
+    fetchLikeState()
+  }, [userId, decodedId])
+
+
+  useEffect(() => {
+    if (data?.likeCount !== undefined) {
+      setLikeCount(data.likeCount)
+    }
+  }, [data])
+
+  const toggleLike = async () => {
+    if (!data || !userId) return
+  
+    // 새 좋아요 상태
+    const newLikeState = !like
+  
+    // optimistic UI 업데이트
+    setLike(newLikeState)
+    setLikeCount(prev => (newLikeState ? prev + 1 : prev - 1))
+  
+    try {
+      if (newLikeState) {
+        // 1. 좋아요 추가
+        const { error: likeError } = await supabase
+          .from('Like')
+          .insert({
+            userid: userId,
+            portfolioid: data.id,  // 반드시 id가 맞는지 확인
+          })
+  
+        if (likeError) throw likeError
+  
+        // 2. likeCount 증가 → Supabase 함수 호출
+        const { error: rpcError } = await supabase.rpc('increment_like_count', {
+          portfolioid: data.id, 
+        })
+  
+        if (rpcError) throw rpcError
+      } else {
+        // 1. 좋아요 취소
+        const { error: unlikeError } = await supabase
+          .from('Like')
+          .delete()
+          .eq('userid', userId)
+          .eq('portfolioid', data.id)
+  
+        if (unlikeError) throw unlikeError
+  
+        // 2. likeCount 감소 → Supabase 함수 호출
+        const { error: rpcError } = await supabase.rpc('decrement_like_count', {
+          portfolioid: data.id,
+        })
+  
+        if (rpcError) throw rpcError
+      }
+    } catch (error) {
+      console.error('좋아요 상태 업데이트 실패:', error)
+      // 실패 시 상태 복구
+      setLike(prev => !prev)
+      setLikeCount(prev => (newLikeState ? prev - 1 : prev + 1))
+    }
+  }
+  
+
+  useEffect(() => {
+    const fetchInitialBookmarkState = async () => {
+      if (!userId || !decodedId) return
+
+      const { data, error } = await supabase
+        .from('BookMark')
+        .select('id')
+        .eq('userid', userId)
+        .eq('portfolioid', decodedId)
+        .single()
+
+      if (error && error.code !== 'PGRST116') {
+        // 'PGRST116' :  row not found
+        console.error('북마크 상태 조회 실패:', error.message)
+        return
+      }
+
+      setBookmark(!!data)
+    }
+
+    fetchInitialBookmarkState()
+  }, [userId, decodedId])
+
+  const toggleBookmark = async () => {
+    if (!data) return
+    const success = await handleToggleBookmark(data.id, userId, !bookmark)
+    if (success) {
+      setBookmark(prev => !prev)
+    }
+  }
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data, error } = await supabase.auth.getUser()
+      if (error || !data?.user) {
+        console.error('사용자가 인증되지 않았습니다.', error)
+        return
+      }
+      setUserId(data.user.id)
+    }
+    fetchUser()
+  }, [])
 
   useEffect(() => {
     if (!decodedId) return
@@ -74,22 +227,22 @@ export default function PortfolioDetail() {
     <div className={S.container}>
       <div className={S.bookmarkLike}>
         <div className={S.like}>
-          <button>
+          <button onClick={toggleLike}>
             <img
-              src={emptyHeart}
-              alt="빈 하트 아이콘"
+              src={like ? filledHeart : emptyHeart}
+              alt={like ? '채워진 하트 아이콘' : '빈 하트 아이콘'}
             />
           </button>
-          <span>{data.likeCount}</span>
+          <span>{likeCount}</span>
         </div>
         <div className={S.bookmark}>
-          <button>
+          <button onClick={toggleBookmark}>
             <img
-              src={emptyBookmark}
-              alt="빈 북마크 아이콘"
+              src={bookmark ? filledBookmark : emptyBookmark}
+              alt={bookmark ? '채워진 북마크 아이콘' : '빈 북마크 아이콘'}
             />
           </button>
-          <span>북마크</span>
+          <span>{bookmark ? '북마크 취소' : '북마크'}</span>
         </div>
         <div className={S.dm}>
           <button>
@@ -111,7 +264,7 @@ export default function PortfolioDetail() {
                 ? S.activeButton
                 : S.inactiveButton
             }
-            onClick={() => handleButtonClick('기본 정보', basicInfoRef)}
+            onClick={() => handleNavButtonClick('기본 정보', basicInfoRef)}
           />
           <Button
             children="지원 분야 / 기술 스택"
@@ -121,7 +274,7 @@ export default function PortfolioDetail() {
                 : S.inactiveButton
             }
             onClick={() =>
-              handleButtonClick('지원 분야 / 기술 스택', techStackRef)
+              handleNavButtonClick('지원 분야 / 기술 스택', techStackRef)
             }
           />
           <Button
@@ -132,7 +285,7 @@ export default function PortfolioDetail() {
                 : S.inactiveButton
             }
             onClick={() =>
-              handleButtonClick('포트폴리오 소개', introductionRef)
+              handleNavButtonClick('포트폴리오 소개', introductionRef)
             }
           />
           <Button
@@ -142,7 +295,9 @@ export default function PortfolioDetail() {
                 ? S.activeButton
                 : S.inactiveButton
             }
-            onClick={() => handleButtonClick('포트폴리오 자료', portfolioRef)}
+            onClick={() =>
+              handleNavButtonClick('포트폴리오 자료', portfolioRef)
+            }
           />
         </nav>
         <div className={S.detailWrapper}>
