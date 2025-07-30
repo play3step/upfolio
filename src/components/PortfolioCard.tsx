@@ -4,6 +4,7 @@ import bookmarkFilledIcon from '../assets/icon/bookmark-fill.svg'
 import grayHeart from '../assets/icon/grayHeart.svg'
 import eye from '../assets/icon/eye.svg'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export interface Props {
   id: string
@@ -30,26 +31,36 @@ export function PortfolioCard({
   interest,
   career,
   isBookmarked,
-  onToggleBookmark,
+  onToggleBookmark
 }: PortfolioCardProps) {
   const [bookmarked, setBookmarked] = useState(isBookmarked)
+  const navigate = useNavigate()
 
   useEffect(() => {
     // 새로고침 후 북마크 상태 반영
     setBookmarked(isBookmarked)
   }, [isBookmarked])
 
-  const toggleBookmark = () => {
+  const toggleBookmark = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
     const next = !bookmarked
     setBookmarked(next)
     onToggleBookmark(id, next)
   }
 
+  const handleCardClick = () => {
+    navigate(`/portfolios/${id}`)
+  }
+
   return (
-    <div className={S.container}>
+    <div
+      className={S.container}
+      onClick={handleCardClick}>
       <div className={S.interest}>{interest}</div>
 
-      <button onClick={toggleBookmark} className={S.bookmark}>
+      <button
+        onClick={toggleBookmark}
+        className={S.bookmark}>
         <img
           src={bookmarked ? bookmarkFilledIcon : bookmarkIcon}
           alt="bookmark icon"
@@ -62,11 +73,17 @@ export function PortfolioCard({
 
       <div className={S.meta}>
         <span className={S.like}>
-          <img src={grayHeart} alt="Like Icon" />
+          <img
+            src={grayHeart}
+            alt="Like Icon"
+          />
           {likecount}
         </span>
         <span className={S.view}>
-          <img src={eye} alt="View Icon" />
+          <img
+            src={eye}
+            alt="View Icon"
+          />
           {viewcount}
         </span>
       </div>

@@ -6,6 +6,9 @@ import { PortfolioCard } from '@/components/PortfolioCard'
 import styles from '@/components/PortfolioCard.module.css'
 import supabase from '@/lib/supabaseClient'
 import { SearchBar } from '@/components/SearchBar'
+
+import { useNavigate } from 'react-router-dom'
+import { AuthContext } from '@/context/AuthContext'
 import { SearchContext } from '@/context/search/SearchContext'
 
 export interface SearchParams {
@@ -29,15 +32,20 @@ const INTEREST_MAP = {
 
 export const Home = () => {
   const { authData, getSession } = useAuthLogin()
+  const { isAuthenticated } = useContext(AuthContext)
   const [userId, setUserId] = useState<string | null>(null)
-
+  const navigate = useNavigate()
   const { portfolio, setPortfolio } = usePortfolio(userId)
   const [filteredPortfolio, setFilteredPortfolio] = useState(portfolio)
+  const { keyword } = useSearch()
   const { keyword } = useContext(SearchContext)
 
   useEffect(() => {
     getSession()
-  }, [])
+    if (authData && (!authData.phone || !authData.birthDate)) {
+      navigate('/signup')
+    }
+  }, [authData?.phone, authData?.birthDate, isAuthenticated])
 
   useEffect(() => {
     if (authData?.id) setUserId(authData.id)

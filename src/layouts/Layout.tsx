@@ -30,7 +30,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Header onSearch={handleSearch} />
       <div className={S['layout']}>
         {showSidebar && <MyPageSidebar />}
-
         <main className={S['main']}>
           <Outlet />
           {children}

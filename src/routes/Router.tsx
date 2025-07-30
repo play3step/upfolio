@@ -7,11 +7,12 @@ import Posts from '@/pages/MyPage/Posts'
 import Profile from '@/pages/MyPage/Profile'
 import { NotFound } from '@/pages/NotFound'
 import { NewPortfolio } from '@/pages/Portfolio/NewPortfolio'
-import { PortfolioDetail } from '@/pages/Portfolio/PortfolioDetail'
+import  PortfolioDetail  from '@/pages/Portfolio/PortfolioDetail'
 import { PortfolioList } from '@/pages/Portfolio/PortfolioList'
 import { createBrowserRouter } from 'react-router-dom'
 import Layout from '@/layouts/Layout'
 import FormAndText from '@/pages/Example/FormAndText'
+import { Signup } from '@/pages/Signup'
 
 const routerList = [
   {
@@ -25,6 +26,10 @@ const routerList = [
   {
     path: '/login',
     element: <Login />
+  },
+  {
+    path: '/signup',
+    element: <Signup />
   },
   {
     path: '/portfolios',
