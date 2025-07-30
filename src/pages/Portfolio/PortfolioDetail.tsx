@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom'
-import { useEffect, useState, useRef } from 'react'
-import { handleToggleBookmark } from '@/utils/bookmarkUtils'
+import { useState, useRef } from 'react'
+import { usePortfolioDetail } from '@/hooks/usePortfolioDetail'
+import { handleToggleBookmark } from '@/apis/bookmark/bookmarkUtils'
 import supabase from '@/lib/supabaseClient'
 import S from './PortfolioDetail.module.css'
 import defaultProfileImage from '@/assets/images/default-profile.png'
@@ -12,34 +13,22 @@ import emptyBookmark from '@/assets/icon/bookmark-empty.svg'
 import filledBookmark from '@/assets/icon/bookmark-fill.svg'
 import dm from '@/assets/icon/dm-black.svg'
 
-interface PortfolioData {
-  id: string
-  userId: string
-  profileimage: string
-  name: string
-  birthDate: string
-  phone: string
-  email: string
-  title: string
-  content: string
-  career: string
-  interest: string
-  techStack: string[]
-  linkUrl: string
-  imageUrls: string[]
-  likeCount: number
-}
-
 export default function PortfolioDetail() {
   const { id } = useParams<{ id: string }>()
   const decodedId = decodeURIComponent(id ?? '')
-  const [data, setData] = useState<PortfolioData | null>(null)
   const [activeNavButton, setActiveNavButton] = useState('기본 정보')
   const [activeEditButton, setActiveEditButton] = useState('수정')
-  const [like, setLike] = useState(false)
-  const [bookmark, setBookmark] = useState(false)
-  const [likeCount, setLikeCount] = useState(0)
-  const [userId, setUserId] = useState<string | null>(null)
+
+  const {
+    data,
+    like,
+    setLike,
+    bookmark,
+    setBookmark,
+    likeCount,
+    setLikeCount,
+    userId
+  } = usePortfolioDetail(decodedId)
 
   const basicInfoRef = useRef<HTMLDivElement>(null)
   const techStackRef = useRef<HTMLDivElement>(null)
@@ -53,176 +42,52 @@ export default function PortfolioDetail() {
     scrollToSection(buttonName, ref, setActiveNavButton, 200)
   }
 
-  // 좋아요 개수 supabase에서 불러오기
-  useEffect(() => {
-    if (!data?.id) return
-  
-    const fetchLikeCount = async () => {
-      const { count, error } = await supabase
-        .from('Like')
-        .select('*', { count: 'exact', head: true })
-        .eq('portfolioid', data.id)
-  
-      if (!error) {
-        setLikeCount(count || 0)
-      } else {
-        console.error('좋아요 개수 불러오기 실패:', error.message)
-      }
-    }
-  
-    fetchLikeCount()
-  }, [data?.id])
-
-
-  // 좋아요 상태 초기화
-  useEffect(() => {
-    const fetchLikeState = async () => {
-      if (!userId || !decodedId) return
-
-      const { data: likeData, error: likeError } = await supabase
-        .from('Like')
-        .select('id')
-        .eq('userid', userId)
-        .eq('portfolioid', decodedId)
-        .single()
-
-      if (likeError && likeError.code !== 'PGRST116') {
-        console.error('좋아요 상태 조회 실패:', likeError.message)
-        return
-      }
-
-      setLike(!!likeData)
-    }
-
-    fetchLikeState()
-  }, [userId, decodedId])
-
-
-  useEffect(() => {
-    if (data?.likeCount !== undefined) {
-      setLikeCount(data.likeCount)
-    }
-  }, [data])
-
-  const toggleLike = async () => {
-    if (!data || !userId) return
-  
-    // 새 좋아요 상태
-    const newLikeState = !like
-  
-    // optimistic UI 업데이트
-    setLike(newLikeState)
-    setLikeCount(prev => (newLikeState ? prev + 1 : prev - 1))
-  
-    try {
-      if (newLikeState) {
-        // 1. 좋아요 추가
-        const { error: likeError } = await supabase
-          .from('Like')
-          .insert({
-            userid: userId,
-            portfolioid: data.id,  // 반드시 id가 맞는지 확인
-          })
-  
-        if (likeError) throw likeError
-  
-        // 2. likeCount 증가 → Supabase 함수 호출
-        const { error: rpcError } = await supabase.rpc('increment_like_count', {
-          portfolioid: data.id, 
-        })
-  
-        if (rpcError) throw rpcError
-      } else {
-        // 1. 좋아요 취소
-        const { error: unlikeError } = await supabase
-          .from('Like')
-          .delete()
-          .eq('userid', userId)
-          .eq('portfolioid', data.id)
-  
-        if (unlikeError) throw unlikeError
-  
-        // 2. likeCount 감소 → Supabase 함수 호출
-        const { error: rpcError } = await supabase.rpc('decrement_like_count', {
-          portfolioid: data.id,
-        })
-  
-        if (rpcError) throw rpcError
-      }
-    } catch (error) {
-      console.error('좋아요 상태 업데이트 실패:', error)
-      // 실패 시 상태 복구
-      setLike(prev => !prev)
-      setLikeCount(prev => (newLikeState ? prev - 1 : prev + 1))
-    }
-  }
-  
-
-  useEffect(() => {
-    const fetchInitialBookmarkState = async () => {
-      if (!userId || !decodedId) return
-
-      const { data, error } = await supabase
-        .from('BookMark')
-        .select('id')
-        .eq('userid', userId)
-        .eq('portfolioid', decodedId)
-        .single()
-
-      if (error && error.code !== 'PGRST116') {
-        // 'PGRST116' :  row not found
-        console.error('북마크 상태 조회 실패:', error.message)
-        return
-      }
-
-      setBookmark(!!data)
-    }
-
-    fetchInitialBookmarkState()
-  }, [userId, decodedId])
-
-  const toggleBookmark = async () => {
-    if (!data) return
-    const success = await handleToggleBookmark(data.id, userId, !bookmark)
-    if (success) {
-      setBookmark(prev => !prev)
-    }
-  }
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser()
-      if (error || !data?.user) {
-        console.error('사용자가 인증되지 않았습니다.', error)
-        return
-      }
-      setUserId(data.user.id)
-    }
-    fetchUser()
-  }, [])
-
-  useEffect(() => {
-    if (!decodedId) return
-    const fetchPortfolio = async () => {
-      const { data, error } = await supabase
-        .from('Portfolio')
-        .select('*')
-        .eq('id', decodedId)
-        .single()
-
-      if (error) {
-        console.error(error)
-        return
-      }
-
-      setData(data)
-    }
-
-    if (id) fetchPortfolio()
-  }, [decodedId])
-
   if (!data) return <p>불러오는 중...</p>
 
+  const toggleLike = async () => {
+    if (!decodedId || !userId) return
+
+    const nextLike = !like
+    setLike(nextLike)
+
+    if (nextLike) {
+      const { error } = await supabase.from('like_table').upsert({
+        portfolioid: decodedId,
+        userid: userId
+      })
+
+      if (error) {
+        console.error('좋아요 추가 중 오류 발생:', error.message)
+        setLike(!nextLike) // 원래 상태로 되돌리기
+      } else {
+        setLikeCount(prev => prev + 1)
+      }
+    } else {
+      // 좋아요 취소
+      const { error } = await supabase
+        .from('like_table')
+        .delete()
+        .eq('portfolioid', decodedId)
+        .eq('userid', userId)
+
+      if (error) {
+        console.error('좋아요 취소 중 오류 발생:', error.message)
+        setLike(!nextLike)
+      } else {
+        setLikeCount(prev => Math.max(prev - 1, 0)) // 최소 0으로 유지
+      }
+    }
+  }
+
+  const toggleBookmark = async () => {
+    const nextBookmark = !bookmark
+    setBookmark(nextBookmark)
+
+    const success = await handleToggleBookmark(decodedId, userId, nextBookmark)
+    if (!success) {
+      setBookmark(!nextBookmark) // 원래 상태로 되돌리기
+    }
+  }
   return (
     <div className={S.container}>
       <div className={S.bookmarkLike}>

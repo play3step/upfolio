@@ -5,7 +5,8 @@ import { useSearch } from '@/context/SearchContext'
 import { PortfolioCard } from '@/components/PortfolioCard'
 import styles from '@/components/PortfolioCard.module.css'
 import { SearchBar } from '@/components/SearchBar'
-import { handleToggleBookmark } from '@/utils/bookmarkUtils'
+import { handleToggleBookmark } from '@/apis/bookmark/bookmarkUtils'
+import supabase from '@/lib/supabaseClient'
 
 export interface SearchParams {
   interest: string
@@ -50,7 +51,7 @@ export const Home = () => {
     if (keyword) {
       handleSearch({
         interest: 'all',
-        keyword,
+        keyword
       })
     }
   }, [keyword])
@@ -58,9 +59,9 @@ export const Home = () => {
   const handleSearch = ({ interest, career, keyword }: SearchParams) => {
     const filtered = (portfolio || []).filter(item => {
       const matchInterest =
-        interest === 'all' || item.interest === INTEREST_MAP[interest as keyof typeof INTEREST_MAP]
-      const matchCareer =
-        !career || item.career === career
+        interest === 'all' ||
+        item.interest === INTEREST_MAP[interest as keyof typeof INTEREST_MAP]
+      const matchCareer = !career || item.career === career
       const matchKeyword =
         !keyword ||
         item.title?.toLowerCase().includes(keyword.toLowerCase()) ||
@@ -75,13 +76,55 @@ export const Home = () => {
 
   const handleBookmarkToggle = async (id: string, next: boolean) => {
     const success = await handleToggleBookmark(id, next, userId)
-    if(success) {
+    if (success) {
       setPortfolio(prev =>
         prev.map(p => (p.id === id ? { ...p, isBookmarked: next } : p))
       )
     }
   }
 
+  const handleLikeToggle = async (id: string, next: boolean) => {
+    if (!userId) return
+  
+    // 1. Like 테이블에 반영
+    const { error: likeError } = await supabase
+      .from('Like') 
+      .upsert({ portfolioid: id, userid: userId })
+  
+    // 2. likeCount 증가/감소
+    const { error: rpcError } = await supabase.rpc(
+      next ? 'increment_like_count' : 'decrement_like_count',
+      { portfolioid: id }
+    )
+  
+    // 3. 에러 체크
+    if (likeError || rpcError) {
+      console.error('좋아요 처리 중 오류:', likeError?.message, rpcError?.message)
+      return
+    }
+  
+    // 4. 최신 likeCount 다시 조회
+    const { data, error: fetchError } = await supabase
+      .from('Portfolio')
+      .select('likeCount')
+      .eq('id', id)
+      .maybeSingle()
+  
+    if (fetchError) {
+      console.error('likeCount 조회 중 오류:', fetchError.message)
+      return
+    }
+  
+    if (data) {
+      setPortfolio(prev =>
+        prev.map(p =>
+          p.id === id ? { ...p, likeCount: data.likeCount } : p
+        )
+      )
+    } else {
+      console.warn('likeCount 조회 결과가 없습니다.')
+    }
+  }
   
   return (
     <div>
@@ -92,6 +135,7 @@ export const Home = () => {
             key={p.id}
             {...p}
             onToggleBookmark={handleBookmarkToggle}
+            onToggleLike={handleLikeToggle}
           />
         ))}
       </div>
