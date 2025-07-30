@@ -1,17 +1,6 @@
 import { useEffect, useState } from 'react'
 import supabase from '@/lib/supabaseClient'
-
-export interface PortfolioItem {
-  id: string
-  userid: string
-  title: string
-  content: string
-  likecount: number
-  viewcount: number
-  interest: string
-  career: string
-  isBookmarked: boolean
-}
+import type { PortfolioItem } from '@/types/portfolio'
 
 export const usePortfolio = (userId: string | null) => {
   const [portfolio, setPortfolio] = useState<PortfolioItem[]>([])
@@ -35,7 +24,7 @@ export const usePortfolio = (userId: string | null) => {
 
       // 2. 포트폴리오 + 유저 정보 가져오기
       const { data: portfolios, error: portfolioError } = await supabase.from(
-        'Portfolio2'
+        'Portfolio'
       ).select(`
           *,
           User:userId

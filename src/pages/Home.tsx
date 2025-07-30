@@ -9,7 +9,7 @@ import { SearchBar } from '@/components/SearchBar'
 
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '@/context/AuthContext'
-import { SearchContext } from '@/context/search/SearchContext'
+import { SearchContext } from '@/context/search/searchContext'
 
 export interface SearchParams {
   interest: string
@@ -37,7 +37,6 @@ export const Home = () => {
   const navigate = useNavigate()
   const { portfolio, setPortfolio } = usePortfolio(userId)
   const [filteredPortfolio, setFilteredPortfolio] = useState(portfolio)
-  const { keyword } = useSearch()
   const { keyword } = useContext(SearchContext)
 
   useEffect(() => {
