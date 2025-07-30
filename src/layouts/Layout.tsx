@@ -5,18 +5,24 @@ import Footer from '@/components/common/Footer'
 
 import { Outlet } from 'react-router-dom'
 import { MyPageSidebar } from '@/components/domain/mypage/MyPageSidebar'
-
+import { AuthContext } from '@/context/AuthContext'
 import DmDropdownWrapper from '@/components/domain/dm/DmDropdownWrapper'
+import { useContext } from 'react'
 // import { useState } from 'react'
 // import { usePortfolio, type PortfolioItem } from '@/hooks/usePortfolio'
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+interface LayoutProps {
+  children?: React.ReactNode
+}
+
+export default function Layout({ children }: LayoutProps) {
   // const [userId, setUserId] = useState<string | null>(null)
   // const { portfolio, setPortfolio } = usePortfolio(userId)
   // const [filteredPortfolio, setFilteredPortfolio] = useState<PortfolioItem[]>(
   //   []
   // )
   const showSidebar = window.location.pathname.includes('/mypage')
+  const { isAuthenticated } = useContext(AuthContext)
 
   // const handleSearch = (keyword: string) => {
   //   const filtered = portfolio.filter(item =>
@@ -34,9 +40,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Outlet />
           {children}
         </main>
-        <div className={S['dm--button-position']}>
-          <DmDropdownWrapper />
-        </div>
+        {isAuthenticated && (
+          <div className={S['dm--button-position']}>
+            <DmDropdownWrapper />
+          </div>
+        )}
       </div>
       <Footer />
     </div>
