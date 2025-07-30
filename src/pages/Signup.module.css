@@ -1,0 +1,76 @@
+.signup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--sp-6);
+  background-color: var(--gray2);
+}
+
+.signup__card {
+  width: 100%;
+  max-width: 32rem;
+  padding: var(--sp-8);
+  background-color: white;
+  border-radius: var(--rounded-lg);
+  box-shadow: var(--bs-drop);
+}
+
+.signup__title {
+  font-size: var(--fs-xl);
+  font-weight: 600;
+  color: var(--primary);
+  text-align: center;
+}
+
+.signup__description {
+  margin-top: var(--sp-2);
+  color: var(--gray-600);
+  font-size: var(--fs-sm);
+  text-align: center;
+}
+
+.signup__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  width: 100%;
+  margin-top: var(--sp-6);
+}
+
+.birth-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.birth-input-group label {
+  font-size: 0.875rem;
+  color: var(--gray-700);
+  text-align: left;
+}
+
+.birth-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.birth-inputs input {
+  width: 4.5rem;
+  padding: 0.5rem;
+  border: 1px solid var(--gray-300);
+  border-radius: 0.375rem;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.birth-inputs input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.birth-inputs span {
+  color: var(--gray-600);
+  font-size: 0.875rem;
+}

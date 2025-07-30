@@ -12,6 +12,7 @@ import { PortfolioList } from '@/pages/Portfolio/PortfolioList'
 import { createBrowserRouter } from 'react-router-dom'
 import Layout from '@/layouts/Layout'
 import FormAndText from '@/pages/Example/FormAndText'
+import { Signup } from '@/pages/Signup'
 
 const routerList = [
   {
@@ -25,6 +26,10 @@ const routerList = [
   {
     path: '/login',
     element: <Login />
+  },
+  {
+    path: '/signup',
+    element: <Signup />
   },
   {
     path: '/portfolios',
