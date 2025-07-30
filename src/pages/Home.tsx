@@ -7,10 +7,13 @@ import styles from '@/components/PortfolioCard.module.css'
 import supabase from '@/lib/supabaseClient'
 import { SearchBar } from '@/components/SearchBar'
 
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AuthContext } from '@/context/AuthContext'
 
-import { useSearchPortfoilo } from '@/hooks/useSearchPortfoilo'
+import {
+  useSearchPortfoilo,
+  type SearchParams
+} from '@/hooks/useSearchPortfoilo'
 import type { PortfolioItem } from '@/types/portfolio'
 
 export const INTEREST_MAP = {
@@ -31,7 +34,30 @@ export const Home = () => {
   const { isAuthenticated } = useContext(AuthContext)
   const navigate = useNavigate()
   const { portfolio } = usePortfolio(authData?.id ?? null)
-  const { filteredPortfolio, handleSearch } = useSearchPortfoilo({ portfolio })
+  const { filteredPortfolio } = useSearchPortfoilo(portfolio)
+
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const handleSearch = (params: SearchParams) => {
+    const newSearchParams = new URLSearchParams(searchParams)
+    newSearchParams.set('searchKeyword', params.searchKeyword ?? '')
+    newSearchParams.set('interest', params.interest ?? '')
+    newSearchParams.set('career', params.career ?? '')
+    if (params.searchKeyword === '') {
+      newSearchParams.delete('searchKeyword')
+    }
+    if (params.interest === 'all') {
+      newSearchParams.delete('interest')
+    }
+    if (params.career === '') {
+      newSearchParams.delete('career')
+    }
+    if (newSearchParams.toString() === '') {
+      setSearchParams({})
+    } else {
+      setSearchParams(newSearchParams)
+    }
+  }
 
   useEffect(() => {
     getSession()
@@ -70,14 +96,17 @@ export const Home = () => {
     <div>
       <SearchBar onSearch={handleSearch} />
       <div className={styles['portfolio-grid']}>
-        {filteredPortfolio.length === 0 && <div>검색 결과가 없습니다.</div>}
-        {filteredPortfolio.map((p: PortfolioItem) => (
-          <PortfolioCard
-            key={p.id}
-            {...p}
-            onToggleBookmark={handleToggleBookmark}
-          />
-        ))}
+        {filteredPortfolio && filteredPortfolio.length === 0 && (
+          <div>검색 결과가 없습니다.</div>
+        )}
+        {filteredPortfolio &&
+          filteredPortfolio.map((p: PortfolioItem) => (
+            <PortfolioCard
+              key={p.id}
+              {...p}
+              onToggleBookmark={handleToggleBookmark}
+            />
+          ))}
       </div>
     </div>
   )

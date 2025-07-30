@@ -5,7 +5,7 @@ import RadioGroup from './common/RadioGroup'
 import { useState } from 'react'
 import CareerSelect from './common/CareerSelect'
 import { useDebounce } from '../hooks/useDebounce'
-import type { SearchParams } from '@/hooks/useSearchPortfoilo'
+import { type SearchParams } from '@/hooks/useSearchPortfoilo'
 
 const INTEREST_SELECT = [
   { label: '전체', value: 'all' },
@@ -38,7 +38,7 @@ export const SearchBar = ({ onSearch }: SearchBarProps) => {
     const params = {
       interest,
       career,
-      keyword: debouncedKeyword.trim()
+      searchKeyword: debouncedKeyword.trim()
     }
     onSearch(params)
   }
