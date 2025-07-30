@@ -60,6 +60,7 @@ html {
     }
   }
 
+  /* sticky 메뉴일 시 */
   &.sticky {
     position: sticky;
     top: 0;
@@ -71,4 +72,11 @@ html {
     background-color: var(--white);
     border-radius: 0 0 1.25rem 1.25rem;
   }
+}
+
+/* 말줄임표 */
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

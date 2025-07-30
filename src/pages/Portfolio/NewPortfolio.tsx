@@ -14,6 +14,7 @@ import { useUserInfo } from '@/hooks/portfolio/useUserInfo'
 import { useSaveTempPortfolio } from '@/hooks/portfolio/useSaveTempPortfolio'
 import { usePortfolioForm } from '@/hooks/portfolio/usePortfolioForm'
 import { useStickyMenu } from '@/hooks/portfolio/useStickyMenu'
+import SideTempList from './SideTempList'
 
 // TODOS : 기본정보 마이페이지에서 불러와야함
 const TempData: PortfolioData = {
@@ -87,8 +88,27 @@ export const NewPortfolio = () => {
 
   useStickyMenu(stickyRef, setIsSticky)
 
+  /* --- 임시저장목록 사이드패널 --- */
+  const [isSideOpen, setSideOpen] = useState(false)
+
+  const handleOpenSide = () => {
+    setSideOpen(true)
+  }
+
+  const handleCloseSide = () => {
+    setSideOpen(false)
+  }
+
   return (
     <div className={S.container}>
+      {/* 임시저장목록 사이드 패널 */}
+      <SideTempList
+        isOpen={isSideOpen}
+        isClose={handleCloseSide}
+        onSave={handleSaveTemp}
+      />
+
+      {/* 포트폴리오 작성 목록 */}
       <div
         ref={stickyRef}
         className={`tit-withBtn ${isSticky ? 'sticky' : ''}`}>
@@ -105,14 +125,13 @@ export const NewPortfolio = () => {
         />
         <div style={{ display: 'flex', gap: '.75rem' }}>
           <Button
-            onClick={handleSaveTemp}
+            onClick={handleOpenSide}
             line>
             임시저장
           </Button>
           <Button onClick={handleSave}>저장</Button>
         </div>
       </div>
-
       <form>
         <section className={S['sec']}>
           <h3 className="a11y-hidden">기본정보</h3>
