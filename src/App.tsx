@@ -1,13 +1,15 @@
-import SupaTest from "./pages/SupaTest"
+import { RouterProvider } from 'react-router-dom'
+import { router } from './routes/Router'
+import { AuthProvider } from './context/AuthProvider'
+import { SearchProvider } from './context/search/SearchProvider'
 
 function App() {
   return (
-    <>
-      <h1 className="text-3xl font-bold underline cursor-pointer">
-        Hello world!
-      </h1>
-      <SupaTest />
-    </>
+    <SearchProvider>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </SearchProvider>
   )
 }
 

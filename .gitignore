@@ -188,4 +188,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+copilot-instructions.md
+
 # End of https://www.toptal.com/developers/gitignore/api/mac,windows,node,visualstudiocode

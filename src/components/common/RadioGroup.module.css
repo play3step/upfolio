@@ -1,0 +1,48 @@
+.radio-group {
+  display: block;
+
+  legend {
+    display: block;
+    margin-bottom: var(--sp-2);
+  }
+
+  ul {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 0;
+    gap: 0.75rem;
+
+    li {
+      display: block;
+
+      span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 28px;
+        line-height: 28px;
+        padding: 0.25rem 0.75rem;
+        font-size: var(--fs-sm);
+        border: 1px solid var(--primary);
+        border-radius: 1.875rem;
+        background-color: var(--white);
+        color: var(--primary);
+        cursor: pointer;
+      }
+
+      input:checked + span {
+        background-color: var(--primary);
+        color: var(--white);
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.radio-group--err {
+  ul {
+    border: 1px dashed var(--danger-50);
+    border-radius: 20px;
+  }
+}

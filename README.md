@@ -71,14 +71,15 @@ src/
 
 ```json
 {
-  "semi": false,
-  "singleQuote": true,
-  "singleAttributePerLine": true,
-  "bracketSameLine": true,
-  "endOfLine": "lf",
-  "trailingComma": "none",
-  "arrowParens": "avoid"
+  "semi": false,                    // 세미콜론(;) 사용 안 함
+  "singleQuote": true,             // 문자열은 싱글쿼트(') 사용
+  "singleAttributePerLine": true,  // JSX 속성은 줄마다 하나씩
+  "bracketSameLine": true,         // JSX 닫는 괄호는 마지막 라인에 붙임
+  "endOfLine": "lf",               // 줄바꿈은 LF (\n) 사용 (유닉스 스타일)
+  "trailingComma": "none",         // 끝에 쉼표는 붙이지 않음
+  "arrowParens": "avoid"           // 화살표 함수의 매개변수가 하나일 땐 괄호 생략
 }
+
 ```
 
 ### ✅ ESLint

@@ -2,8 +2,81 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+html {
+  font-size: 16px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.a11y-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* form 요소 에러메세지 */
+.err-msg {
+  display: block;
+  font-size: var(--fs-xs);
+  margin-top: var(--sp-1);
+  color: var(--danger);
+  &::before {
+    content: '✔';
+    display: inline-block;
+    margin-right: var(--sp-1);
+  }
+}
+
+/* 타이틀 +  버튼 형식 */
+.tit-withBtn {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+  gap: var(--sp-3);
+  align-items: center;
+  background-color: var(--white);
+  transition: all 0.3s ease;
+
+  .tit__txt {
+    font-size: var(--fs-xl);
+    font-weight: bold;
+  }
+
+  @media (max-width: 40rem) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: var(--sp-1);
+
+    .tit__txt {
+      font-size: var(--fs-lg);
+    }
+  }
+
+  /* sticky 메뉴일 시 */
+  &.sticky {
+    position: sticky;
+    top: 0;
+    left: 0;
+    margin: 0 -0.75rem;
+    padding: 0.5rem 0.75rem;
+    box-shadow: var(--bs-drop);
+    z-index: 4;
+    background-color: var(--white);
+    border-radius: 0 0 1.25rem 1.25rem;
+  }
+}
+
+/* 말줄임표 */
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
