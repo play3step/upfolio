@@ -1,15 +1,14 @@
-.textarea-wrap{
+.textarea-wrap {
   display: flex;
   flex-direction: column;
   width: 100%;
-
 
   label {
     margin-bottom: var(--sp-2);
     font-size: var(--fs-sm);
     font-weight: 400;
   }
-  
+
   textarea {
     padding: 13px 16px;
     height: 13.625rem;
@@ -22,15 +21,11 @@
       color: var(--gray);
     }
   }
-
 }
 
-.textarea-wrap--err{
-  label {
-    color: var(--danger);
-  }
+.textarea-wrap--err {
   textarea {
-    border: .0625rem solid var(--danger);
+    border: 0.0625rem solid var(--danger);
     background-color: var(--danger-20);
   }
 }
