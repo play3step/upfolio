@@ -2,6 +2,7 @@ import { signupUser } from '@/apis/user/signup.controller'
 import { AuthContext } from '@/context/AuthContext'
 import { formatPhoneNumber } from '@/utils/format'
 import { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export const useSignup = () => {
   const [birthDate, setBirthDate] = useState({
@@ -11,7 +12,7 @@ export const useSignup = () => {
   })
   const [phone, setPhone] = useState('')
   const { authData } = useContext(AuthContext)
-
+  const navigate = useNavigate()
   const handleBirthChange = (
     field: 'year' | 'month' | 'day',
     value: string
@@ -47,6 +48,8 @@ export const useSignup = () => {
       id: authData?.id ?? ''
     }
     await signupUser(signupData.phone, signupData.birthDate, signupData.id)
+    alert('회원가입이 완료되었습니다.')
+    navigate('/')
   }
 
   return {

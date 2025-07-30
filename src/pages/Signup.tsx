@@ -29,13 +29,13 @@ export function Signup() {
           <Input
             id="exId01"
             label="이메일"
-            value="example@github.com"
+            value={authData?.email ?? ''}
             readOnly
           />
           <Input
             id="exId02"
             label="이름"
-            value="배고파"
+            value={authData?.nickname ?? ''}
             readOnly
           />
           <Input

@@ -21,8 +21,8 @@ export interface UserData {
 }
 
 export interface AuthContextType {
-  login: (userData: AuthData) => void
+  login: (userData: UserData) => void
   logout: () => void
   isAuthenticated: boolean
-  authData: AuthData | null
+  authData: UserData | null
 }
