@@ -1,29 +1,53 @@
 import { useNavigate } from 'react-router-dom'
 import S from './Posts.module.css'
+import { useEffect, useState } from 'react'
+import supabase from '@/lib/supabaseClient'
 
-const dummyPosts = [
-  {
-    id: 1,
-    title: '타이틀 1',
-    content: 'Lorem ipsum dolor sit amet...',
-    date: '2023.07.28'
-  },
-  {
-    id: 2,
-    title: '타이틀 2',
-    content: 'Lorem ipsum dolor sit amet...',
-    date: '2023.07.29'
-  }
-]
+interface Post {
+  id: number
+  title: string
+  content: string
+  createdat: string
+  likeCount: number
+  viewCount: number
+}
 
-const dummyComments = [
-  { id: 1, content: 'Lorem ipsum dolor sit amet...', date: '2023.07.28' },
-  { id: 2, content: 'Lorem ipsum dolor sit amet...', date: '2023.07.29' },
-  { id: 3, content: 'Lorem ipsum dolor sit amet...', date: '2023.07.30' }
-]
+interface Comment {
+  id: number
+  portfolioid: number
+  userid: string
+  content: string
+  createdat: string
+}
 
 export default function Posts() {
+  const [posts, setPosts] = useState<Post[]>([])
+  const [comments, setComments] = useState<Comment[]>([])
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const {
+        data: { user }
+      } = await supabase.auth.getUser()
+      if (!user) return
+
+      const { data } = await supabase
+        .from('Portfolio')
+        .select('id, title, content, createdat, likeCount,viewCount')
+        .eq('userId', user.id)
+
+      setPosts(data || [])
+
+      const { data: commentData } = await supabase
+        .from('Comment')
+        .select('id, portfolioid, userid, content, createdat')
+        .eq('userid', user.id)
+
+      setComments(commentData || [])
+    }
+    fetchPosts()
+  }, [])
 
   const handlePostClick = (id: number) => {
     navigate(`/posts/${id}`)
@@ -33,10 +57,10 @@ export default function Posts() {
     <div className={S.container}>
       <section className={S.section}>
         <h2 className={S.title}>내가 작성한 글</h2>
-        {dummyPosts.length === 0 ? (
+        {posts.length === 0 ? (
           <p>작성된 글이 없습니다.</p>
         ) : (
-          dummyPosts.map((post, idx) => (
+          posts.map((post, idx) => (
             <div
               key={post.id}
               className={S.item}
@@ -48,7 +72,16 @@ export default function Posts() {
                   <p className={S.itemContent}>{post.content}</p>
                 </div>
               </div>
-              <div className={S.date}>{post.date}</div>
+              <div className={S.date}>
+                {new Date(post.createdat)
+                  .toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                  })
+                  .replace(/\.\s*$/, '')}
+                | 좋아요: {post.likeCount} | 조회수: {post.viewCount}
+              </div>
             </div>
           ))
         )}
@@ -56,10 +89,10 @@ export default function Posts() {
 
       <section className={S.section}>
         <h2 className={S.title}>내가 작성한 댓글</h2>
-        {dummyComments.length === 0 ? (
+        {comments.length === 0 ? (
           <p>작성된 댓글이 없습니다.</p>
         ) : (
-          dummyComments.map((comment, idx) => (
+          comments.map((comment, idx) => (
             <div
               key={comment.id}
               className={S.item}>
@@ -67,7 +100,15 @@ export default function Posts() {
                 <strong>{idx + 1}</strong>
                 <p className={S.itemContent}>{comment.content}</p>
               </div>
-              <div className={S.date}>{comment.date}</div>
+              <div className={S.date}>
+                {new Date(comment.createdat)
+                  .toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                  })
+                  .replace(/\.\s*$/, '')}
+              </div>
             </div>
           ))
         )}
