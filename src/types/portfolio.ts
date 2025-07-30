@@ -44,3 +44,9 @@ export interface UserInfo {
 }
 
 export type ValidationError = Partial<Record<keyof PortfolioData, string>>
+
+export interface TempItem {
+  id: string
+  title: string
+  updatedAt: string
+}
