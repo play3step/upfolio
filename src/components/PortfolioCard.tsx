@@ -8,11 +8,11 @@ import { useNavigate } from 'react-router-dom'
 
 export interface Props {
   id: string
-  userid: string
+  userId: string
   title: string
   content: string
-  likecount: number
-  viewcount: number
+  likeCount: number
+  viewCount: number
   interest: string
   career: string
   isBookmarked: boolean
@@ -26,8 +26,8 @@ export function PortfolioCard({
   id,
   title,
   content,
-  likecount,
-  viewcount,
+  likeCount,
+  viewCount,
   interest,
   career,
   isBookmarked,
@@ -77,14 +77,14 @@ export function PortfolioCard({
             src={grayHeart}
             alt="Like Icon"
           />
-          {likecount}
+          {likeCount}
         </span>
         <span className={S.view}>
           <img
             src={eye}
             alt="View Icon"
           />
-          {viewcount}
+          {viewCount}
         </span>
       </div>
     </div>
