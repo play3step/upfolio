@@ -14,7 +14,11 @@ export const uploadTempPortfolio = async ({
   const { error } = await supabase
     .from('TempPortfolio')
     .upsert(
-      { ...rest, userId: userInfo?.id, id: undefined },
+      {
+        ...rest,
+        userId: userInfo?.id,
+        ...(portfolioData.id ? { id: portfolioData.id } : {})
+      },
       { onConflict: 'id' }
     )
 

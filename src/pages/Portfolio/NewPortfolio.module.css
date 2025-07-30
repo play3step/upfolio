@@ -3,7 +3,7 @@
   width: 100%;
   max-width: 49.25rem;
   margin: 0 auto;
-  padding: 3.75rem 0.75rem 5rem;
+  padding: 2rem 0.75rem 5rem;
 
   @media (max-width: 40rem) {
     padding: 2rem 0.65rem 2.5rem;
@@ -11,7 +11,7 @@
 }
 
 .head {
-  /* &.sticky {
+  &.sticky {
     position: sticky;
     top: 0;
     left: 0;
@@ -21,7 +21,7 @@
     z-index: 4;
     background-color: var(--white);
     border-radius: 0 0 1.25rem 1.25rem;
-  } */
+  }
 
   .head__tempListBtn {
     display: flex;

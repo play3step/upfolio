@@ -6,9 +6,10 @@ interface Props {
   isOpen: boolean
   isClose: () => void
   tempList: TempItem[]
+  onSelect: (tempItemId: string) => void
 }
 
-function SideTempList({ isOpen, isClose, tempList }: Props) {
+function SideTempList({ isOpen, isClose, tempList, onSelect }: Props) {
   return (
     <>
       <div
@@ -27,7 +28,9 @@ function SideTempList({ isOpen, isClose, tempList }: Props) {
           <ul className={S['side__list']}>
             {tempList.map(item => (
               <li key={item.id}>
-                <button type="button">
+                <button
+                  type="button"
+                  onClick={() => onSelect(item.id)}>
                   <strong className={`${S['tit']} ${'ellipsis'}`}>
                     {item.title}
                   </strong>

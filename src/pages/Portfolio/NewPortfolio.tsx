@@ -78,7 +78,8 @@ export const NewPortfolio = () => {
   /* --- 입력값 변경 시 상태 저장 및 관련 에러 제거 --- */
   const { handleChangeForm } = usePortfolioForm(setPortfolioData, setErrors)
 
-  /* --- 임시저장목록 사이드패널 --- */
+  /* --- 임시저장목록 --- */
+  // 사이드 패널 열고 닫기
   const [isSideOpen, setSideOpen] = useState(false)
 
   const handleOpenSide = () => {
@@ -89,6 +90,7 @@ export const NewPortfolio = () => {
     setSideOpen(false)
   }
 
+  // 임시저장 목록 불러오기
   const [tempList, setTempList] = useState<TempItem[]>([])
 
   const fetchTempList = useCallback(async () => {
@@ -113,6 +115,31 @@ export const NewPortfolio = () => {
     fetchTempList()
   }, [fetchTempList])
 
+  const handleSelectTempItem = async (id: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('TempPortfolio')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+      if (error) throw error
+      if (!data) return
+      console.log(typeof data.techStack, data.techStack)
+      setErrors({})
+
+      setPortfolioData(prev => ({
+        ...prev,
+        ...data,
+        id: data.id
+      }))
+
+      setSideOpen(false)
+    } catch (error) {
+      console.error('임시저장된 항목 불러오기 실패', error)
+    }
+  }
+
   /* --- 임시저장 --- */
   const { handleSaveTemp } = useSaveTempPortfolio({
     portfolioData,
@@ -136,12 +163,13 @@ export const NewPortfolio = () => {
         isOpen={isSideOpen}
         isClose={handleCloseSide}
         tempList={tempList}
+        onSelect={handleSelectTempItem}
       />
 
       {/* 포트폴리오 작성 목록 */}
       <div
         ref={stickyRef}
-        className={`${S['head']} ${isSticky ? 'sticky' : ''}`}>
+        className={`${S.head} ${isSticky ? S.sticky : ''}`}>
         <h2 className="a11y-hidden">포트폴리오 등록</h2>
         <button
           type="button"
@@ -229,7 +257,9 @@ export const NewPortfolio = () => {
 
             <CheckboxSelect
               value={portfolioData.techStack}
-              onChange={stack => handleChangeForm('techStack', stack)}
+              onChange={stack => {
+                handleChangeForm('techStack', stack)
+              }}
               error={errors.techStack}
             />
           </div>
