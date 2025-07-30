@@ -4,10 +4,9 @@ import logo from '@/assets/logo.svg'
 import person from '@/assets/icon/person.svg'
 import alarm from '@/assets/icon/alarm.svg'
 import search from '@/assets/icon/search.svg'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { useContext, useEffect, useRef, useState } from 'react'
+import { Link, NavLink, useNavigate, useSearchParams } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
 import { useAuth } from '@/hooks/auth/useAuth'
-import { SearchContext } from '@/context/search/SearchContext'
 
 export const Header = () => {
   const [showHeader, setShowHeader] = useState(true)
@@ -15,20 +14,24 @@ export const Header = () => {
   const { isAuthenticated, logout } = useAuth()
   const [searchKeyword, setSearchKeyword] = useState('')
 
-  const { setKeyword } = useContext(SearchContext)
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const navigate = useNavigate()
-
-  console.log('Header 렌더링됨, isAuthenticated:', isAuthenticated)
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value)
   }
 
   const handleSearchSubmit = () => {
-    setKeyword(searchKeyword)
     navigate('/')
+    const newSearchParams = new URLSearchParams(searchParams)
+    newSearchParams.set('searchKeyword', searchKeyword)
+    if (searchKeyword === '') {
+      newSearchParams.delete('searchKeyword')
+    }
+    setSearchParams(newSearchParams)
   }
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.pageYOffset
