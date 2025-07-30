@@ -4,29 +4,21 @@ import { useEffect, useState } from 'react'
 import supabase from '@/lib/supabaseClient'
 import { formatDate } from '@/utils/formatDate'
 
-interface Bookmark {
+interface BookmarkAndLiked {
   portfolioid: string
   Portfolio: {
     id: string
     title: string
     content: string
-    createdAt: string
+    createdat: string
     likeCount: number
-  }
-}
-
-interface LikedComment {
-  commentid: string
-  Comment: {
-    content: string
-    createdAt: string
   }
 }
 
 export const Bookmarks = () => {
   const navigate = useNavigate()
-  const [bookmarks, setBookmarks] = useState<Bookmark[]>([])
-  const [likedComments, setLikedComments] = useState<LikedComment[]>([])
+  const [bookmarks, setBookmarks] = useState<BookmarkAndLiked[]>([])
+  const [likedComments, setLikedComments] = useState<BookmarkAndLiked[]>([])
 
   useEffect(() => {
     const fetchBookmarks = async () => {
@@ -49,7 +41,7 @@ export const Bookmarks = () => {
             id,
             title,
             content,
-            createdAt,
+            createdat,
             likeCount
           )
         `
@@ -62,19 +54,19 @@ export const Bookmarks = () => {
           bookmarkError.message
         )
       } else if (bookmarkData) {
-        const fixedBookmarks: Bookmark[] = bookmarkData.map(item => {
-          const portfolio = Array.isArray(item.Portfolio)
+        const fixedBookmarks: BookmarkAndLiked[] = bookmarkData.map(item => {
+          const bookmark = Array.isArray(item.Portfolio)
             ? item.Portfolio[0] // 배열이면 첫 번째 값
             : item.Portfolio // 아니면 그냥 사용
 
           return {
             portfolioid: item.portfolioid,
             Portfolio: {
-              id: portfolio.id,
-              title: portfolio.title,
-              content: portfolio.content,
-              createdAt: portfolio.createdAt,
-              likeCount: portfolio.likeCount
+              id: bookmark.id,
+              title: bookmark.title,
+              content: bookmark.content,
+              createdat: bookmark.createdat,
+              likeCount: bookmark.likeCount
             }
           }
         })
@@ -85,13 +77,16 @@ export const Bookmarks = () => {
       // 좋아요한 댓글 데이터 가져오기
       const { data: likedCommentData, error: likedCommentError } =
         await supabase
-          .from('Like')
+          .from('like_table')
           .select(
             `
-          commentid,
-          Comment (
+          portfolioid,
+          Portfolio(
+            id,
+            title,
             content,
-            createdAt
+            createdat,
+            likeCount
           )
         `
           )
@@ -99,27 +94,30 @@ export const Bookmarks = () => {
 
       if (likedCommentError) {
         console.error(
-          '좋아요한 댓글 데이터를 가져오는 중 오류 발생:',
+          '좋아요한 글 데이터를 가져오는 중 오류 발생:',
           likedCommentError.message
         )
       } else if (likedCommentData) {
-        const fixedLikedComments: LikedComment[] = likedCommentData.map(
+        const fixedLikedPortfolios: BookmarkAndLiked[] = likedCommentData.map(
           item => {
-            const comment = Array.isArray(item.Comment)
-              ? item.Comment[0]
-              : item.Comment
+            const likedPortfolio = Array.isArray(item.Portfolio)
+              ? item.Portfolio[0]
+              : item.Portfolio
 
             return {
-              commentid: item.commentid,
-              Comment: {
-                content: comment.content,
-                createdAt: comment.createdAt
+              portfolioid: item.portfolioid,
+              Portfolio: {
+                id: likedPortfolio.id,
+                title: likedPortfolio.title,
+                content: likedPortfolio.content,
+                createdat: likedPortfolio.createdat,
+                likeCount: likedPortfolio.likeCount
               }
             }
           }
         )
 
-        setLikedComments(fixedLikedComments)
+        setLikedComments(fixedLikedPortfolios)
       }
     }
 
@@ -150,7 +148,7 @@ export const Bookmarks = () => {
                 </div>
               </div>
               <div className={S.date}>
-                {formatDate(bookmark.Portfolio.createdAt)}
+                {formatDate(bookmark.Portfolio.createdat)}
               </div>
             </div>
           ))
@@ -158,20 +156,23 @@ export const Bookmarks = () => {
       </section>
 
       <section className={S.section}>
-        <h2 className={S.title}>좋아요한 댓글</h2>
+        <h2 className={S.title}>좋아요한 글</h2>
         {likedComments.length === 0 ? (
-          <p>좋아요한 댓글이 없습니다.</p>
+          <p>좋아요한 글이 없습니다.</p>
         ) : (
-          likedComments.map((comment, idx) => (
+          likedComments.map((likeportfolio, idx) => (
             <div
-              key={comment.commentid}
+              key={likeportfolio.portfolioid}
               className={S.item}>
               <div className={S.left}>
                 <strong>{idx + 1}</strong>
-                <p className={S.itemContent}>{comment.Comment.content}</p>
+                <p className={S.itemContent}>
+                  <p className={S.itemTitle}>{likeportfolio.Portfolio.title}</p>
+                  {likeportfolio.Portfolio.content}
+                </p>
               </div>
               <div className={S.date}>
-                {formatDate(comment.Comment.createdAt)}
+                {formatDate(likeportfolio.Portfolio.createdat)}
               </div>
             </div>
           ))

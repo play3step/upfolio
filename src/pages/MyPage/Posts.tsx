@@ -3,27 +3,21 @@ import S from './Posts.module.css'
 import { useEffect, useState } from 'react'
 import supabase from '@/lib/supabaseClient'
 import { formatDate } from '@/utils/formatDate'
+import likeIcon from '@/assets/icon/like.svg'
+import eyeIcon from '@/assets/icon/eye.svg'
+import Comments from './Comments'
 
 interface Post {
   id: number
   title: string
   content: string
-  createdAt: string
+  createdat: string
   likeCount: number
   viewCount: number
 }
 
-interface Comment {
-  id: number
-  portfolioid: number
-  userid: string
-  content: string
-  createdAt: string
-}
-
 export default function Posts() {
   const [posts, setPosts] = useState<Post[]>([])
-  const [comments, setComments] = useState<Comment[]>([])
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -35,17 +29,10 @@ export default function Posts() {
 
       const { data } = await supabase
         .from('Portfolio')
-        .select('id, title, content, createdAt, likeCount,viewCount')
+        .select('id, title, content, createdat, likeCount,viewCount')
         .eq('userId', user.id)
 
       setPosts(data || [])
-
-      const { data: commentData } = await supabase
-        .from('Comment')
-        .select('id, portfolioid, userid, content, createdAt')
-        .eq('userid', user.id)
-
-      setComments(commentData || [])
     }
     fetchPosts()
   }, [])
@@ -74,32 +61,28 @@ export default function Posts() {
                 </div>
               </div>
               <div className={S.date}>
-                {formatDate(post.createdAt)}| 좋아요: {post.likeCount} | 조회수:{' '}
-                {post.viewCount}
+                {formatDate(post.createdat)} |{' '}
+                <span className={S.inline}>
+                  <img
+                    src={likeIcon}
+                    alt="like"
+                  />
+                  {post.likeCount}
+                </span>{' '}
+                |{' '}
+                <span className={S.inline}>
+                  <img
+                    src={eyeIcon}
+                    alt="eye"
+                  />
+                  {post.viewCount}
+                </span>
               </div>
             </div>
           ))
         )}
       </section>
-
-      <section className={S.section}>
-        <h2 className={S.title}>내가 작성한 댓글</h2>
-        {comments.length === 0 ? (
-          <p>작성된 댓글이 없습니다.</p>
-        ) : (
-          comments.map((comment, idx) => (
-            <div
-              key={comment.id}
-              className={S.item}>
-              <div className={S.left}>
-                <strong>{idx + 1}</strong>
-                <p className={S.itemContent}>{comment.content}</p>
-              </div>
-              <div className={S.date}>{formatDate(comment.createdAt)}</div>
-            </div>
-          ))
-        )}
-      </section>
+      <Comments />
     </div>
   )
 }

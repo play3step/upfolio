@@ -23,14 +23,14 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: var(--sp-3);
-  border: 1px solid var(--gray);
+  border: 1px solid var(--secondary);
   border-radius: var(--sp-2);
-  transition: background-color 0.2s ease;
+  transition: 0.2s ease;
   cursor: pointer;
 }
 
 .item:hover {
-  background-color: var(--gray2);
+  background-color: var(--primary-50);
 }
 
 .content {

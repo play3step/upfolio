@@ -37,7 +37,8 @@
 }
 
 .itemTitle {
-  font-weight: bold
+  font-weight: bold;
+  color: var(--black);
 }
 
 .itemContent {
@@ -52,4 +53,10 @@
 .date {
   font-size: var(--fs-sm);
   color: var(--black);
+}
+
+.inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }

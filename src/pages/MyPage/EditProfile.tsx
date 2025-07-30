@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import supabase from '@/lib/supabaseClient'
 import S from './EditProfile.module.css'
+import { formatDate } from '@/utils/formatDate'
 
 interface Draft {
   id: number
   title: string
   content: string
-  updatedAt: string
+  createdAt: string
 }
 
 export const EditProfile = () => {
@@ -25,7 +26,7 @@ export const EditProfile = () => {
 
         const { data, error } = await supabase
           .from('TempPortfolio') // 임시 저장된 글이 저장된 테이블
-          .select('id, title, content, updatedAt')
+          .select('id, title, content, createdAt')
           .eq('userId', user.user.id)
 
         if (error) {
@@ -66,9 +67,7 @@ export const EditProfile = () => {
                 <h3 className={S.itemTitle}>{temp.title}</h3>
                 <p className={S.itemDescription}>{temp.content}</p>
               </div>
-              <div className={S.date}>
-                {new Date(temp.updatedAt).toLocaleDateString()}
-              </div>
+              <div className={S.date}>{formatDate(temp.createdAt)}</div>
             </li>
           ))}
         </ul>

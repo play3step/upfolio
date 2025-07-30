@@ -21,7 +21,7 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: var(--sp-3) 0;
-  border-bottom: 1px solid var(--gray);
+  border-bottom: 1px solid var(--black);
   transition: 0.2s ease;
 }
 
@@ -37,7 +37,8 @@
 }
 
 .itemTitle {
-  font-weight: bold
+  font-weight: bold;
+  color: var(--black);
 }
 
 .itemContent {
@@ -51,5 +52,5 @@
 
 .date {
   font-size: var(--fs-sm);
-  color: var(--gray);
+  color: var(--black);
 }
