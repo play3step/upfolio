@@ -22,9 +22,9 @@ const TempData: PortfolioData = {
   id: '',
   userId: '',
   profileImage: '',
-  name: '홍길동',
-  birthDate: '2000.04.03',
-  phone: '010-0000-0000',
+  name: '',
+  birthDate: '',
+  phone: '',
   email: '',
   title: '',
   content: '',
@@ -67,10 +67,13 @@ export const NewPortfolio = () => {
   const userId = userInfo?.id ?? null
 
   useEffect(() => {
-    if (userInfo?.email) {
+    if (userInfo) {
       setPortfolioData(prev => ({
         ...prev,
-        email: userInfo.email
+        name: userInfo.nickname,
+        email: userInfo.email,
+        phone: userInfo.phone ?? '',
+        birthDate: userInfo.birthDate ?? ''
       }))
     }
   }, [userInfo])

@@ -15,7 +15,7 @@
     position: sticky;
     top: 0;
     left: 0;
-    margin: 0 -0.75rem;
+    margin: 0 auto;
     padding: 0.5rem 0.75rem;
     box-shadow: var(--bs-drop);
     z-index: 4;
@@ -40,6 +40,16 @@
 
     &:hover {
       background-color: var(--tertiary);
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .head__tempListBtn {
+      margin-bottom: var(--sp-8);
+    }
+
+    .txt-withBtn {
+      margin-bottom: 0;
     }
   }
 }

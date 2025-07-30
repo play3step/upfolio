@@ -41,6 +41,9 @@ export interface PortfolioData {
 export interface UserInfo {
   id: string
   email: string
+  nickname: string
+  phone?: string
+  birthDate?: string
 }
 
 export type ValidationError = Partial<Record<keyof PortfolioData, string>>
