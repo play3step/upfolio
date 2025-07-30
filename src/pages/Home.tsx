@@ -33,9 +33,8 @@ const INTEREST_MAP = {
 export const Home = () => {
   const { authData, getSession } = useAuthLogin()
   const { isAuthenticated } = useContext(AuthContext)
-  const [userId, setUserId] = useState<string | null>(null)
   const navigate = useNavigate()
-  const { portfolio, setPortfolio } = usePortfolio(userId)
+  const { portfolio } = usePortfolio(authData?.id ?? null)
   const [filteredPortfolio, setFilteredPortfolio] = useState(portfolio)
   const { keyword } = useContext(SearchContext)
 
@@ -45,10 +44,6 @@ export const Home = () => {
       navigate('/signup')
     }
   }, [authData?.phone, authData?.birthDate, isAuthenticated])
-
-  useEffect(() => {
-    if (authData?.id) setUserId(authData.id)
-  }, [authData])
 
   useEffect(() => {
     setFilteredPortfolio(portfolio)
@@ -77,7 +72,6 @@ export const Home = () => {
       return matchInterest && matchCareer && matchKeyword
     })
 
-    console.log('setFilteredPortfolio 호출됨: ', filtered.length)
     setFilteredPortfolio(filtered)
   }
 
@@ -106,9 +100,7 @@ export const Home = () => {
       if (error) console.error('Error removing bookmark:', error.message)
     }
 
-    setPortfolio(prev =>
-      prev.map(p => (p.id === id ? { ...p, isBookmarked: next } : p))
-    )
+    // 북마크 상태 업데이트 후 북마크 리스트 다시 가져오기
   }
 
   return (
