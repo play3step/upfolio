@@ -1,13 +1,15 @@
 import { useContext, useEffect, useState } from 'react'
 import { usePortfolio } from '@/hooks/usePortfolio'
 import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
-import { useSearch } from '@/context/SearchContext'
+
 import { PortfolioCard } from '@/components/PortfolioCard'
 import styles from '@/components/PortfolioCard.module.css'
 import supabase from '@/lib/supabaseClient'
 import { SearchBar } from '@/components/SearchBar'
+
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '@/context/AuthContext'
+import { SearchContext } from '@/context/search/searchContext'
 
 export interface SearchParams {
   interest: string
@@ -35,8 +37,8 @@ export const Home = () => {
   const navigate = useNavigate()
   const { portfolio, setPortfolio } = usePortfolio(userId)
   const [filteredPortfolio, setFilteredPortfolio] = useState(portfolio)
-  const { keyword } = useSearch()
-  console.log(authData)
+  const { keyword } = useContext(SearchContext)
+
   useEffect(() => {
     getSession()
     if (authData && (!authData.phone || !authData.birthDate)) {
