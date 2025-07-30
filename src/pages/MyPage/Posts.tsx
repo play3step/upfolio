@@ -2,12 +2,13 @@ import { useNavigate } from 'react-router-dom'
 import S from './Posts.module.css'
 import { useEffect, useState } from 'react'
 import supabase from '@/lib/supabaseClient'
+import { formatDate } from '@/utils/formatDate'
 
 interface Post {
   id: number
   title: string
   content: string
-  createdat: string
+  createdAt: string
   likeCount: number
   viewCount: number
 }
@@ -17,7 +18,7 @@ interface Comment {
   portfolioid: number
   userid: string
   content: string
-  createdat: string
+  createdAt: string
 }
 
 export default function Posts() {
@@ -34,14 +35,14 @@ export default function Posts() {
 
       const { data } = await supabase
         .from('Portfolio')
-        .select('id, title, content, createdat, likeCount,viewCount')
+        .select('id, title, content, createdAt, likeCount,viewCount')
         .eq('userId', user.id)
 
       setPosts(data || [])
 
       const { data: commentData } = await supabase
         .from('Comment')
-        .select('id, portfolioid, userid, content, createdat')
+        .select('id, portfolioid, userid, content, createdAt')
         .eq('userid', user.id)
 
       setComments(commentData || [])
@@ -73,14 +74,8 @@ export default function Posts() {
                 </div>
               </div>
               <div className={S.date}>
-                {new Date(post.createdat)
-                  .toLocaleDateString('ko-KR', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit'
-                  })
-                  .replace(/\.\s*$/, '')}
-                | 좋아요: {post.likeCount} | 조회수: {post.viewCount}
+                {formatDate(post.createdAt)}| 좋아요: {post.likeCount} | 조회수:{' '}
+                {post.viewCount}
               </div>
             </div>
           ))
@@ -100,15 +95,7 @@ export default function Posts() {
                 <strong>{idx + 1}</strong>
                 <p className={S.itemContent}>{comment.content}</p>
               </div>
-              <div className={S.date}>
-                {new Date(comment.createdat)
-                  .toLocaleDateString('ko-KR', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit'
-                  })
-                  .replace(/\.\s*$/, '')}
-              </div>
+              <div className={S.date}>{formatDate(comment.createdAt)}</div>
             </div>
           ))
         )}

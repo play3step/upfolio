@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import S from './Bookmarks.module.css'
 import { useEffect, useState } from 'react'
 import supabase from '@/lib/supabaseClient'
+import { formatDate } from '@/utils/formatDate'
 
 interface Bookmark {
   portfolioid: string
@@ -149,9 +150,7 @@ export const Bookmarks = () => {
                 </div>
               </div>
               <div className={S.date}>
-                {new Date(bookmark.Portfolio.createdAt).toLocaleDateString(
-                  'ko-KR'
-                )}
+                {formatDate(bookmark.Portfolio.createdAt)}
               </div>
             </div>
           ))
@@ -172,9 +171,7 @@ export const Bookmarks = () => {
                 <p className={S.itemContent}>{comment.Comment.content}</p>
               </div>
               <div className={S.date}>
-                {new Date(comment.Comment.createdAt).toLocaleDateString(
-                  'ko-KR'
-                )}
+                {formatDate(comment.Comment.createdAt)}
               </div>
             </div>
           ))
