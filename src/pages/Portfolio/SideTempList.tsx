@@ -1,6 +1,7 @@
 import type { TempItem } from '@/types/portfolio'
 import S from './SideTempList.module.css'
 import { formatDate } from '@/utils/formatDate'
+import { useEffect, useRef } from 'react'
 
 interface Props {
   isOpen: boolean
@@ -10,6 +11,14 @@ interface Props {
 }
 
 function SideTempList({ isOpen, isClose, tempList, onSelect }: Props) {
+  const sideRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (isOpen) {
+      sideRef.current?.focus()
+    }
+  }, [isOpen])
+
   return (
     <>
       <div
@@ -18,9 +27,9 @@ function SideTempList({ isOpen, isClose, tempList, onSelect }: Props) {
       <div
         role="dialog"
         aria-modal="true"
-        aria-hidden={!isOpen}
         tabIndex={isOpen ? 0 : -1}
-        className={`${S['side']} ${isOpen ? S.open : ''}`}>
+        className={`${S['side']} ${isOpen ? S.open : ''}`}
+        ref={sideRef}>
         <div className={S['side__tit']}>
           <h2>임시저장 목록</h2>
         </div>
@@ -35,7 +44,7 @@ function SideTempList({ isOpen, isClose, tempList, onSelect }: Props) {
                     {item.title}
                   </strong>
                   <span className={S['side__list__date']}>
-                    {formatDate(item.updatedAt)}
+                    {formatDate(item.createdAt)}
                   </span>
                 </button>
               </li>

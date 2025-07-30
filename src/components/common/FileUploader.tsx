@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Button from './Button'
 import S from './FileUploader.module.css'
 import supabase from '@/lib/supabaseClient'
@@ -11,13 +11,17 @@ interface FileList {
 
 interface Props {
   onChange?: (fileList: FileList[]) => void
+  value?: FileList[]
   error?: string
   className?: string
 }
 
-function FileUploader({ onChange, error, className }: Props) {
+function FileUploader({ onChange, value = [], error, className }: Props) {
   const [fileList, setFileList] = useState<FileList[]>([])
 
+  useEffect(() => {
+    setFileList(value)
+  }, [value])
   const fileInput = useRef<HTMLInputElement>(null)
 
   const handleClick = () => {

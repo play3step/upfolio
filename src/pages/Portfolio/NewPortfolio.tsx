@@ -99,9 +99,9 @@ export const NewPortfolio = () => {
     try {
       const { data, error } = await supabase
         .from('TempPortfolio')
-        .select('id,title,updatedAt')
+        .select('id,title,createdAt')
         .eq('userId', userId)
-        .order('updatedAt', { ascending: false })
+        .order('createdAt', { ascending: false })
 
       if (error) throw error
 
@@ -203,6 +203,7 @@ export const NewPortfolio = () => {
           <h3 className="a11y-hidden">기본정보</h3>
           <div className={S['sec__profile']}>
             <ImageUploader
+              key={portfolioData.id}
               id="exImage"
               value={portfolioData.profileImage}
               onChange={image => handleChangeForm('profileImage', image)}
@@ -295,6 +296,8 @@ export const NewPortfolio = () => {
             </div>
 
             <FileUploader
+              key={portfolioData.id}
+              value={portfolioData.fileList}
               onChange={files => handleChangeForm('fileList', files)}
               error={errors.linkUrl}
             />

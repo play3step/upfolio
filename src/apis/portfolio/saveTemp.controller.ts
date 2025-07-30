@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import supabase from '@/lib/supabaseClient'
 import type { PortfolioData, UserInfo } from '@/types/portfolio'
 
@@ -8,19 +9,25 @@ export const uploadTempPortfolio = async ({
   portfolioData: PortfolioData
   userInfo: UserInfo | null
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { viewCount, likeCount, ...rest } = portfolioData
+  const {
+    viewCount,
+    likeCount,
+    id: _id,
+    userId: _userId,
+    ...rest
+  } = portfolioData
 
-  const { error } = await supabase
-    .from('TempPortfolio')
-    .upsert(
-      {
-        ...rest,
-        userId: userInfo?.id,
-        ...(portfolioData.id ? { id: portfolioData.id } : {})
-      },
-      { onConflict: 'id' }
-    )
+  const safeId = _id?.trim?.()
+  const safeUserId = userInfo?.id?.trim?.()
+
+  const { error } = await supabase.from('TempPortfolio').upsert(
+    {
+      ...rest,
+      ...(safeId ? { id: safeId } : {}),
+      ...(safeUserId ? { userId: safeUserId } : {})
+    },
+    { onConflict: 'id' }
+  )
 
   if (error) throw error
 }
