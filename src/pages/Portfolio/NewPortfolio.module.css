@@ -1,8 +1,13 @@
 .container {
+  position: relative;
   width: 100%;
   max-width: 49.25rem;
   margin: 0 auto;
   padding: 3.75rem 0.75rem 5rem;
+
+  @media (max-width: 40rem) {
+    padding: 2rem 0.65rem 2.5rem;
+  }
 }
 
 .tit__input {
