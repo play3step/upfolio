@@ -5,6 +5,20 @@
   padding: 3.75rem 0.75rem 5rem;
 }
 
+.tit__input {
+  input {
+    padding: 0;
+    font-size: var(--fs-xl);
+    font-weight: bold;
+    border: none;
+  }
+
+  @media (max-width: 40rem) {
+    input {
+      font-size: var(--fs-md);
+    }
+  }
+}
 .sec {
   border-bottom: 1px solid var(--gray);
   padding: 1.5rem 0;
