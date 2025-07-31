@@ -2,31 +2,72 @@ import { Link } from 'react-router-dom'
 import S from './MobileHeader.module.css'
 import logo from '@/assets/logo.svg'
 import hamburger from '@/assets/icon/hamburger.svg'
+import close from '@/assets/icon/close.svg'
 import SideNavList from './SideNavList'
+import { useEffect, useState } from 'react'
 
 function MobileHeader() {
+  const [isSideNavOpen, setSideNavOpen] = useState(false)
+
+  const handleOpenSide = () => {
+    setSideNavOpen(true)
+  }
+
+  const handleCloseSide = () => {
+    setSideNavOpen(false)
+  }
+
+  useEffect(() => {
+    if (isSideNavOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isSideNavOpen])
+
   return (
     <header className={`${S.header}`}>
       <Link
         to="/"
         className={S['header__logo']}
-        title="Upfolio 메인 바로가기">
+        title="Upfolio 메인 바로가기"
+        onClick={handleCloseSide}>
         <img
           src={logo}
           alt="Upfolio 로고"
         />
       </Link>
 
-      <button
-        type="button"
-        className={S['header__navBtn']}>
-        <img
-          src={hamburger}
-          alt="모바일 메뉴 버튼"
-        />
-      </button>
+      {isSideNavOpen ? (
+        <button
+          type="button"
+          className={S['header__navBtn']}
+          onClick={handleCloseSide}>
+          <img
+            src={close}
+            alt="모바일 메뉴 리스트 닫기"
+          />
+        </button>
+      ) : (
+        <button
+          type="button"
+          className={S['header__navBtn']}
+          onClick={handleOpenSide}>
+          <img
+            src={hamburger}
+            alt="모바일 메뉴 버튼"
+          />
+        </button>
+      )}
 
-      <SideNavList />
+      <SideNavList
+        isOpen={isSideNavOpen}
+        isClose={handleCloseSide}
+      />
     </header>
   )
 }
