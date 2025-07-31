@@ -1,13 +1,24 @@
-import Button from '@/components/common/Button'
+import type { TempItem } from '@/types/portfolio'
 import S from './SideTempList.module.css'
+import { formatDate } from '@/utils/formatDate'
+import { useEffect, useRef } from 'react'
 
 interface Props {
   isOpen: boolean
   isClose: () => void
-  onSave: () => void
+  tempList: TempItem[]
+  onSelect: (tempItemId: string) => void
 }
 
-function SideTempList({ isOpen, isClose, onSave }: Props) {
+function SideTempList({ isOpen, isClose, tempList, onSelect }: Props) {
+  const sideRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (isOpen) {
+      sideRef.current?.focus()
+    }
+  }, [isOpen])
+
   return (
     <>
       <div
@@ -16,28 +27,28 @@ function SideTempList({ isOpen, isClose, onSave }: Props) {
       <div
         role="dialog"
         aria-modal="true"
-        aria-hidden={!isOpen}
         tabIndex={isOpen ? 0 : -1}
-        className={`${S['side']} ${isOpen ? S.open : ''}`}>
+        className={`${S['side']} ${isOpen ? S.open : ''}`}
+        ref={sideRef}>
         <div className={S['side__tit']}>
           <h2>임시저장 목록</h2>
-          <Button
-            children="임시저장"
-            className={S['side__tempBtn']}
-            onClick={onSave}
-          />
         </div>
         <div className={S['side__cont']}>
           <ul className={S['side__list']}>
-            <li>
-              <button type="button">
-                <strong className={`${S['tit']} ${'ellipsis'}`}>
-                  포트폴리오 제목 포트폴리오 제목포트폴리오 제목포트폴리오
-                  제목포트폴리오 제목
-                </strong>
-                <span className={S['side__list__date']}>2025.04.30</span>
-              </button>
-            </li>
+            {tempList.map(item => (
+              <li key={item.id}>
+                <button
+                  type="button"
+                  onClick={() => onSelect(item.id)}>
+                  <strong className={`${S['tit']} ${'ellipsis'}`}>
+                    {item.title}
+                  </strong>
+                  <span className={S['side__list__date']}>
+                    {formatDate(item.createdAt)}
+                  </span>
+                </button>
+              </li>
+            ))}
           </ul>
         </div>
         <button
