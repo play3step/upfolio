@@ -2,11 +2,12 @@ import S from './DesktopHeader.module.css'
 import Sb from './Button.module.css'
 import logo from '@/assets/logo.svg'
 import person from '@/assets/icon/person.svg'
-import alarm from '@/assets/icon/alarm.svg'
+import alarmIcon from '@/assets/icon/alarm.svg'
 import search from '@/assets/icon/search.svg'
 import { Link, NavLink, useNavigate, useSearchParams } from 'react-router-dom'
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { useAuth } from '@/hooks/auth/useAuth'
+import { AlarmContext } from '@/context/alarm/AlarmContext'
 
 export const DesktopHeader = () => {
   const [showHeader, setShowHeader] = useState(true)
@@ -15,6 +16,8 @@ export const DesktopHeader = () => {
   const [searchKeyword, setSearchKeyword] = useState('')
 
   const [searchParams, setSearchParams] = useSearchParams()
+
+  const { toggleAlarm } = useContext(AlarmContext)
 
   const navigate = useNavigate()
 
@@ -126,9 +129,10 @@ export const DesktopHeader = () => {
           </Link>
           <button
             type="button"
-            className={S['header__iconbtn']}>
+            className={S['header__iconbtn']}
+            onClick={toggleAlarm}>
             <img
-              src={alarm}
+              src={alarmIcon}
               alt="alarm"
             />
           </button>

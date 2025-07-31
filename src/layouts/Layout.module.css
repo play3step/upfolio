@@ -25,6 +25,14 @@
   z-index: 100;
 }
 
+.alarm--button-position {
+  position: fixed;
+  min-height: 0;
+  top: 6rem;
+  right: 17rem;
+  z-index: 100;
+}
+
 .main > * {
   min-height: calc(100vh - 10.5rem);
   @media (max-width: 48rem) {
