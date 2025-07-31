@@ -61,7 +61,7 @@ const protectedRoutes: RouteItem[] = [
   },
   {
     path: '/mypage',
-    element: <Layout />,
+    element: undefined,
     children: [
       {
         path: '',
