@@ -35,10 +35,24 @@ export default function AlarmWrapper() {
         </p>
       </div>
       <div className={S['alarm-content']}>
-        <AlarmCard />
-        <AlarmCard />
-        <AlarmCard />
-        <AlarmCard />
+        {selected === 'comment' && (
+          <AlarmCard
+            type="comment"
+            name="구르르르"
+          />
+        )}
+        {selected === 'like' && (
+          <AlarmCard
+            type="like"
+            name="치르르르"
+          />
+        )}
+        {selected === 'dm' && (
+          <AlarmCard
+            type="dm"
+            name="삐삐삐삐"
+          />
+        )}
       </div>
     </div>
   )
