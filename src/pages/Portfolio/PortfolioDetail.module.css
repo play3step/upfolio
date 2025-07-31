@@ -1,3 +1,113 @@
+.commentContainer {
+  display: flex;
+  position: fixed;
+  right: 0;
+  top: 87.99px;
+  width: 20rem;
+  height: 1000px;
+  background-color: var(--gray2);
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.commentHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1rem;
+  gap: 0.25rem;
+  width: 100%;
+
+  > h3 {
+    width: auto;
+    margin: 0;
+    font-size: 1rem;
+    color: var(--black);
+  }
+}
+
+.commentToggleBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+}
+
+.commentList {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.commentItem {
+  background-color: var(--white);
+  border-bottom: 1px solid rgba(117, 117, 117, 0.6);
+}
+
+.commentHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #444;
+}
+
+.avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 2.25rem;
+  flex-shrink: 0;
+  aspect-ratio: 1/1;
+  border: 1px solid #000;
+  background: url(<path-to-image>) lightgray 50% / cover no-repeat;
+}
+.commentMeta {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+.timestamp {
+  font-size: 0.75rem;
+  color: var(--gray);
+}
+
+.content {
+  margin-left: 3.75rem;
+  margin-top: -0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.commentInputWrapper {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-top: 1px solid #ccc;
+  width: 100%;
+  position: sticky;
+  bottom: 0;
+}
+
+.commentInput {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+  border: none;
+  outline: none;
+}
+
+.sendButton {
+  background: var(--primary);
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -15,8 +125,6 @@
   max-width: 1000px;
   width: 100%;
   gap: 1rem;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .like,
@@ -35,6 +143,7 @@
 
   > span {
     font-size: 1rem;
+    translate: 0 0.1rem;
   }
 }
 
@@ -43,7 +152,6 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
-  margin: 0 auto;
   max-width: 1000px;
   width: 100%;
   gap: 2.5rem;

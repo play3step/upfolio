@@ -1,23 +1,39 @@
 import { useParams } from 'react-router-dom'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { usePortfolioDetail } from '@/hooks/usePortfolioDetail'
 import { handleToggleBookmark } from '@/apis/bookmark/bookmarkUtils'
 import supabase from '@/lib/supabaseClient'
 import S from './PortfolioDetail.module.css'
 import defaultProfileImage from '@/assets/images/default-profile.png'
 import Button from '@/components/common/Button'
+import { formatTime } from '@/utils/formatTime'
 import { scrollToSection } from '@/utils/scrollToSection'
 import emptyHeart from '@/assets/icon/heart.empty.svg'
 import filledHeart from '@/assets/icon/heart.fill.svg'
 import emptyBookmark from '@/assets/icon/bookmark-empty.svg'
 import filledBookmark from '@/assets/icon/bookmark-fill.svg'
 import dm from '@/assets/icon/dm-black.svg'
+import dmWhite from '@/assets/icon/dm.svg'
+import rightArrow from '@/assets/icon/right-arrow.svg'
+
+interface CommentType {
+  id: string
+  content: string
+  profileimage: string
+  createdat: string
+  portfolioid: string
+  userid: string
+  nickname: string
+}
 
 export default function PortfolioDetail() {
   const { id } = useParams<{ id: string }>()
   const decodedId = decodeURIComponent(id ?? '')
   const [activeNavButton, setActiveNavButton] = useState('기본 정보')
   const [activeEditButton, setActiveEditButton] = useState('수정')
+  const [isCommentOpen, setIsCommentOpen] = useState(false)
+  const [inputValue, setInputValue] = useState('')
+  const [comments, setComments] = useState<CommentType[]>([])
 
   const {
     data,
@@ -34,6 +50,31 @@ export default function PortfolioDetail() {
   const techStackRef = useRef<HTMLDivElement>(null)
   const introductionRef = useRef<HTMLDivElement>(null)
   const portfolioRef = useRef<HTMLDivElement>(null)
+
+  const fetchComments = async () => {
+    const { data, error } = await supabase
+      .from('Comment')
+      .select('*')
+      .order('createdat', { ascending: false })
+
+    if (error) {
+      console.error('댓글 불러오기 실패:', error.message)
+      return
+    }
+
+    setComments(data || [])
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await fetchComments()
+      } catch (error) {
+        console.error('댓글 데이터를 가져오는 중 오류 발생: ', error)
+      }
+    }
+    fetchData()
+  }, [])
 
   const handleNavButtonClick = (
     buttonName: string,
@@ -88,178 +129,286 @@ export default function PortfolioDetail() {
       setBookmark(!nextBookmark) // 원래 상태로 되돌리기
     }
   }
-  return (
-    <div className={S.container}>
-      <div className={S.bookmarkLike}>
-        <div className={S.like}>
-          <button onClick={toggleLike}>
-            <img
-              src={like ? filledHeart : emptyHeart}
-              alt={like ? '채워진 하트 아이콘' : '빈 하트 아이콘'}
-            />
-          </button>
-          <span>{likeCount}</span>
-        </div>
-        <div className={S.bookmark}>
-          <button onClick={toggleBookmark}>
-            <img
-              src={bookmark ? filledBookmark : emptyBookmark}
-              alt={bookmark ? '채워진 북마크 아이콘' : '빈 북마크 아이콘'}
-            />
-          </button>
-          <span>{bookmark ? '북마크 취소' : '북마크'}</span>
-        </div>
-        <div className={S.dm}>
-          <button>
-            <img
-              src={dm}
-              alt="DM 아이콘"
-            />
-          </button>
-          <span>DM 보내기</span>
-        </div>
-      </div>
 
-      <div className={S.navDetail}>
-        <nav className={S.nav}>
-          <Button
-            children="기본 정보"
-            className={
-              activeNavButton === '기본 정보'
-                ? S.activeButton
-                : S.inactiveButton
-            }
-            onClick={() => handleNavButtonClick('기본 정보', basicInfoRef)}
+  const toggleCommentPanel = () => {
+    setIsCommentOpen(prev => !prev)
+  }
+
+  const handleSendComment = async () => {
+    const {
+      data: { user }
+    } = await supabase.auth.getUser()
+
+    if (!user) {
+      alert('로그인이 필요합니다.')
+      return
+    }
+
+    const { data: userProfile, error: profileError } = await supabase
+      .from('User')
+      .select('nickname, profileimage')
+      .eq('id', user.id)
+      .single()
+
+    if (profileError) {
+      console.error('프로필 정보 조회 실패:', profileError)
+      return
+    }
+
+    if (!inputValue.trim()) return
+
+    const newComment = {
+      id: crypto.randomUUID(),
+      content: inputValue.trim(),
+      profileimage: userProfile.profileimage || defaultProfileImage,
+      createdat: new Date().toISOString(),
+      portfolioid: decodedId,
+      userid: user.id,
+      nickname: userProfile.nickname
+    }
+
+    await supabase.from('Comment').insert([newComment])
+
+    setComments(prev => [...prev, newComment])
+    setInputValue('')
+  }
+
+  return (
+    <>
+      <nav
+        className={S.commentContainer}
+        style={{
+          transform: isCommentOpen
+            ? 'translateX(0)'
+            : 'translateX(calc(100% - 2rem))',
+          transition: 'transform 0.3s ease-in-out'
+        }}>
+        <div className={S.commentHeader}>
+          <button
+            onClick={toggleCommentPanel}
+            className={S.commentToggleBtn}>
+            <img src={rightArrow} />
+          </button>
+          <h3>댓글</h3>
+        </div>
+        <div className={S.commentList}>
+          {isCommentOpen
+            ? comments.map(comment => (
+                <div
+                  key={comment.id}
+                  className={S.commentItem}>
+                  <div className={S.commentHeader}>
+                    <img
+                      src={comment.profileimage}
+                      alt="프로필"
+                      className={S.avatar}
+                    />
+
+                    <div className={S.commentMeta}>
+                      <span className={S.username}>
+                        {comment.nickname ? comment.nickname : '익명의 사용자'}
+                      </span>
+                      <span className={S.timestamp}>
+                        {formatTime(comment.createdat)}
+                      </span>
+                    </div>
+                  </div>
+                  <p className={S.content}>{comment.content}</p>
+                </div>
+              ))
+            : ''}
+        </div>
+        <div className={S.commentInputWrapper}>
+          <input
+            type="text"
+            placeholder="댓글을 입력하세요"
+            value={inputValue}
+            onChange={e => setInputValue(e.target.value)}
+            className={S.commentInput}
           />
-          <Button
-            children="지원 분야 / 기술 스택"
-            className={
-              activeNavButton === '지원 분야 / 기술 스택'
-                ? S.activeButton
-                : S.inactiveButton
-            }
-            onClick={() =>
-              handleNavButtonClick('지원 분야 / 기술 스택', techStackRef)
-            }
-          />
-          <Button
-            children="포트폴리오 소개"
-            className={
-              activeNavButton === '포트폴리오 소개'
-                ? S.activeButton
-                : S.inactiveButton
-            }
-            onClick={() =>
-              handleNavButtonClick('포트폴리오 소개', introductionRef)
-            }
-          />
-          <Button
-            children="포트폴리오 자료"
-            className={
-              activeNavButton === '포트폴리오 자료'
-                ? S.activeButton
-                : S.inactiveButton
-            }
-            onClick={() =>
-              handleNavButtonClick('포트폴리오 자료', portfolioRef)
-            }
-          />
-        </nav>
-        <div className={S.detailWrapper}>
-          <div ref={basicInfoRef}>
-            <div className={S.titleWrapper}>
-              <h1 className={S.title}>{data.title}</h1>
-              <div className={S.editButtons}>
-                <Button
-                  children="수정"
-                  className={
-                    activeEditButton === '수정'
-                      ? S.activeButton
-                      : S.inactiveButton
-                  }
-                  onClick={() => setActiveEditButton('수정')}
-                />
-                <Button
-                  children="삭제"
-                  className={
-                    activeEditButton === '삭제'
-                      ? S.activeButton
-                      : S.inactiveButton
-                  }
-                  onClick={() => setActiveEditButton('삭제')}
-                />
+          <button
+            onClick={handleSendComment}
+            className={S.sendButton}>
+            <img
+              src={dmWhite}
+              alt="보내기"
+            />
+          </button>
+        </div>
+      </nav>
+
+      <div className={S.container}>
+        <div className={S.bookmarkLike}>
+          <div className={S.like}>
+            <button onClick={toggleLike}>
+              <img
+                src={like ? filledHeart : emptyHeart}
+                alt={like ? '채워진 하트 아이콘' : '빈 하트 아이콘'}
+              />
+            </button>
+            <span>{likeCount}</span>
+          </div>
+          <div className={S.bookmark}>
+            <button onClick={toggleBookmark}>
+              <img
+                src={bookmark ? filledBookmark : emptyBookmark}
+                alt={bookmark ? '채워진 북마크 아이콘' : '빈 북마크 아이콘'}
+              />
+            </button>
+            <span>{bookmark ? '북마크 취소' : '북마크'}</span>
+          </div>
+          <div className={S.dm}>
+            <button>
+              <img
+                src={dm}
+                alt="DM 아이콘"
+              />
+            </button>
+            <span>DM 보내기</span>
+          </div>
+        </div>
+
+        <div className={S.navDetail}>
+          <nav className={S.nav}>
+            <Button
+              children="기본 정보"
+              className={
+                activeNavButton === '기본 정보'
+                  ? S.activeButton
+                  : S.inactiveButton
+              }
+              onClick={() => handleNavButtonClick('기본 정보', basicInfoRef)}
+            />
+            <Button
+              children="지원 분야 / 기술 스택"
+              className={
+                activeNavButton === '지원 분야 / 기술 스택'
+                  ? S.activeButton
+                  : S.inactiveButton
+              }
+              onClick={() =>
+                handleNavButtonClick('지원 분야 / 기술 스택', techStackRef)
+              }
+            />
+            <Button
+              children="포트폴리오 소개"
+              className={
+                activeNavButton === '포트폴리오 소개'
+                  ? S.activeButton
+                  : S.inactiveButton
+              }
+              onClick={() =>
+                handleNavButtonClick('포트폴리오 소개', introductionRef)
+              }
+            />
+            <Button
+              children="포트폴리오 자료"
+              className={
+                activeNavButton === '포트폴리오 자료'
+                  ? S.activeButton
+                  : S.inactiveButton
+              }
+              onClick={() =>
+                handleNavButtonClick('포트폴리오 자료', portfolioRef)
+              }
+            />
+          </nav>
+          <div className={S.detailWrapper}>
+            <div ref={basicInfoRef}>
+              <div className={S.titleWrapper}>
+                <h1 className={S.title}>{data.title}</h1>
+                <div className={S.editButtons}>
+                  <Button
+                    children="수정"
+                    className={
+                      activeEditButton === '수정'
+                        ? S.activeButton
+                        : S.inactiveButton
+                    }
+                    onClick={() => setActiveEditButton('수정')}
+                  />
+                  <Button
+                    children="삭제"
+                    className={
+                      activeEditButton === '삭제'
+                        ? S.activeButton
+                        : S.inactiveButton
+                    }
+                    onClick={() => setActiveEditButton('삭제')}
+                  />
+                </div>
               </div>
+
+              <section className={S.profile}>
+                <img
+                  src={
+                    data.profileimage ? data.profileimage : defaultProfileImage
+                  }
+                  alt="프로필"
+                />
+                <div>
+                  <h4>{data.name}</h4>
+                  <h4>{data.birthDate}</h4>
+                </div>
+              </section>
+
+              <section className={S.emailPhone}>
+                <h3>이메일</h3>
+                <p>{data.email}</p>
+                <h3>전화번호</h3>
+                <p>{data.phone}</p>
+              </section>
             </div>
 
-            <section className={S.profile}>
-              <img
-                src={
-                  data.profileimage ? data.profileimage : defaultProfileImage
-                }
-                alt="프로필"
-              />
-              <div>
-                <h4>{data.name}</h4>
-                <h4>{data.birthDate}</h4>
-              </div>
-            </section>
+            <hr />
 
-            <section className={S.emailPhone}>
-              <h3>이메일</h3>
-              <p>{data.email}</p>
-              <h3>전화번호</h3>
-              <p>{data.phone}</p>
-            </section>
-          </div>
+            <div ref={techStackRef}>
+              <section className={S.interestStack}>
+                <h3>지원 분야</h3>
+                <div className={S.interest}>
+                  <p>{data.interest}</p>
+                </div>
 
-          <hr />
+                <h3>경력</h3>
+                <p>{data.career === 'junior' ? '신입' : '경력'}</p>
 
-          <div ref={techStackRef}>
-            <section className={S.interestStack}>
-              <h3>지원 분야</h3>
-              <div className={S.interest}>
-                <p>{data.interest}</p>
-              </div>
+                <h3>기술 스택</h3>
+                <p>{data.techStack?.join(' | ')}</p>
+              </section>
+            </div>
 
-              <h3>경력</h3>
-              <p>{data.career === 'junior' ? '신입' : '경력'}</p>
+            <hr />
 
-              <h3>기술 스택</h3>
-              <p>{data.techStack?.join(' | ')}</p>
-            </section>
-          </div>
+            <div ref={introductionRef}>
+              <section className={S.description}>
+                <h3>소개</h3>
+                <p>{data.content}</p>
+              </section>
+            </div>
 
-          <hr />
+            <hr />
 
-          <div ref={introductionRef}>
-            <section className={S.description}>
-              <h3>소개</h3>
-              <p>{data.content}</p>
-            </section>
-          </div>
+            <div ref={portfolioRef}>
+              <section className={S.urlFile}>
+                <h3>포트폴리오 자료</h3>
+                <h3>URL</h3>
+                <a
+                  href={
+                    data.linkUrl?.startsWith('http')
+                      ? data.linkUrl
+                      : `https://${data.linkUrl}`
+                  }
+                  target="_blank"
+                  rel="noreferrer">
+                  {data.linkUrl}
+                </a>
 
-          <hr />
-
-          <div ref={portfolioRef}>
-            <section className={S.urlFile}>
-              <h3>포트폴리오 자료</h3>
-              <h3>URL</h3>
-              <a
-                href={
-                  data.linkUrl?.startsWith('http')
-                    ? data.linkUrl
-                    : `https://${data.linkUrl}`
-                }
-                target="_blank"
-                rel="noreferrer">
-                {data.linkUrl}
-              </a>
-
-              <h3>첨부파일</h3>
-            </section>
+                <h3>첨부파일</h3>
+              </section>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
