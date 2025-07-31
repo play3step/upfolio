@@ -26,5 +26,16 @@ export const usePortfolioForm = (
     })
   }
 
-  return { handleChangeForm }
+  const handelChangeRadio = (
+    key: 'career' | 'interest',
+    value: string,
+    options: { label: string; value: string }[]
+  ) => {
+    const selected = options.find(item => item.value === value)
+    if (!selected) return
+
+    handleChangeForm(key, selected)
+  }
+
+  return { handleChangeForm, handelChangeRadio }
 }
