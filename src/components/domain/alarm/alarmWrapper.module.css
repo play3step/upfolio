@@ -30,7 +30,14 @@
   align-items: center;
 
   font-size: var(--fs-xs);
+  color: var(--gray3);
   padding-left: var(--sp-4);
+  cursor: pointer;
+}
+
+.alarm-select-active {
+  color: var(--primary);
+  border-bottom: 1px solid var(--primary);
 }
 
 .alarm-content {
