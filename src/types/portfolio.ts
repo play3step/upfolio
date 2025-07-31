@@ -54,3 +54,25 @@ export interface TempItem {
   title: string
   createdAt: string
 }
+
+export interface IBasicInfoSection {
+  portfolioData: PortfolioData
+  handleChangeForm: <K extends keyof PortfolioData>(
+    key: K,
+    value: PortfolioData[K]
+  ) => void
+}
+
+export interface ITechInfoSection {
+  portfolioData: PortfolioData
+  handleChangeForm: <K extends keyof PortfolioData>(
+    key: K,
+    value: PortfolioData[K]
+  ) => void
+  handleChangeRadio: (
+    key: 'career' | 'interest',
+    value: string,
+    options: { label: string; value: string }[]
+  ) => void
+  errors: ValidationError
+}

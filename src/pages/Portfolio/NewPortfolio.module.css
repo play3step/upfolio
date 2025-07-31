@@ -117,25 +117,6 @@
   }
 }
 
-.sec__profile {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: var(--sp-8);
-
-  img {
-    width: 6.25rem;
-    height: 6.25rem;
-    border-radius: 50%;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-}
-
-.sec__profile__info {
-  font-size: var(--fs-md);
-}
-
 .sec__form {
   display: flex;
   flex-direction: column;

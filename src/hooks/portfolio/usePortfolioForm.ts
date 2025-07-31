@@ -26,7 +26,7 @@ export const usePortfolioForm = (
     })
   }
 
-  const handelChangeRadio = (
+  const handleChangeRadio = (
     key: 'career' | 'interest',
     value: string,
     options: { label: string; value: string }[]
@@ -37,5 +37,5 @@ export const usePortfolioForm = (
     handleChangeForm(key, selected)
   }
 
-  return { handleChangeForm, handelChangeRadio }
+  return { handleChangeForm, handleChangeRadio }
 }
