@@ -73,7 +73,8 @@ export const NewPortfolio = () => {
         name: userInfo.nickname,
         email: userInfo.email,
         phone: userInfo.phone ?? '',
-        birthDate: userInfo.birthDate ?? ''
+        birthDate: userInfo.birthDate ?? '',
+        createdAt: new Date().toISOString()
       }))
     }
   }, [userInfo])
