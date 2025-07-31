@@ -1,14 +1,13 @@
-import { useContext, useEffect } from 'react'
 import { usePortfolio } from '@/hooks/usePortfolio'
 import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
 
 import { PortfolioCard } from '@/components/PortfolioCard'
 import styles from '@/components/PortfolioCard.module.css'
-import supabase from '@/lib/supabaseClient'
 import { SearchBar } from '@/components/SearchBar'
+import { handleToggleBookmark } from '@/apis/bookmark/bookmarkUtils'
+import supabase from '@/lib/supabaseClient'
 
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import { AuthContext } from '@/context/AuthContext'
+import { useSearchParams } from 'react-router-dom'
 
 import {
   useSearchPortfoilo,
@@ -30,10 +29,8 @@ export const INTEREST_MAP = {
 } as const
 
 export const Home = () => {
-  const { authData, getSession } = useAuthLogin()
-  const { isAuthenticated } = useContext(AuthContext)
-  const navigate = useNavigate()
-  const { portfolio } = usePortfolio(authData?.id ?? null)
+  const { authData } = useAuthLogin()
+  const { portfolio, setPortfolio } = usePortfolio(authData?.id ?? null)
   const { filteredPortfolio } = useSearchPortfoilo(portfolio)
 
   const [searchParams, setSearchParams] = useSearchParams()
@@ -59,37 +56,56 @@ export const Home = () => {
     }
   }
 
-  useEffect(() => {
-    getSession()
-    if (authData && (!authData.phone || !authData.birthDate)) {
-      navigate('/signup')
+  const handleBookmarkToggle = async (id: string, next: boolean) => {
+    const success = await handleToggleBookmark(id, authData?.id ?? '', next)
+    if (success) {
+      setPortfolio(prev =>
+        prev.map(p => (p.id === id ? { ...p, isBookmarked: next } : p))
+      )
     }
-  }, [authData?.phone, authData?.birthDate, isAuthenticated])
+  }
 
-  const handleToggleBookmark = async (id: string, next: boolean) => {
-    const {
-      data: { user }
-    } = await supabase.auth.getUser()
-    const userId = user?.id
+  const handleLikeToggle = async (id: string, next: boolean) => {
+    if (!authData?.id) return
 
-    if (!userId) {
-      console.error('User not authenticated')
+    // 1. Like 테이블에 반영
+    const { error: likeError } = await supabase
+      .from('Like')
+      .upsert({ portfolioid: id, userid: authData?.id })
+
+    // 2. likeCount 증가/감소
+    const { error: rpcError } = await supabase.rpc(
+      next ? 'increment_like_count' : 'decrement_like_count',
+      { portfolioid: id }
+    )
+
+    // 3. 에러 체크
+    if (likeError || rpcError) {
+      console.error(
+        '좋아요 처리 중 오류:',
+        likeError?.message,
+        rpcError?.message
+      )
       return
     }
 
     if (next) {
       const { error } = await supabase
         .from('BookMark')
-        .upsert({ portfolioid: id, userid: userId })
+        .upsert({ portfolioid: id, userid: authData?.id })
       if (error) console.error('Error adding bookmark:', error.message)
     } else {
       const { error } = await supabase
         .from('BookMark')
         .delete()
-        .eq('userid', userId)
+        .eq('userid', authData?.id)
         .eq('portfolioid', id)
       if (error) console.error('Error removing bookmark:', error.message)
     }
+
+    setPortfolio(prev =>
+      prev.map(p => (p.id === id ? { ...p, isBookmarked: next } : p))
+    )
   }
 
   return (
@@ -104,7 +120,8 @@ export const Home = () => {
             <PortfolioCard
               key={p.id}
               {...p}
-              onToggleBookmark={handleToggleBookmark}
+              onToggleBookmark={handleBookmarkToggle}
+              onToggleLike={handleLikeToggle}
             />
           ))}
       </div>
