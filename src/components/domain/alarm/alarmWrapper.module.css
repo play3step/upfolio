@@ -1,0 +1,39 @@
+.alarm-wrapper {
+  position: fixed;
+  top: 50px;
+  right: 100px;
+  width: 280px;
+  height: 363px;
+  background-color: white;
+  border-radius: var(--sp-4);
+  padding: var(--sp-4);
+  box-shadow: var(--bs-drop);
+  z-index: 1000;
+}
+.alarm-header {
+  height: 3.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: var(--fs-md);
+  font-weight: 600;
+}
+
+.alarm-select {
+  height: 2.75rem;
+  border-top: 1px solid var(--gray2);
+  border-bottom: 1px solid var(--gray2);
+
+  display: flex;
+  gap: var(--sp-4);
+  align-items: center;
+
+  font-size: var(--fs-xs);
+  padding-left: var(--sp-4);
+}
+
+.alarm-content {
+  overflow-y: auto;
+  height: 14rem;
+}

@@ -8,6 +8,7 @@ import { MyPageSidebar } from '@/components/domain/mypage/MyPageSidebar'
 import { AuthContext } from '@/context/AuthContext'
 import DmDropdownWrapper from '@/components/domain/dm/DmDropdownWrapper'
 import { useContext } from 'react'
+import AlarmWrapper from '@/components/domain/alarm/alarmWrapper'
 // import { useState } from 'react'
 // import { usePortfolio, type PortfolioItem } from '@/hooks/usePortfolio'
 
@@ -40,6 +41,8 @@ export default function Layout({ children }: LayoutProps) {
           <Outlet />
           {children}
         </main>
+        <AlarmWrapper />
+
         {isAuthenticated && (
           <div className={S['dm--button-position']}>
             <DmDropdownWrapper />
