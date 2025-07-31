@@ -4,8 +4,8 @@ export interface PortfolioItem {
   title: string
   content: string
   fileList: string[]
-  interest: string
-  career: string
+  interest: { label: string; value: string }
+  career: { label: string; value: string }
   isBookmarked: boolean
   linkUrl: string
   createdAt: string
@@ -29,8 +29,8 @@ export interface PortfolioData {
   email: string
   title: string
   content: string
-  career: string
-  interest: string
+  career: { label: string; value: string }
+  interest: { label: string; value: string }
   techStack: string[]
   linkUrl: string
   fileList: { name: string; url: string }[]
