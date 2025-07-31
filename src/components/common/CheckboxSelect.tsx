@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import S from './CheckboxSelect.module.css'
 
+/*
+  추가 이유 : 해당 컴포넌트의 선택된 값을 받아와 상위 컴포넌트에서 상태를 관리 하고
+  ONcHANGE 콜백을 전달해야합니다.
+  이 컴포넌트는 선택된 값만 관리하고, 상위 컴포넌트에서 상태를 관리합니다.
+*/
 interface Props {
   value: string[]
   onChange: (newTechStack: string[]) => void
