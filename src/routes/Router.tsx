@@ -7,18 +7,22 @@ import Posts from '@/pages/MyPage/Posts'
 import Profile from '@/pages/MyPage/Profile'
 import { NotFound } from '@/pages/NotFound'
 import { NewPortfolio } from '@/pages/Portfolio/NewPortfolio'
-import  PortfolioDetail  from '@/pages/Portfolio/PortfolioDetail'
+import PortfolioDetail from '@/pages/Portfolio/PortfolioDetail'
 import { PortfolioList } from '@/pages/Portfolio/PortfolioList'
 import { createBrowserRouter } from 'react-router-dom'
 import Layout from '@/layouts/Layout'
 import FormAndText from '@/pages/Example/FormAndText'
 import { Signup } from '@/pages/Signup'
+import { ProtectedRoute } from '@/layouts/ProtectedRoute'
 
-const routerList = [
-  {
-    path: '/example/form',
-    element: <FormAndText />
-  },
+interface RouteItem {
+  path: string
+  element: React.ReactNode
+  children?: RouteItem[]
+}
+
+// 인증이 필요 없는 라우트
+const publicRoutes: RouteItem[] = [
   {
     path: '/',
     element: <Home />
@@ -38,6 +42,18 @@ const routerList = [
   {
     path: '/portfolios/:id',
     element: <PortfolioDetail />
+  },
+  {
+    path: '*',
+    element: <NotFound />
+  }
+]
+
+// 인증이 필요한 라우트
+const protectedRoutes: RouteItem[] = [
+  {
+    path: '/example/form',
+    element: <FormAndText />
   },
   {
     path: '/portfolio/new',
@@ -64,26 +80,39 @@ const routerList = [
         element: <Bookmarks />
       }
     ]
-  },
-  {
-    path: '*',
-    element: <NotFound />
   }
 ]
 
-export const router = createBrowserRouter(
-  routerList.map(item => {
-    if (item.children) {
+const wrapWithLayout = (routes: RouteItem[], isProtected = false) => {
+  return routes.map(route => {
+    if (route.children) {
       return {
-        path: item.path,
-        element: <Layout />,
-        children: item.children
+        ...route,
+        element: isProtected ? (
+          <ProtectedRoute>
+            <Layout>{route.element}</Layout>
+          </ProtectedRoute>
+        ) : (
+          <Layout>{route.element}</Layout>
+        ),
+        children: route.children
       }
     }
 
     return {
-      path: item.path,
-      element: <Layout>{item.element}</Layout>
+      ...route,
+      element: isProtected ? (
+        <ProtectedRoute>
+          <Layout>{route.element}</Layout>
+        </ProtectedRoute>
+      ) : (
+        <Layout>{route.element}</Layout>
+      )
     }
   })
-)
+}
+
+export const router = createBrowserRouter([
+  ...wrapWithLayout(publicRoutes),
+  ...wrapWithLayout(protectedRoutes, true)
+])
