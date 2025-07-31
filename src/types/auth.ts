@@ -12,6 +12,8 @@ export interface UserData {
   email: string
   nickname: string
   profileimage: string
+  phone?: string
+  birthDate?: string
   interest?: string
   techstack?: string[]
   createdat?: string
@@ -19,8 +21,8 @@ export interface UserData {
 }
 
 export interface AuthContextType {
-  login: (userData: AuthData) => void
+  login: (userData: UserData) => void
   logout: () => void
   isAuthenticated: boolean
-  authData: AuthData | null
+  authData: UserData | null
 }

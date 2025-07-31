@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom'
 
 export interface Props {
   id: string
-  userid: string
+  userId: string
   title: string
   content: string
   likeCount: number
@@ -37,7 +37,7 @@ export function PortfolioCard({
   onToggleLike
 }: PortfolioCardProps) {
   const [bookmarked, setBookmarked] = useState(isBookmarked)
-  const [liked, setLiked] = useState(false) 
+  const [liked, setLiked] = useState(false)
   const [currentLikeCount, setCurrentLikeCount] = useState(likeCount)
   const navigate = useNavigate()
 
@@ -59,7 +59,7 @@ export function PortfolioCard({
   }
 
   const toggleLike = () => {
-    const next = !liked 
+    const next = !liked
     setLiked(next)
     onToggleLike(id, next)
   }
@@ -89,23 +89,23 @@ export function PortfolioCard({
 
       <div className={S.meta}>
         <span className={S.like}>
-         {liked ? (
-          <img
-            src={redHeart}
-            alt="Like Icon"
-            onClick={(e) => {
-              e.stopPropagation()
-              toggleLike()
-            }}
-            style={{ pointerEvents: 'none'}}
-          />
-         ) : (
-          <img
-            src={grayHeart}
-            alt="Like Icon"
-            style={{ pointerEvents: 'none'}}
-          />
-         )}
+          {liked ? (
+            <img
+              src={redHeart}
+              alt="Like Icon"
+              onClick={e => {
+                e.stopPropagation()
+                toggleLike()
+              }}
+              style={{ pointerEvents: 'none' }}
+            />
+          ) : (
+            <img
+              src={grayHeart}
+              alt="Like Icon"
+              style={{ pointerEvents: 'none' }}
+            />
+          )}
           {currentLikeCount}
         </span>
         <span className={S.view}>

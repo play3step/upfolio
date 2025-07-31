@@ -1,20 +1,21 @@
-import { useEffect, useState } from 'react'
 import { usePortfolio } from '@/hooks/usePortfolio'
 import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
-import { useSearch } from '@/context/SearchContext'
+
 import { PortfolioCard } from '@/components/PortfolioCard'
 import styles from '@/components/PortfolioCard.module.css'
 import { SearchBar } from '@/components/SearchBar'
 import { handleToggleBookmark } from '@/apis/bookmark/bookmarkUtils'
 import supabase from '@/lib/supabaseClient'
 
-export interface SearchParams {
-  interest: string
-  career?: string
-  keyword?: string
-}
+import { useSearchParams } from 'react-router-dom'
 
-const INTEREST_MAP = {
+import {
+  useSearchPortfoilo,
+  type SearchParams
+} from '@/hooks/useSearchPortfoilo'
+import type { PortfolioItem } from '@/types/portfolio'
+
+export const INTEREST_MAP = {
   all: '전체',
   FE: '프론트엔드',
   BE: '백엔드',
@@ -28,54 +29,35 @@ const INTEREST_MAP = {
 } as const
 
 export const Home = () => {
-  const { authData, getSession } = useAuthLogin()
-  const [userId, setUserId] = useState<string | null>(null)
+  const { authData } = useAuthLogin()
+  const { portfolio, setPortfolio } = usePortfolio(authData?.id ?? null)
+  const { filteredPortfolio } = useSearchPortfoilo(portfolio)
 
-  const { portfolio, setPortfolio } = usePortfolio(userId)
-  const [filteredPortfolio, setFilteredPortfolio] = useState(portfolio)
-  const { keyword } = useSearch()
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  useEffect(() => {
-    getSession()
-  }, [])
-
-  useEffect(() => {
-    if (authData?.id) setUserId(authData.id)
-  }, [authData])
-
-  useEffect(() => {
-    setFilteredPortfolio(portfolio)
-  }, [portfolio])
-
-  useEffect(() => {
-    if (keyword) {
-      handleSearch({
-        interest: 'all',
-        keyword
-      })
+  const handleSearch = (params: SearchParams) => {
+    const newSearchParams = new URLSearchParams(searchParams)
+    newSearchParams.set('searchKeyword', params.searchKeyword ?? '')
+    newSearchParams.set('interest', params.interest ?? '')
+    newSearchParams.set('career', params.career ?? '')
+    if (params.searchKeyword === '') {
+      newSearchParams.delete('searchKeyword')
     }
-  }, [keyword])
-
-  const handleSearch = ({ interest, career, keyword }: SearchParams) => {
-    const filtered = (portfolio || []).filter(item => {
-      const matchInterest =
-        interest === 'all' ||
-        item.interest === INTEREST_MAP[interest as keyof typeof INTEREST_MAP]
-      const matchCareer = !career || item.career === career
-      const matchKeyword =
-        !keyword ||
-        item.title?.toLowerCase().includes(keyword.toLowerCase()) ||
-        item.content?.toLowerCase().includes(keyword.toLowerCase())
-
-      return matchInterest && matchCareer && matchKeyword
-    })
-
-    console.log('setFilteredPortfolio 호출됨: ', filtered.length)
-    setFilteredPortfolio(filtered)
+    if (params.interest === 'all') {
+      newSearchParams.delete('interest')
+    }
+    if (params.career === '') {
+      newSearchParams.delete('career')
+    }
+    if (newSearchParams.toString() === '') {
+      setSearchParams({})
+    } else {
+      setSearchParams(newSearchParams)
+    }
   }
 
   const handleBookmarkToggle = async (id: string, next: boolean) => {
-    const success = await handleToggleBookmark(id, next, userId)
+    const success = await handleToggleBookmark(id, authData?.id ?? '', next)
     if (success) {
       setPortfolio(prev =>
         prev.map(p => (p.id === id ? { ...p, isBookmarked: next } : p))
@@ -84,60 +66,64 @@ export const Home = () => {
   }
 
   const handleLikeToggle = async (id: string, next: boolean) => {
-    if (!userId) return
-  
+    if (!authData?.id) return
+
     // 1. Like 테이블에 반영
     const { error: likeError } = await supabase
-      .from('Like') 
-      .upsert({ portfolioid: id, userid: userId })
-  
+      .from('Like')
+      .upsert({ portfolioid: id, userid: authData?.id })
+
     // 2. likeCount 증가/감소
     const { error: rpcError } = await supabase.rpc(
       next ? 'increment_like_count' : 'decrement_like_count',
       { portfolioid: id }
     )
-  
+
     // 3. 에러 체크
     if (likeError || rpcError) {
-      console.error('좋아요 처리 중 오류:', likeError?.message, rpcError?.message)
-      return
-    }
-  
-    // 4. 최신 likeCount 다시 조회
-    const { data, error: fetchError } = await supabase
-      .from('Portfolio')
-      .select('likeCount')
-      .eq('id', id)
-      .maybeSingle()
-  
-    if (fetchError) {
-      console.error('likeCount 조회 중 오류:', fetchError.message)
-      return
-    }
-  
-    if (data) {
-      setPortfolio(prev =>
-        prev.map(p =>
-          p.id === id ? { ...p, likeCount: data.likeCount } : p
-        )
+      console.error(
+        '좋아요 처리 중 오류:',
+        likeError?.message,
+        rpcError?.message
       )
-    } else {
-      console.warn('likeCount 조회 결과가 없습니다.')
+      return
     }
+
+    if (next) {
+      const { error } = await supabase
+        .from('BookMark')
+        .upsert({ portfolioid: id, userid: authData?.id })
+      if (error) console.error('Error adding bookmark:', error.message)
+    } else {
+      const { error } = await supabase
+        .from('BookMark')
+        .delete()
+        .eq('userid', authData?.id)
+        .eq('portfolioid', id)
+      if (error) console.error('Error removing bookmark:', error.message)
+    }
+
+    setPortfolio(prev =>
+      prev.map(p => (p.id === id ? { ...p, isBookmarked: next } : p))
+    )
   }
-  
+
   return (
     <div>
       <SearchBar onSearch={handleSearch} />
       <div className={styles['portfolio-grid']}>
-        {filteredPortfolio.map(p => (
-          <PortfolioCard
-            key={p.id}
-            {...p}
-            onToggleBookmark={handleBookmarkToggle}
-            onToggleLike={handleLikeToggle}
-          />
-        ))}
+        {filteredPortfolio && filteredPortfolio.length === 0 && (
+          <div>검색 결과가 없습니다.</div>
+        )}
+        {filteredPortfolio &&
+          filteredPortfolio.map((p: PortfolioItem) => (
+            <PortfolioCard
+              key={p.id}
+              {...p}
+              onToggleBookmark={handleBookmarkToggle}
+              onToggleLike={handleLikeToggle}
+            />
+          ))}
       </div>
     </div>
   )

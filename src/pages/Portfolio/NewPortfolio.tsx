@@ -2,44 +2,29 @@ import Button from '@/components/common/Button'
 import S from './NewPortfolio.module.css'
 import Input from '@/components/common/Input'
 import RadioGroup from '@/components/common/RadioGroup'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import CheckboxSelect from '@/components/common/CheckboxSelect'
 import Textarea from '@/components/common/Textarea'
 import FileUploader from '@/components/common/FileUploader'
 import ImageUploader from '@/components/common/ImageUploader'
+import type { PortfolioData, TempItem } from '@/types/portfolio'
+import { useSavePortfolio } from '@/hooks/portfolio/useSavePortfolio'
+import { useCheckValidation } from '@/hooks/portfolio/useCheckValidation'
+import { useUserInfo } from '@/hooks/portfolio/useUserInfo'
+import { useSaveTempPortfolio } from '@/hooks/portfolio/useSaveTempPortfolio'
+import { usePortfolioForm } from '@/hooks/portfolio/usePortfolioForm'
+import { useStickyMenu } from '@/hooks/portfolio/useStickyMenu'
+import SideTempList from './SideTempList'
 import supabase from '@/lib/supabaseClient'
 
-interface UserInfo {
-  id: string
-  email: string
-}
-
-interface PortfolioData {
-  id: string
-  userId: string
-  profileImage: string
-  name: string
-  birthDate: string
-  phone: string
-  email: string
-  title: string
-  content: string
-  career: string
-  interest: string
-  techStack: string[]
-  linkUrl: string
-  fileList: { name: string; url: string }[]
-  viewCount: number
-  likeCount: number
-}
-
+// TODOS : 기본정보 마이페이지에서 불러와야함
 const TempData: PortfolioData = {
   id: '',
   userId: '',
   profileImage: '',
-  name: '홍길동',
-  birthDate: '2000.04.03',
-  phone: '010-0000-0000',
+  name: '',
+  birthDate: '',
+  phone: '',
   email: '',
   title: '',
   content: '',
@@ -51,8 +36,6 @@ const TempData: PortfolioData = {
   viewCount: 0,
   likeCount: 0
 }
-
-type ValidationError = Partial<Record<keyof PortfolioData, string>>
 
 export const NewPortfolio = () => {
   /* --- 지원분야 라디오 그룹 상태 및 옵션 --- */
@@ -74,152 +57,157 @@ export const NewPortfolio = () => {
     { label: '경력', value: 'senior' }
   ]
 
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(TempData)
-  const [errors, setErrors] = useState<ValidationError>({})
 
   /* --- error 체크 --- */
-  const validate = () => {
-    const newErrors: ValidationError = {}
-
-    if (!portfolioData.title.trim()) newErrors.title = '제목을 입력해주세요.'
-    if (!portfolioData.career.trim())
-      newErrors.career = '경력수준을 선택해주세요.'
-    if (!portfolioData.interest.trim())
-      newErrors.interest = '지원분야를 선택해주세요.'
-    if (portfolioData.techStack.length === 0)
-      newErrors.techStack = '기술스택을 선택해주세요.'
-    if (!portfolioData.content.trim())
-      newErrors.content = '소개를 입력해주세요.'
-    if (!portfolioData.linkUrl.trim() && portfolioData.fileList.length === 0)
-      newErrors.linkUrl = 'URL 또는 파일 첨부 중 하나는 반드시 입력해주세요.'
-
-    setErrors(newErrors)
-
-    return Object.keys(newErrors).length == 0
-  }
+  const { validate, errors, setErrors } = useCheckValidation()
 
   /* --- 로그인 시 유저정보 불러오기 --- */
+  const { userInfo } = useUserInfo()
+  const userId = userInfo?.id ?? null
+
   useEffect(() => {
-    if (userInfo?.email) {
+    if (userInfo) {
       setPortfolioData(prev => ({
         ...prev,
-        email: userInfo.email
+        name: userInfo.nickname,
+        email: userInfo.email,
+        phone: userInfo.phone ?? '',
+        birthDate: userInfo.birthDate ?? '',
+        createdAt: new Date().toISOString()
       }))
     }
   }, [userInfo])
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      const {
-        data: { user },
-        error
-      } = await supabase.auth.getUser()
-
-      if (error) {
-        console.error('유저 정보 불러오기 실패:', error)
-        return
-      }
-
-      if (user && user.email) {
-        setUserInfo({ id: user.id, email: user.email })
-      }
-    }
-
-    fetchUserInfo()
-  }, [])
-
   /* --- 입력값 변경 시 상태 저장 및 관련 에러 제거 --- */
-  const handleChangeForm = <K extends keyof PortfolioData>(
-    key: K,
-    value: PortfolioData[K]
-  ) => {
-    setPortfolioData(prev => ({
-      ...prev,
-      [key]: value
-    }))
+  const { handleChangeForm } = usePortfolioForm(setPortfolioData, setErrors)
 
-    setErrors(prevErrors => {
-      const newErrors = { ...prevErrors }
+  /* --- 임시저장목록 --- */
+  // 사이드 패널 열고 닫기
+  const [isSideOpen, setSideOpen] = useState(false)
 
-      if (key === 'linkUrl' || key === 'fileList') {
-        delete newErrors.linkUrl
-        delete newErrors.fileList
-      } else if (newErrors[key]) {
-        delete newErrors[key]
-      }
-      return newErrors
-    })
+  const handleOpenSide = () => {
+    setSideOpen(true)
+  }
+
+  const handleCloseSide = () => {
+    setSideOpen(false)
+  }
+
+  // 임시저장 목록 불러오기
+  const [tempList, setTempList] = useState<TempItem[]>([])
+
+  const fetchTempList = useCallback(async () => {
+    if (!userId) return
+
+    try {
+      const { data, error } = await supabase
+        .from('TempPortfolio')
+        .select('id,title,createdAt')
+        .eq('userId', userId)
+        .order('createdAt', { ascending: false })
+
+      if (error) throw error
+
+      setTempList(data ?? [])
+    } catch (error) {
+      console.error('임시저장 목록 불러오기 실패', error)
+    }
+  }, [userId])
+
+  useEffect(() => {
+    fetchTempList()
+  }, [fetchTempList])
+
+  const handleSelectTempItem = async (id: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('TempPortfolio')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+      if (error) throw error
+      if (!data) return
+      console.log(typeof data.techStack, data.techStack)
+      setErrors({})
+
+      setPortfolioData(prev => ({
+        ...prev,
+        ...data,
+        id: data.id
+      }))
+
+      setSideOpen(false)
+    } catch (error) {
+      console.error('임시저장된 항목 불러오기 실패', error)
+    }
   }
 
   /* --- 임시저장 --- */
-  const handleSaveTemp = async () => {
-    try {
-      const { error } = await supabase
-        .from('TempPortfolio')
-        .upsert(
-          { ...portfolioData, userId: userInfo?.id, id: undefined },
-          { onConflict: 'id' }
-        )
-      if (error) throw error
-      alert('임시저장되었습니다.')
-    } catch (error) {
-      alert('임시저장이 실패하였습니다. 다시 시도해주세요.')
-      console.error(error)
-    }
-  }
+  const { handleSaveTemp } = useSaveTempPortfolio({
+    portfolioData,
+    userInfo,
+    onSave: fetchTempList
+  })
 
   /* --- 저장 --- */
-  const handleSave = async () => {
-    if (!validate()) {
-      alert('빠진 부분이 있는지 확인해주세요.')
-      return
-    }
-    try {
-      const { error } = await supabase.from('Portfolio').insert({
-        ...portfolioData,
-        userId: userInfo?.id,
-        id: undefined,
-        viewCount: 0,
-        likeCount: 0
-      })
-      if (error) throw error
-      alert('포트폴리오가 저장되었습니다.')
-    } catch (error) {
-      alert('저장에 실패하였습니다. 다시 시도해주세요.')
-      console.error(error)
-    }
-  }
+  const { handleSave } = useSavePortfolio({ portfolioData, userInfo, validate })
+
+  /* --- 타이틀 및 버튼 sticky --- */
+  const stickyRef = useRef<HTMLDivElement | null>(null)
+  const [isSticky, setIsSticky] = useState(false)
+
+  useStickyMenu(stickyRef, setIsSticky)
 
   return (
     <div className={S.container}>
-      <div className="tit-withBtn">
+      {/* 임시저장목록 사이드 패널 */}
+      <SideTempList
+        isOpen={isSideOpen}
+        isClose={handleCloseSide}
+        tempList={tempList}
+        onSelect={handleSelectTempItem}
+      />
+
+      {/* 포트폴리오 작성 목록 */}
+      <div
+        ref={stickyRef}
+        className={`${S.head} ${isSticky ? S.sticky : ''}`}>
         <h2 className="a11y-hidden">포트폴리오 등록</h2>
-        <Input
-          className={`'tit__txt' ${S['tit__input']}`}
-          id="exTitle"
-          type="text"
-          value={portfolioData.title}
-          placeholder="포트폴리오 제목을 입력해주세요."
-          onChange={e => handleChangeForm('title', e.target.value)}
-          error={errors.title}
-          hideLabel
-        />
-        <div style={{ display: 'flex', gap: '.75rem' }}>
-          <Button
-            onClick={handleSaveTemp}
-            line>
-            임시저장
-          </Button>
-          <Button onClick={handleSave}>저장</Button>
+        <button
+          type="button"
+          onClick={handleOpenSide}
+          className={S['head__tempListBtn']}>
+          임시저장 목록
+        </button>
+        <div className={'tit-withBtn'}>
+          <Input
+            className={`'tit__txt' ${S['tit__input']}`}
+            id="exTitle"
+            type="text"
+            value={portfolioData.title}
+            placeholder="포트폴리오 제목을 입력해주세요."
+            onChange={e => handleChangeForm('title', e.target.value)}
+            error={errors.title}
+            hideLabel
+          />
+          <div style={{ display: 'flex', gap: '.75rem' }}>
+            <Button
+              onClick={handleSaveTemp}
+              line>
+              임시저장
+            </Button>
+            <Button onClick={handleSave}>저장</Button>
+          </div>
         </div>
       </div>
-
       <form>
         <section className={S['sec']}>
           <h3 className="a11y-hidden">기본정보</h3>
           <div className={S['sec__profile']}>
             <ImageUploader
+              key={portfolioData.id}
               id="exImage"
               value={portfolioData.profileImage}
               onChange={image => handleChangeForm('profileImage', image)}
@@ -274,7 +262,9 @@ export const NewPortfolio = () => {
 
             <CheckboxSelect
               value={portfolioData.techStack}
-              onChange={stack => handleChangeForm('techStack', stack)}
+              onChange={stack => {
+                handleChangeForm('techStack', stack)
+              }}
               error={errors.techStack}
             />
           </div>
@@ -310,6 +300,8 @@ export const NewPortfolio = () => {
             </div>
 
             <FileUploader
+              key={portfolioData.id}
+              value={portfolioData.fileList}
               onChange={files => handleChangeForm('fileList', files)}
               error={errors.linkUrl}
             />
