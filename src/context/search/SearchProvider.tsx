@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react'
-import { SearchContext } from './searchContext'
+import { SearchContext } from './SearchContext'
 
 interface SearchContextType {
   keyword: string

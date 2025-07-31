@@ -1,9 +1,17 @@
 import S from './alarmWrapper.module.css'
 import AlarmCard from './alarmCard'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
+import { AlarmContext } from '@/context/alarm/AlarmContext'
 
 export default function AlarmWrapper() {
   const [selected, setSelected] = useState<'comment' | 'like' | 'dm'>('comment')
+
+  const { alarm } = useContext(AlarmContext)
+
+  console.log(alarm)
+
+  if (!alarm) return null
+
   return (
     <div className={S['alarm-wrapper']}>
       <div className={S['alarm-header']}>
