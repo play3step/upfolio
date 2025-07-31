@@ -16,6 +16,7 @@ import { usePortfolioForm } from '@/hooks/portfolio/usePortfolioForm'
 import { useStickyMenu } from '@/hooks/portfolio/useStickyMenu'
 import SideTempList from './SideTempList'
 import supabase from '@/lib/supabaseClient'
+import { useSearchParams } from 'react-router-dom'
 
 // TODOS : 기본정보 마이페이지에서 불러와야함
 const TempData: PortfolioData = {
@@ -58,6 +59,37 @@ export const NewPortfolio = () => {
   ]
 
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(TempData)
+
+  /* --- 마이페이지 임시저장글 불러오기 --- */
+  const [searchParams] = useSearchParams()
+  const id = searchParams.get('id')
+
+  useEffect(() => {
+    const fetchPortfolioData = async () => {
+      if (!id) return
+
+      try {
+        const { data, error } = await supabase
+          .from('TempPortfolio')
+          .select('*')
+          .eq('id', id)
+          .single()
+
+        if (error) throw error
+        if (!data) return
+
+        setPortfolioData(prev => ({
+          ...prev,
+          ...data,
+          id: data.id
+        }))
+      } catch (error) {
+        console.error('임시 저장된 글 불러오기 실패:', error)
+      }
+    }
+
+    fetchPortfolioData()
+  }, [id])
 
   /* --- error 체크 --- */
   const { validate, errors, setErrors } = useCheckValidation()
