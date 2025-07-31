@@ -2,8 +2,6 @@ import Button from '@/components/common/Button'
 import S from './NewPortfolio.module.css'
 import Input from '@/components/common/Input'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import Textarea from '@/components/common/Textarea'
-import FileUploader from '@/components/common/FileUploader'
 import type { PortfolioData, TempItem } from '@/types/portfolio'
 import { useSavePortfolio } from '@/hooks/portfolio/useSavePortfolio'
 import { useCheckValidation } from '@/hooks/portfolio/useCheckValidation'
@@ -16,6 +14,8 @@ import supabase from '@/lib/supabaseClient'
 import { useSearchParams } from 'react-router-dom'
 import TechInfoSection from '@/components/domain/portfolio/TechInfoSection'
 import BasicInfoSection from '@/components/domain/portfolio/BasicInfoSection'
+import IntroInfoSection from '@/components/domain/portfolio/IntroInfoSection'
+import DataInfoSection from '@/components/domain/portfolio/DataInfoSection'
 
 // TODOS : 기본정보 마이페이지에서 불러와야함
 const TempData: PortfolioData = {
@@ -260,47 +260,20 @@ export const NewPortfolio = () => {
           portfolioData={portfolioData}
           handleChangeRadio={handleChangeRadio}
           handleChangeForm={handleChangeForm}
-          errors={errors ?? {}}
+          errors={errors}
         />
 
-        <section className={S['sec']}>
-          <h3 className="a11y-hidden">포트폴리오 소개</h3>
-          <div className={S['sec__form']}>
-            <Textarea
-              id="exText"
-              label="포트폴리오 소개"
-              placeholder="포트폴리오 관련 내용을 입력해주세요."
-              value={portfolioData.content}
-              onChange={e => handleChangeForm('content', e.target.value)}
-              error={errors.content}
-            />
-          </div>
-        </section>
+        <IntroInfoSection
+          portfolioData={portfolioData}
+          handleChangeForm={handleChangeForm}
+          errors={errors}
+        />
 
-        <section className={S['sec']}>
-          <h3 className={S['sec__tit']}>포트폴리오 자료</h3>
-          <div className={S['sec__form']}>
-            <div className={S['input-prefix']}>
-              <span className={S['prefix']}>https://</span>
-              <Input
-                type="text"
-                id="exId05"
-                label="URL"
-                value={portfolioData.linkUrl}
-                className={S['input-wrap']}
-                onChange={e => handleChangeForm('linkUrl', e.target.value)}
-                error={errors.linkUrl}
-              />
-            </div>
-
-            <FileUploader
-              key={portfolioData.id}
-              value={portfolioData.fileList}
-              onChange={files => handleChangeForm('fileList', files)}
-              error={errors.linkUrl}
-            />
-          </div>
-        </section>
+        <DataInfoSection
+          portfolioData={portfolioData}
+          handleChangeForm={handleChangeForm}
+          errors={errors}
+        />
       </form>
     </div>
   )

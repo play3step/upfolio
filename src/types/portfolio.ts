@@ -76,3 +76,12 @@ export interface ITechInfoSection {
   ) => void
   errors: ValidationError
 }
+
+export interface IIntroInfoSection {
+  portfolioData: PortfolioData
+  handleChangeForm: <K extends keyof PortfolioData>(
+    key: K,
+    value: PortfolioData[K]
+  ) => void
+  errors: ValidationError
+}
