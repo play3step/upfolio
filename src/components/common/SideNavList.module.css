@@ -43,7 +43,7 @@
       li {
         a {
           display: block;
-          padding: var(--sp-5);
+          padding: var(--sp-5) 0;
           font-size: var(--fs-md);
           border-bottom: 1px solid var(--gray);
         }
