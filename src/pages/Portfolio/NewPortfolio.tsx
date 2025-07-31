@@ -197,9 +197,32 @@ export const NewPortfolio = () => {
   const [isSticky, setIsSticky] = useState(false)
 
   useStickyMenu(stickyRef, setIsSticky)
+  /* --- 내용 초기화 --- */
+  const [resetKey, setResetKey] = useState(0)
+
+  const handleReset = () => {
+    const Confirm = window.confirm('작성 중인 내용을 모두 초기화할까요?')
+    if (!Confirm) return
+
+    setPortfolioData(prev => ({
+      ...TempData,
+      id: prev.id,
+      userId: prev.userId,
+      name: userInfo?.nickname ?? '',
+      email: userInfo?.email ?? '',
+      phone: userInfo?.phone ?? '',
+      birthDate: userInfo?.birthDate ?? '',
+      createdAt: new Date().toISOString()
+    }))
+
+    setErrors({})
+    setResetKey(prev => prev + 1)
+  }
 
   return (
-    <div className={S.container}>
+    <div
+      key={resetKey}
+      className={S.container}>
       {/* 임시저장목록 사이드 패널 */}
       <SideTempList
         isOpen={isSideOpen}
@@ -213,30 +236,40 @@ export const NewPortfolio = () => {
         ref={stickyRef}
         className={`${S.head} ${isSticky ? S.sticky : ''}`}>
         <h2 className="a11y-hidden">포트폴리오 등록</h2>
-        <button
-          type="button"
-          onClick={handleOpenSide}
-          className={S['head__tempListBtn']}>
-          임시저장 목록
-        </button>
-        <div className={'tit-withBtn'}>
-          <Input
-            className={`'tit__txt' ${S['tit__input']}`}
-            id="exTitle"
-            type="text"
-            value={portfolioData.title}
-            placeholder="포트폴리오 제목을 입력해주세요."
-            onChange={e => handleChangeForm('title', e.target.value)}
-            error={errors.title}
-            hideLabel
-          />
-          <div style={{ display: 'flex', gap: '.75rem' }}>
-            <Button
-              onClick={handleSaveTemp}
-              line>
-              임시저장
-            </Button>
-            <Button onClick={handleSave}>저장</Button>
+        <div className={S['head__inner']}>
+          <div className={S['head__btn']}>
+            <button
+              type="button"
+              onClick={handleReset}
+              className={S['head__btn-reset']}>
+              내용 초기화
+            </button>
+            <button
+              type="button"
+              onClick={handleOpenSide}
+              className={S['head__btn-temp']}>
+              임시저장 목록
+            </button>
+          </div>
+          <div className={`tit-withBtn ${S['tit-withBtn']}`}>
+            <Input
+              className={`'tit__txt' ${S['tit__input']}`}
+              id="exTitle"
+              type="text"
+              value={portfolioData.title}
+              placeholder="포트폴리오 제목을 입력해주세요."
+              onChange={e => handleChangeForm('title', e.target.value)}
+              error={errors.title}
+              hideLabel
+            />
+            <div style={{ display: 'flex', gap: '.75rem' }}>
+              <Button
+                onClick={handleSaveTemp}
+                line>
+                임시저장
+              </Button>
+              <Button onClick={handleSave}>저장</Button>
+            </div>
           </div>
         </div>
       </div>

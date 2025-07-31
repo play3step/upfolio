@@ -10,9 +10,10 @@ export const useStickyMenu = (
       if (!stickyRef.current) return
 
       const stickyPosition = stickyRef.current.getBoundingClientRect().top ?? 0
-      const yes = stickyPosition <= 0
+
+      const yes = stickyPosition <= 32
       setIsSticky(yes)
-    }, 200)
+    }, 100)
 
     window.addEventListener('scroll', handleScroll)
 

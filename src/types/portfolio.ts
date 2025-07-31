@@ -36,6 +36,7 @@ export interface PortfolioData {
   fileList: { name: string; url: string }[]
   viewCount?: number
   likeCount?: number
+  createdAt?: string
 }
 
 export interface UserInfo {
