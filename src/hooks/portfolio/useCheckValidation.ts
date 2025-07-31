@@ -9,9 +9,9 @@ export const useCheckValidation = () => {
     const newErrors: ValidationError = {}
 
     if (!portfolioData.title.trim()) newErrors.title = '제목을 입력해주세요.'
-    if (!portfolioData.career.trim())
+    if (!portfolioData.career.value)
       newErrors.career = '경력수준을 선택해주세요.'
-    if (!portfolioData.interest.trim())
+    if (!portfolioData.interest.value)
       newErrors.interest = '지원분야를 선택해주세요.'
     if (portfolioData.techStack.length === 0)
       newErrors.techStack = '기술스택을 선택해주세요.'

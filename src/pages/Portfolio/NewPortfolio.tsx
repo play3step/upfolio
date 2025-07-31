@@ -29,8 +29,8 @@ const TempData: PortfolioData = {
   email: '',
   title: '',
   content: '',
-  career: '',
-  interest: '',
+  career: { label: '', value: '' },
+  interest: { label: '', value: '' },
   techStack: [],
   linkUrl: '',
   fileList: [],
@@ -39,23 +39,26 @@ const TempData: PortfolioData = {
 }
 
 export const NewPortfolio = () => {
+  /* --- 경력 수준 라디오 그룹 상태 및 옵션 --- */
+  const CAREER_SELECT = [
+    { label: '신입 (0년)', value: 'zeroYear' },
+    { label: '1년차 이상', value: 'oneYearsPlus' },
+    { label: '3년차 이상', value: 'threeYearsPlus' },
+    { label: '5년차 이상', value: 'fiveYearsPlus' },
+    { label: '10년차 이상', value: 'tenYearsPlus' }
+  ]
+
   /* --- 지원분야 라디오 그룹 상태 및 옵션 --- */
   const INTEREST_SELECT = [
-    { label: '프론트엔드', value: 'FE' },
-    { label: '백엔드', value: 'BE' },
-    { label: '풀스택', value: 'FullStack' },
-    { label: '모바일', value: 'Mobile' },
-    { label: '임베디드', value: 'Embedded' },
+    { label: '프론트엔드 개발', value: 'FE' },
+    { label: '백엔드 개발', value: 'BE' },
+    { label: '풀스택 개발', value: 'FullStack' },
+    { label: '모바일 개발', value: 'Mobile' },
+    { label: '임베디드 개발', value: 'Embedded' },
     { label: 'UI/UX 디자인', value: 'UIUX' },
     { label: '그래픽 디자인', value: 'Graphic' },
     { label: '모션 디자인', value: 'Motion' },
     { label: '일러스트', value: 'Illustration' }
-  ]
-
-  /* --- 경력 수준 라디오 그룹 상태 및 옵션 --- */
-  const CAREER_SELECT = [
-    { label: '신입', value: 'junior' },
-    { label: '경력', value: 'senior' }
   ]
 
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(TempData)
@@ -112,7 +115,10 @@ export const NewPortfolio = () => {
   }, [userInfo])
 
   /* --- 입력값 변경 시 상태 저장 및 관련 에러 제거 --- */
-  const { handleChangeForm } = usePortfolioForm(setPortfolioData, setErrors)
+  const { handleChangeForm, handelChangeRadio } = usePortfolioForm(
+    setPortfolioData,
+    setErrors
+  )
 
   /* --- 임시저장목록 --- */
   // 사이드 패널 열고 닫기
@@ -278,8 +284,10 @@ export const NewPortfolio = () => {
               label="경력수준"
               name="careerOption"
               options={CAREER_SELECT}
-              checked={portfolioData.career}
-              onChange={e => handleChangeForm('career', e.target.value)}
+              checked={portfolioData.career.value}
+              onChange={e =>
+                handelChangeRadio('career', e.target.value, CAREER_SELECT)
+              }
               error={errors.career}
             />
 
@@ -287,8 +295,10 @@ export const NewPortfolio = () => {
               label="지원분야"
               name="fieldOfSupport"
               options={INTEREST_SELECT}
-              checked={portfolioData.interest}
-              onChange={e => handleChangeForm('interest', e.target.value)}
+              checked={portfolioData.interest.value}
+              onChange={e =>
+                handelChangeRadio('interest', e.target.value, INTEREST_SELECT)
+              }
               error={errors.interest}
             />
 
@@ -308,6 +318,7 @@ export const NewPortfolio = () => {
             <Textarea
               id="exText"
               label="포트폴리오 소개"
+              placeholder="포트폴리오 관련 내용을 입력해주세요."
               value={portfolioData.content}
               onChange={e => handleChangeForm('content', e.target.value)}
               error={errors.content}
