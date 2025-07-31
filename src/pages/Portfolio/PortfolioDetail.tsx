@@ -55,7 +55,8 @@ export default function PortfolioDetail() {
     const { data, error } = await supabase
       .from('Comment')
       .select('*')
-      .order('createdat', { ascending: false })
+      .eq('portfolioid', decodedId)
+      .order('createdat', { ascending: true })
 
     if (error) {
       console.error('댓글 불러오기 실패:', error.message)
