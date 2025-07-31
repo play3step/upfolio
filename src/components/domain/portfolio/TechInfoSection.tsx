@@ -3,7 +3,7 @@ import RadioGroup from '@/components/common/RadioGroup'
 import NewPortfolioStyle from '@/pages/Portfolio/NewPortfolio.module.css'
 import type { ITechInfoSection } from '@/types/portfolio'
 
-function TechProfileSection({
+function TechInfoSection({
   portfolioData,
   handleChangeRadio,
   handleChangeForm,
@@ -68,4 +68,4 @@ function TechProfileSection({
     </section>
   )
 }
-export default TechProfileSection
+export default TechInfoSection

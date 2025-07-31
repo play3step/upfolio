@@ -14,7 +14,7 @@ import { useStickyMenu } from '@/hooks/portfolio/useStickyMenu'
 import SideTempList from './SideTempList'
 import supabase from '@/lib/supabaseClient'
 import { useSearchParams } from 'react-router-dom'
-import TechProfileSection from '@/components/domain/portfolio/TechInfoSection'
+import TechInfoSection from '@/components/domain/portfolio/TechInfoSection'
 import BasicInfoSection from '@/components/domain/portfolio/BasicInfoSection'
 
 // TODOS : 기본정보 마이페이지에서 불러와야함
@@ -256,7 +256,7 @@ export const NewPortfolio = () => {
           handleChangeForm={handleChangeForm}
         />
 
-        <TechProfileSection
+        <TechInfoSection
           portfolioData={portfolioData}
           handleChangeRadio={handleChangeRadio}
           handleChangeForm={handleChangeForm}
