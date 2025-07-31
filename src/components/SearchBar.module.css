@@ -3,7 +3,7 @@
     padding: 3rem 0.75rem 1rem;
     border-radius: 0.75rem;
     margin-bottom: 1.5rem;
-    width: 100%;
+    width: 100vw;
     min-height: 200px;
     box-sizing: border-box;
   }

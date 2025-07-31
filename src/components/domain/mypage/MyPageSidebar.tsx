@@ -27,12 +27,12 @@ export function MyPageSidebar() {
             <NavLink
               to="/mypage/bookmarks"
               className={({ isActive }) => (isActive ? S.active : '')}>
-              좋아요 / 북마크한 글
+              북마크한 글 / 좋아요
             </NavLink>
           </li>
           <li>
             <NavLink
-              to="/mypage/drafts"
+              to="/mypage/edit"
               className={({ isActive }) => (isActive ? S.active : '')}>
               임시저장한 글
             </NavLink>

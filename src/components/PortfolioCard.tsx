@@ -2,6 +2,7 @@ import S from './PortfolioCard.module.css'
 import bookmarkIcon from '../assets/icon/bookmark-empty.svg'
 import bookmarkFilledIcon from '../assets/icon/bookmark-fill.svg'
 import grayHeart from '../assets/icon/grayHeart.svg'
+import redHeart from '../assets/icon/heart.fill.svg'
 import eye from '../assets/icon/eye.svg'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -20,6 +21,7 @@ export interface Props {
 
 interface PortfolioCardProps extends Props {
   onToggleBookmark: (id: string, next: boolean) => void
+  onToggleLike: (id: string, next: boolean) => void
 }
 
 export function PortfolioCard({
@@ -31,9 +33,12 @@ export function PortfolioCard({
   interest,
   career,
   isBookmarked,
-  onToggleBookmark
+  onToggleBookmark,
+  onToggleLike
 }: PortfolioCardProps) {
   const [bookmarked, setBookmarked] = useState(isBookmarked)
+  const [liked, setLiked] = useState(false)
+  const [currentLikeCount, setCurrentLikeCount] = useState(likeCount)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -41,11 +46,22 @@ export function PortfolioCard({
     setBookmarked(isBookmarked)
   }, [isBookmarked])
 
+  useEffect(() => {
+    // 새로고침 후 좋아요 수 반영
+    setCurrentLikeCount(likeCount)
+  }, [likeCount])
+
   const toggleBookmark = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     const next = !bookmarked
     setBookmarked(next)
     onToggleBookmark(id, next)
+  }
+
+  const toggleLike = () => {
+    const next = !liked
+    setLiked(next)
+    onToggleLike(id, next)
   }
 
   const handleCardClick = () => {
@@ -73,11 +89,24 @@ export function PortfolioCard({
 
       <div className={S.meta}>
         <span className={S.like}>
-          <img
-            src={grayHeart}
-            alt="Like Icon"
-          />
-          {likeCount}
+          {liked ? (
+            <img
+              src={redHeart}
+              alt="Like Icon"
+              onClick={e => {
+                e.stopPropagation()
+                toggleLike()
+              }}
+              style={{ pointerEvents: 'none' }}
+            />
+          ) : (
+            <img
+              src={grayHeart}
+              alt="Like Icon"
+              style={{ pointerEvents: 'none' }}
+            />
+          )}
+          {currentLikeCount}
         </span>
         <span className={S.view}>
           <img

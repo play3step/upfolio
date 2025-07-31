@@ -1,18 +1,21 @@
-import { getUserInfo } from '@/apis/portfolio/userInfo.controller'
+import { AuthContext } from '@/context/AuthContext'
 import type { UserInfo } from '@/types/portfolio'
-import { useEffect, useState } from 'react'
+import { useContext, useMemo } from 'react'
 
 export const useUserInfo = () => {
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
+  const { authData } = useContext(AuthContext)
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      const info = await getUserInfo()
-      if (info) setUserInfo(info)
+  const userInfo: UserInfo | null = useMemo(() => {
+    if (!authData) return null
+
+    return {
+      id: authData.id,
+      email: authData.email,
+      nickname: authData.nickname,
+      phone: authData.phone ?? '',
+      birthDate: authData.birthDate ?? ''
     }
-
-    fetchUserInfo()
-  }, [])
+  }, [authData])
 
   return { userInfo }
 }
