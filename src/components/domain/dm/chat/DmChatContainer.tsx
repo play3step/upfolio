@@ -3,7 +3,7 @@ import dmSendIcon from '@/assets/icon/dm.svg'
 import DmChatListItem from './DmChatListItem'
 import DmChatMessage from './DmChatMessage'
 import type { Message, Thread } from '@/types/thread'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { AuthContext } from '@/context/AuthContext'
 
 interface Props {
@@ -26,6 +26,14 @@ export default function DmChatContainer({
 }: Props) {
   const { authData } = useContext(AuthContext)
   const [message, setMessage] = useState('')
+  const messageRef = useRef<HTMLDivElement | null>(null)
+
+  // 메시지가 추가되거나 채팅방이 변경될 때 스크롤 내리기
+  useEffect(() => {
+    const message = messageRef.current
+    if (!message) return
+    setTimeout(() => message.scrollTo(0, message.scrollHeight))
+  }, [messages, selectedThreadId])
 
   return (
     <div
@@ -45,7 +53,9 @@ export default function DmChatContainer({
         ))}
       </div>
       <div className={S['dm-chat-container-right']}>
-        <div className={S['dm-chat-conversation']}>
+        <div
+          className={S['dm-chat-conversation']}
+          ref={messageRef}>
           {messages?.map(message => (
             <DmChatMessage
               key={message.id}
