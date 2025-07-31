@@ -11,6 +11,10 @@
   max-width: 100vw;
   padding-top: 5.5rem;
   position: relative;
+
+  @media (max-width: 48rem) {
+    padding-top: 2.75rem;
+  }
 }
 
 .dm--button-position {

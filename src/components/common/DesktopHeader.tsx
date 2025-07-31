@@ -58,10 +58,11 @@ export const DesktopHeader = () => {
         <div className={S.header__left}>
           <Link
             to="/"
-            className={S.header__left__logo}>
+            className={S.header__left__logo}
+            title="Upfolio 메인 바로가기">
             <img
               src={logo}
-              alt="Upfolio 메인"
+              alt="Upfolio 로고"
             />
           </Link>
           <nav className={S.header__left__nav}>
