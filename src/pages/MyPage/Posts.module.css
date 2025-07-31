@@ -25,11 +25,6 @@
   transition: 0.2s ease;
 }
 
-.item:hover {
-  background-color: var(--primary-50);
-  cursor: pointer;
-}
-
 .left {
   display: flex;
   gap: var(--sp-3);
@@ -55,8 +50,9 @@
   color: var(--black);
 }
 
-.inline {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+.item:hover .itemTitle,
+.item:hover .itemContent,
+.item:hover .date {
+  color: var(--primary);
+  cursor: pointer;
 }

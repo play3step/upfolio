@@ -10,7 +10,7 @@ interface BookmarkAndLiked {
     id: string
     title: string
     content: string
-    createdat: string
+    createdAt: string
     likeCount: number
   }
 }
@@ -41,7 +41,7 @@ export const Bookmarks = () => {
             id,
             title,
             content,
-            createdat,
+            createdAt,
             likeCount
           )
         `
@@ -65,7 +65,7 @@ export const Bookmarks = () => {
               id: bookmark.id,
               title: bookmark.title,
               content: bookmark.content,
-              createdat: bookmark.createdat,
+              createdAt: bookmark.createdAt,
               likeCount: bookmark.likeCount
             }
           }
@@ -85,7 +85,7 @@ export const Bookmarks = () => {
             id,
             title,
             content,
-            createdat,
+            createdAt,
             likeCount
           )
         `
@@ -110,7 +110,7 @@ export const Bookmarks = () => {
                 id: likedPortfolio.id,
                 title: likedPortfolio.title,
                 content: likedPortfolio.content,
-                createdat: likedPortfolio.createdat,
+                createdAt: likedPortfolio.createdAt,
                 likeCount: likedPortfolio.likeCount
               }
             }
@@ -148,7 +148,7 @@ export const Bookmarks = () => {
                 </div>
               </div>
               <div className={S.date}>
-                {formatDate(bookmark.Portfolio.createdat)}
+                {formatDate(bookmark.Portfolio.createdAt)}
               </div>
             </div>
           ))
@@ -172,7 +172,7 @@ export const Bookmarks = () => {
                 </p>
               </div>
               <div className={S.date}>
-                {formatDate(likeportfolio.Portfolio.createdat)}
+                {formatDate(likeportfolio.Portfolio.createdAt)}
               </div>
             </div>
           ))

@@ -76,6 +76,11 @@ export default function Profile() {
     )
   }
 
+  const imageSrc =
+    data?.profileimage && data.profileimage.trim().length > 0
+      ? data.profileimage
+      : defaultProfile
+
   return (
     <div className={S.profile}>
       <div className={S.profile__content}>
@@ -96,12 +101,12 @@ export default function Profile() {
             {isEditing ? (
               <ImageUploader
                 id="profile-image"
-                value={data?.profileimage || ''}
+                value={imageSrc}
                 onChange={url => handleChange('profileimage', url)}
               />
             ) : (
               <img
-                src={data?.profileimage || defaultProfile}
+                src={imageSrc}
                 alt="profile"
                 className={S.profile__image}
               />

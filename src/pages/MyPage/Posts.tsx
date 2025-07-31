@@ -3,15 +3,13 @@ import S from './Posts.module.css'
 import { useEffect, useState } from 'react'
 import supabase from '@/lib/supabaseClient'
 import { formatDate } from '@/utils/formatDate'
-import likeIcon from '@/assets/icon/like.svg'
-import eyeIcon from '@/assets/icon/eye.svg'
 import Comments from './Comments'
 
 interface Post {
   id: number
   title: string
   content: string
-  createdat: string
+  createdAt: string
   likeCount: number
   viewCount: number
 }
@@ -29,7 +27,7 @@ export default function Posts() {
 
       const { data } = await supabase
         .from('Portfolio')
-        .select('id, title, content, createdat, likeCount,viewCount')
+        .select('id, title, content, createdAt, likeCount,viewCount')
         .eq('userId', user.id)
 
       setPosts(data || [])
@@ -60,24 +58,7 @@ export default function Posts() {
                   <p className={S.itemContent}>{post.content}</p>
                 </div>
               </div>
-              <div className={S.date}>
-                {formatDate(post.createdat)} |{' '}
-                <span className={S.inline}>
-                  <img
-                    src={likeIcon}
-                    alt="like"
-                  />
-                  {post.likeCount}
-                </span>{' '}
-                |{' '}
-                <span className={S.inline}>
-                  <img
-                    src={eyeIcon}
-                    alt="eye"
-                  />
-                  {post.viewCount}
-                </span>
-              </div>
+              <div className={S.date}>{formatDate(post.createdAt)}</div>
             </div>
           ))
         )}
