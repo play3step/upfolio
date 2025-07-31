@@ -27,6 +27,9 @@
 
 .main > * {
   min-height: calc(100vh - 10.5rem);
+  @media (max-width: 48rem) {
+    min-height: calc(100vh - 10.75rem);
+  }
 }
 
 .layout {

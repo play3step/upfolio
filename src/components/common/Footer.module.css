@@ -1,6 +1,6 @@
 .footer {
   width: 100%;
-  min-height: 5rem;
+  height: 5rem;
   background-color: var(--white);
   border-top: 1px solid var(--primary-50);
   display: flex;
@@ -42,5 +42,38 @@
   gap: var(--sp-8);
   p {
     font-size: var(--fs-xs);
+  }
+}
+
+@media (max-width: 48rem) {
+  .footer {
+    height: 7.5rem;
+
+    .footer__inner {
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: unset;
+      gap: var(--sp-1);
+
+      .footer__left {
+        order: 2;
+        width: 100%;
+      }
+
+      .footer__middle {
+        position: relative;
+        order: 0;
+        left: unset;
+        bottom: unset;
+        translate: unset;
+      }
+
+      .footer__right {
+        order: 1;
+        width: 100%;
+        gap: var(--sp-2);
+        justify-content: flex-start;
+      }
+    }
   }
 }
