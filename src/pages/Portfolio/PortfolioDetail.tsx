@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useRef, useEffect } from 'react'
 import { usePortfolioDetail } from '@/hooks/usePortfolioDetail'
 import { handleToggleBookmark } from '@/apis/bookmark/bookmarkUtils'
@@ -6,7 +6,7 @@ import supabase from '@/lib/supabaseClient'
 import S from './PortfolioDetail.module.css'
 import defaultProfileImage from '@/assets/images/default-profile.png'
 import Button from '@/components/common/Button'
-import { formatTime } from '@/utils/formatTime'
+import { formatTime } from '@/utils/format'
 import { scrollToSection } from '@/utils/scrollToSection'
 import emptyHeart from '@/assets/icon/heart.empty.svg'
 import filledHeart from '@/assets/icon/heart.fill.svg'
@@ -15,6 +15,9 @@ import filledBookmark from '@/assets/icon/bookmark-fill.svg'
 import dm from '@/assets/icon/dm-black.svg'
 import dmWhite from '@/assets/icon/dm.svg'
 import rightArrow from '@/assets/icon/right-arrow.svg'
+
+import { useThreads } from '@/hooks/dm/useThreads'
+import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
 
 interface CommentType {
   id: string
@@ -34,6 +37,8 @@ export default function PortfolioDetail() {
   const [isCommentOpen, setIsCommentOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [comments, setComments] = useState<CommentType[]>([])
+  const navigate = useNavigate()
+  const { authData } = useAuthLogin()
 
   const {
     data,
@@ -52,6 +57,9 @@ export default function PortfolioDetail() {
   const techStackRef = useRef<HTMLDivElement>(null)
   const introductionRef = useRef<HTMLDivElement>(null)
   const portfolioRef = useRef<HTMLDivElement>(null)
+  const { handleAddThreads } = useThreads()
+
+  const isAuthor = authData?.id === data?.userId
 
   const fetchComments = async () => {
     const { data, error } = await supabase
@@ -195,6 +203,23 @@ export default function PortfolioDetail() {
     setInputValue('')
   }
 
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm('정말로 삭제하시겠습니까?')
+    if (!confirmDelete) return
+
+    const { error } = await supabase
+      .from('Portfolio')
+      .delete()
+      .eq('id', data.id)
+
+    if (error) {
+      alert('삭제 실패: ' + error.message)
+    } else {
+      alert('삭제되었습니다.')
+      navigate('/') // 홈 또는 포트폴리오 목록으로 이동
+    }
+  }
+
   return (
     <>
       <nav
@@ -280,7 +305,7 @@ export default function PortfolioDetail() {
             <span>{bookmark ? '북마크 취소' : '북마크'}</span>
           </div>
           <div className={S.dm}>
-            <button>
+            <button onClick={() => handleAddThreads(data?.userId ?? '')}>
               <img
                 src={dm}
                 alt="DM 아이콘"
@@ -340,24 +365,28 @@ export default function PortfolioDetail() {
               <div className={S.titleWrapper}>
                 <h1 className={S.title}>{data.title}</h1>
                 <div className={S.editButtons}>
-                  <Button
-                    children="수정"
-                    className={
-                      activeEditButton === '수정'
-                        ? S.activeButton
-                        : S.inactiveButton
-                    }
-                    onClick={() => setActiveEditButton('수정')}
-                  />
-                  <Button
-                    children="삭제"
-                    className={
-                      activeEditButton === '삭제'
-                        ? S.activeButton
-                        : S.inactiveButton
-                    }
-                    onClick={() => setActiveEditButton('삭제')}
-                  />
+                  {isAuthor && (
+                    <>
+                      <Button
+                        children="수정"
+                        className={
+                          activeEditButton === '수정'
+                            ? S.activeButton
+                            : S.inactiveButton
+                        }
+                        onClick={() => navigate(`/edit/${data.id}`)}
+                      />
+                      <Button
+                        children="삭제"
+                        className={
+                          activeEditButton === '삭제'
+                            ? S.activeButton
+                            : S.inactiveButton
+                        }
+                        onClick={handleDelete}
+                      />
+                    </>
+                  )}
                 </div>
               </div>
 
