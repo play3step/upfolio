@@ -1,5 +1,6 @@
 .container {
-  padding: var(--sp-8);
+  padding-top: var(--sp-8);
+  margin: 30px 0;
   display: flex;
   flex-direction: column;
   gap: var(--sp-6);
@@ -56,4 +57,69 @@
 .date {
   font-size: var(--fs-sm);
   color: var(--black);
+}
+
+/* PC 이하 (1024px 이하) */
+@media (max-width: 1024px) {
+  .container {
+    padding: var(--sp-6);
+    gap: var(--sp-4);
+  }
+  .itemDescription {
+    max-width: 400px;
+  }
+}
+
+/* 태블릿 이하 (768px 이하) */
+@media (max-width: 768px) {
+  .container {
+    padding: var(--sp-4);
+    gap: var(--sp-3);
+  }
+  .item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-bottom: var(--sp-6);
+    position: relative;
+  }
+  .itemDescription {
+    max-width: 400px;
+    font-size: var(--fs-xs);
+  }
+  .date {
+    position: absolute;
+    bottom: var(--sp-1);
+    right: var(--sp-1);
+    font-size: var(--fs-xxs);
+    color: var(--black);
+  }
+}
+
+/* 모바일 이하 (640px 이하) */
+@media (max-width: 640px) {
+  .container {
+    padding: var(--sp-2);
+    gap: var(--sp-2);
+  }
+
+  .item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-bottom: var(--sp-6);
+    position: relative;
+  }
+
+  .title {
+    font-size: var(--fs-md);
+  }
+  .itemDescription {
+    font-size: var(--fs-xxs);
+  }
+  .date {
+    position: absolute;
+    bottom: var(--sp-1);
+    right: var(--sp-1);
+    font-size: var(--fs-xxs);
+    color: var(--black);
+  }
 }

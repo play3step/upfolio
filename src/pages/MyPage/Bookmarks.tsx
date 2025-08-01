@@ -37,7 +37,7 @@ export const Bookmarks = () => {
         .select(
           `
           portfolioid,
-          Portfolio(
+          PortfolioWithLikes(
             id,
             title,
             content,
@@ -55,9 +55,9 @@ export const Bookmarks = () => {
         )
       } else if (bookmarkData) {
         const fixedBookmarks: BookmarkAndLiked[] = bookmarkData.map(item => {
-          const bookmark = Array.isArray(item.Portfolio)
-            ? item.Portfolio[0] // 배열이면 첫 번째 값
-            : item.Portfolio // 아니면 그냥 사용
+          const bookmark = Array.isArray(item.PortfolioWithLikes)
+            ? item.PortfolioWithLikes[0] // 배열이면 첫 번째 값
+            : item.PortfolioWithLikes // 아니면 그냥 사용
 
           return {
             portfolioid: item.portfolioid,
@@ -81,7 +81,7 @@ export const Bookmarks = () => {
           .select(
             `
           portfolioid,
-          Portfolio(
+          PortfolioWithLikes(
             id,
             title,
             content,
@@ -100,9 +100,9 @@ export const Bookmarks = () => {
       } else if (likedCommentData) {
         const fixedLikedPortfolios: BookmarkAndLiked[] = likedCommentData.map(
           item => {
-            const likedPortfolio = Array.isArray(item.Portfolio)
-              ? item.Portfolio[0]
-              : item.Portfolio
+            const likedPortfolio = Array.isArray(item.PortfolioWithLikes)
+              ? item.PortfolioWithLikes[0]
+              : item.PortfolioWithLikes
 
             return {
               portfolioid: item.portfolioid,
