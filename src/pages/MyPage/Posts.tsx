@@ -26,7 +26,8 @@ export default function Posts() {
       if (!user) return
 
       const { data } = await supabase
-        .from('Portfolio')
+        // .from('Portfolio')
+        .from('PortfolioWithLikes')
         .select('id, title, content, createdAt, likeCount,viewCount')
         .eq('userId', user.id)
 
