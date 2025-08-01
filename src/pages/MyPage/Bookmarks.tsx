@@ -125,7 +125,7 @@ export const Bookmarks = () => {
   }, [])
 
   const handleBookmarkClick = (id: string) => {
-    navigate(`/bookmarks/${id}`)
+    navigate(`/portfolios/${id}`)
   }
 
   return (
@@ -163,7 +163,8 @@ export const Bookmarks = () => {
           likedComments.map((likeportfolio, idx) => (
             <div
               key={likeportfolio.portfolioid}
-              className={S.item}>
+              className={S.item}
+              onClick={() => handleBookmarkClick(likeportfolio.Portfolio.id)}>
               <div className={S.left}>
                 <strong>{idx + 1}</strong>
                 <p className={S.itemContent}>

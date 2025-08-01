@@ -37,7 +37,7 @@ export default function Posts() {
   }, [])
 
   const handlePostClick = (id: number) => {
-    navigate(`/posts/${id}`)
+    navigate(`/portfolios/${id}`)
   }
 
   return (
