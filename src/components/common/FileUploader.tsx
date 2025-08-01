@@ -85,7 +85,7 @@ function FileUploader({ onChange, value = [], error, className }: Props) {
 
   return (
     <div
-      className={`${S['uploader']} ${error ? S['uploader-error'] : ''} ${className}`}>
+      className={`${S['uploader']} ${error ? S['uploader-error'] : ''} ${className ?? ''}`}>
       <input
         type="file"
         ref={fileInput}
