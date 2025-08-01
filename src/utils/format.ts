@@ -1,4 +1,4 @@
-export const formatPhoneNumber = (value: string) => {
+const formatPhoneNumber = (value: string) => {
   const numbers = value.replace(/[^\d]/g, '')
 
   // 길이에 따라 하이픈 추가
@@ -16,3 +16,21 @@ export const formatPhoneNumber = (value: string) => {
     )
   }
 }
+
+const formatDate = (dateString: string): string => {
+  if (!dateString) return ''
+  return new Date(dateString).toLocaleDateString('ko-KR').replace(/\.\s*$/, '')
+}
+
+export const formatTime = (timestamp: string) => {
+  const date = new Date(timestamp)
+  return date.toLocaleString(undefined, {
+    hour: '2-digit',
+    minute: '2-digit',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  })
+}
+
+export { formatPhoneNumber, formatDate }

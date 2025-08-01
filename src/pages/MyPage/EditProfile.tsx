@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import supabase from '@/lib/supabaseClient'
 import S from './EditProfile.module.css'
-import { formatDate } from '@/utils/formatDate'
+import { formatDate } from '@/utils/format'
 
 interface Draft {
   id: number
