@@ -4,9 +4,12 @@ import logo from '@/assets/logo.svg'
 import hamburger from '@/assets/icon/hamburger.svg'
 import close from '@/assets/icon/close.svg'
 import SideNavList from './SideNavList'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 function MobileHeader() {
+  const [showHeader, setShowHeader] = useState(true)
+  const lastScrollY = useRef(0)
+
   const [isSideNavOpen, setSideNavOpen] = useState(false)
 
   const handleOpenSide = () => {
@@ -29,8 +32,28 @@ function MobileHeader() {
     }
   }, [isSideNavOpen])
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.pageYOffset
+
+      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+        setShowHeader(false)
+      } else {
+        setShowHeader(true)
+      }
+
+      lastScrollY.current = currentScrollY
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  })
+
   return (
-    <header className={`${S.header}`}>
+    <header className={`${S.header} ${!showHeader ? S.hide : ''}`}>
       <Link
         to="/"
         className={S['header__logo']}

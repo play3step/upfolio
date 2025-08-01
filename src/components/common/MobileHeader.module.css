@@ -23,4 +23,8 @@
     height: 2rem;
     cursor: pointer;
   }
+
+  &.hide {
+    transform: translateY(-100%);
+  }
 }
