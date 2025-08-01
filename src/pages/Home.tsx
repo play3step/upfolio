@@ -66,40 +66,42 @@ export const Home = () => {
   }
 
   const handleLikeToggle = async (id: string, next: boolean) => {
-    if (!authData?.id) return;
-  
+    if (!authData?.id) return
+
     // 좋아요 반영
     if (next) {
       await supabase
         .from('like_table')
-        .upsert({ portfolioid: id, userid: authData.id });
+        .upsert({ portfolioid: id, userid: authData.id })
     } else {
       await supabase
         .from('like_table')
         .delete()
         .eq('portfolioid', id)
-        .eq('userid', authData.id);
+        .eq('userid', authData.id)
     }
-  
+
     // 좋아요 수 & 관련 정보 다시 fetch (뷰 기반)
     const { data: updated, error } = await supabase
       .from('PortfolioWithLikes')
       .select('*')
       .eq('id', id)
-      .single();
-  
+      .single()
+
     if (error) {
-      console.error('뷰에서 업데이트된 데이터 가져오기 실패:', error.message);
-      return;
+      console.error('뷰에서 업데이트된 데이터 가져오기 실패:', error.message)
+      return
     }
-  
+
     // 로컬 상태 반영
     setPortfolio(prev =>
-      prev.map(p => (p.id === id ? { ...p, ...updated, likeCount: Number(updated.likeCount ?? 0) } : p))
-    );
-  };
-  
-  
+      prev.map(p =>
+        p.id === id
+          ? { ...p, ...updated, likeCount: Number(updated.likeCount ?? 0) }
+          : p
+      )
+    )
+  }
 
   return (
     <div>
