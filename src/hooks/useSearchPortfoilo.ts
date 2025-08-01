@@ -42,7 +42,20 @@ export const useSearchPortfoilo = (portfolio?: PortfolioItem[]) => {
       return matchInterest && matchCareer && matchKeyword
     })
 
-    setFilteredPortfolio(filtered)
+    // 데이터 변환
+    const transformed = filtered.map(item => ({
+      ...item,
+      interest: {
+        label: item.interest.label || '알 수 없음',
+        value: item.interest.value || 'unknown'
+      },
+      career: {
+        label: item.career.label || '알 수 없음',
+        value: item.career.value || 'unknown'
+      }
+    }))
+
+    setFilteredPortfolio(transformed)
   }
 
   return { filteredPortfolio, handleSearch }

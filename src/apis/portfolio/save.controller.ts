@@ -12,8 +12,7 @@ export const uploadPortfolio = async ({
     ...portfolioData,
     userId: userInfo?.id,
     id: undefined,
-    viewCount: 0,
-    likeCount: 0
+    viewCount: 0
   })
 
   if (error) throw error

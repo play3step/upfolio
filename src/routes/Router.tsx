@@ -14,6 +14,7 @@ import Layout from '@/layouts/Layout'
 import FormAndText from '@/pages/Example/FormAndText'
 import { Signup } from '@/pages/Signup'
 import { ProtectedRoute } from '@/layouts/ProtectedRoute'
+import EditPortfolio from '@/pages/Portfolio/EditPortfolio'
 
 interface RouteItem {
   path: string
@@ -42,6 +43,10 @@ const publicRoutes: RouteItem[] = [
   {
     path: '/portfolios/:id',
     element: <PortfolioDetail />
+  },
+  {
+    path: 'edit/:id',
+    element: <EditPortfolio />
   },
   {
     path: '*',

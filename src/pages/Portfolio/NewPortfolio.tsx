@@ -33,12 +33,10 @@ const TempData: PortfolioData = {
   techStack: [],
   linkUrl: '',
   fileList: [],
-  viewCount: 0,
-  likeCount: 0
+  viewCount: 0
 }
 
 export const NewPortfolio = () => {
-
   /* --- 지원분야 라디오 그룹 상태 및 옵션 --- */
   const INTEREST_SELECT = [
     { label: '프론트엔드 개발', value: 'FE' },

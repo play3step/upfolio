@@ -74,7 +74,7 @@ export const usePortfolioDetail = (portfolioId: string | null) => {
           .select('*', { count: 'exact' })
           .eq('portfolioid', portfolioId)
           .eq('userid', userId)
-          .single()
+          .maybeSingle()
 
         if (likeError && likeError.code !== 'PGRST116') {
           // PGRST116 : No rows found
