@@ -3,12 +3,10 @@ import S from './Layout.module.css'
 import { Header } from '@/components/common/Header'
 import Footer from '@/components/common/Footer'
 
-import { Outlet } from 'react-router-dom'
-import { MyPageSidebar } from '@/components/domain/mypage/MyPageSidebar'
 import { AuthContext } from '@/context/AuthContext'
-import DmDropdownWrapper from '@/components/domain/dm/DmDropdownWrapper'
+import DmDropdownWrapper from '@/components/dm/DmDropdownWrapper'
 import { useContext } from 'react'
-import AlarmWrapper from '@/components/domain/alarm/alarmWrapper'
+import AlarmWrapper from '@/components/alarm/alarmWrapper'
 // import { useState } from 'react'
 // import { usePortfolio, type PortfolioItem } from '@/hooks/usePortfolio'
 
@@ -22,7 +20,6 @@ export default function Layout({ children }: LayoutProps) {
   // const [filteredPortfolio, setFilteredPortfolio] = useState<PortfolioItem[]>(
   //   []
   // )
-  const showSidebar = window.location.pathname.includes('/mypage')
   const { isAuthenticated } = useContext(AuthContext)
 
   // const handleSearch = (keyword: string) => {
@@ -35,12 +32,18 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className={S['wrapper']}>
       <Header />
-      <div className={S['layout']}>
-        {showSidebar && <MyPageSidebar />}
-        <main className={S['main']}>
-          <Outlet />
-          {children}
-        </main>
+      <div className={S.layout}>
+        <main className={S.main}>{children}</main>
+        {isAuthenticated && (
+          <>
+            <div className={S['alarm--button-position']}>
+              <AlarmWrapper />
+            </div>
+            <div className={S['dm--button-position']}>
+              <DmDropdownWrapper />
+            </div>
+          </>
+        )}
 
         {isAuthenticated && (
           <>

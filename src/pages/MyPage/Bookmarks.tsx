@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import S from './Bookmarks.module.css'
 import { useEffect, useState } from 'react'
 import supabase from '@/lib/supabaseClient'
-import { formatDate } from '@/utils/formatDate'
+import { formatDate } from '@/utils/format'
 
 interface BookmarkAndLiked {
   portfolioid: string
