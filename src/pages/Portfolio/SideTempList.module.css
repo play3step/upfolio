@@ -56,12 +56,13 @@
   > li {
     border-bottom: 1px dashed var(--gray);
 
-    > button {
+    & > .side__list__item {
       display: flex;
       width: 100%;
       justify-content: space-between;
       padding: var(--sp-2);
       gap: var(--sp-1);
+      cursor: pointer;
       transition: background-color 0.3s ease-in-out;
 
       &:hover {
@@ -69,13 +70,26 @@
       }
 
       > strong {
-        width: calc(100% - 6.25rem);
+        width: calc(100% - 8.25rem);
         text-align: left;
       }
 
       .side__list__date {
         width: 6.25rem;
         color: var(--gray);
+      }
+
+      .side__list__delBtn {
+        display: block;
+        width: 24px;
+        height: 24px;
+        background: url(../../assets/icon/close-circle-red.svg) no-repeat
+          center/contain;
+        border-radius: 50%;
+
+        &:hover {
+          box-shadow: 0 0 4px 6px var(--danger-20);
+        }
       }
     }
   }
