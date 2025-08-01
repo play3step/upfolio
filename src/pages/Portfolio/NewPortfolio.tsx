@@ -1,8 +1,8 @@
 import Button from '@/components/common/Button'
 import S from './NewPortfolio.module.css'
 import Input from '@/components/common/Input'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import type { PortfolioData, TempItem } from '@/types/portfolio'
+import { useEffect, useRef, useState } from 'react'
+import type { PortfolioData } from '@/types/portfolio'
 import { useSavePortfolio } from '@/hooks/portfolio/useSavePortfolio'
 import { useCheckValidation } from '@/hooks/portfolio/useCheckValidation'
 import { useUserInfo } from '@/hooks/portfolio/useUserInfo'
@@ -16,8 +16,9 @@ import TechInfoSection from '@/components/domain/portfolio/TechInfoSection'
 import BasicInfoSection from '@/components/domain/portfolio/BasicInfoSection'
 import IntroInfoSection from '@/components/domain/portfolio/IntroInfoSection'
 import DataInfoSection from '@/components/domain/portfolio/DataInfoSection'
+import { useTempPortfolioList } from '@/hooks/portfolio/useTempPortfolioList'
 
-// TODOS : 기본정보 마이페이지에서 불러와야함
+// 초기화 데이터
 const TempData: PortfolioData = {
   id: '',
   userId: '',
@@ -98,66 +99,14 @@ export const NewPortfolio = () => {
   )
 
   /* --- 임시저장목록 --- */
-  // 사이드 패널 열고 닫기
-  const [isSideOpen, setSideOpen] = useState(false)
-
-  const handleOpenSide = () => {
-    setSideOpen(true)
-  }
-
-  const handleCloseSide = () => {
-    setSideOpen(false)
-  }
-
-  // 임시저장 목록 불러오기
-  const [tempList, setTempList] = useState<TempItem[]>([])
-
-  const fetchTempList = useCallback(async () => {
-    if (!userId) return
-
-    try {
-      const { data, error } = await supabase
-        .from('TempPortfolio')
-        .select('id,title,createdAt')
-        .eq('userId', userId)
-        .order('createdAt', { ascending: false })
-
-      if (error) throw error
-
-      setTempList(data ?? [])
-    } catch (error) {
-      console.error('임시저장 목록 불러오기 실패', error)
-    }
-  }, [userId])
-
-  useEffect(() => {
-    fetchTempList()
-  }, [fetchTempList])
-
-  const handleSelectTempItem = async (id: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('TempPortfolio')
-        .select('*')
-        .eq('id', id)
-        .single()
-
-      if (error) throw error
-      if (!data) return
-
-      setErrors({})
-
-      setPortfolioData(prev => ({
-        ...prev,
-        ...data,
-        id: data.id
-      }))
-
-      setSideOpen(false)
-    } catch (error) {
-      console.error('임시저장된 항목 불러오기 실패', error)
-    }
-  }
+  const {
+    tempList,
+    fetchTempList,
+    isSideOpen,
+    handleOpenSide,
+    handleCloseSide,
+    handleSelectTempItem
+  } = useTempPortfolioList({ userId, setPortfolioData, setErrors })
 
   /* --- 임시저장 --- */
   const { handleSaveTemp } = useSaveTempPortfolio({
