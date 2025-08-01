@@ -10,7 +10,6 @@ export interface PortfolioItem {
   linkUrl: string
   createdAt: string
   viewCount: number
-  likeCount: number
   techStack: string[]
   email: string
   name: string
@@ -35,7 +34,6 @@ export interface PortfolioData {
   linkUrl: string
   fileList: { name: string; url: string }[]
   viewCount?: number
-  likeCount?: number
   createdAt?: string
 }
 

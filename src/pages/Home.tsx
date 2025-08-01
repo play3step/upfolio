@@ -33,6 +33,8 @@ export const Home = () => {
   const { portfolio, setPortfolio } = usePortfolio(authData?.id ?? null)
   const { filteredPortfolio } = useSearchPortfoilo(portfolio)
 
+  console.log('filteredPortfolio:', filteredPortfolio)
+
   const [searchParams, setSearchParams] = useSearchParams()
 
   const handleSearch = (params: SearchParams) => {

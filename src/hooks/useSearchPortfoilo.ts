@@ -24,14 +24,16 @@ export const useSearchPortfoilo = (portfolio?: PortfolioItem[]) => {
       career,
       searchKeyword
     })
-  }, [searchParams])
+  }, [searchParams, portfolio])
 
   const handleSearch = ({ interest, career, searchKeyword }: SearchParams) => {
     const filtered = (portfolio || []).filter(item => {
       const matchInterest =
         interest === 'all' ||
-        item.interest === INTEREST_MAP[interest as keyof typeof INTEREST_MAP]
-      const matchCareer = !career || item.career === career
+        item.interest.label?.includes(
+          INTEREST_MAP[interest as keyof typeof INTEREST_MAP]
+        )
+      const matchCareer = !career || item.career.label === career
       const matchKeyword =
         !searchKeyword ||
         item.title?.toLowerCase().includes(searchKeyword.toLowerCase()) ||
@@ -40,7 +42,20 @@ export const useSearchPortfoilo = (portfolio?: PortfolioItem[]) => {
       return matchInterest && matchCareer && matchKeyword
     })
 
-    setFilteredPortfolio(filtered)
+    // 데이터 변환
+    const transformed = filtered.map(item => ({
+      ...item,
+      interest: {
+        label: item.interest.label || '알 수 없음',
+        value: item.interest.value || 'unknown'
+      },
+      career: {
+        label: item.career.label || '알 수 없음',
+        value: item.career.value || 'unknown'
+      }
+    }))
+
+    setFilteredPortfolio(transformed)
   }
 
   return { filteredPortfolio, handleSearch }

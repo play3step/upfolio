@@ -35,7 +35,6 @@ const TempData: PortfolioData = {
   linkUrl: '',
   fileList: [],
   viewCount: 0
-  // likeCount: 0
 }
 
 export const NewPortfolio = () => {

@@ -8,6 +8,14 @@ export const uploadPortfolio = async ({
   portfolioData: PortfolioData
   userInfo: UserInfo | null
 }) => {
+<<<<<<< HEAD
+  const { error } = await supabase.from('Portfolio').insert({
+    ...portfolioData,
+    userId: userInfo?.id,
+    id: undefined,
+    viewCount: 0
+  })
+=======
   const { data, error } = await supabase
     .from('Portfolio')
     .insert({
@@ -18,6 +26,7 @@ export const uploadPortfolio = async ({
     })
     .select()
     .single()
+>>>>>>> main
 
   if (error) throw error
 
