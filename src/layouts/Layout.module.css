@@ -40,11 +40,21 @@
   }
 }
 
-.layout {
+.layoutOuter {
   display: flex;
-  justify-content: center;
+  flex-direction: row;
   width: 100%;
+  margin: auto;
   max-width: 1200px;
-  margin: 0 auto;
-  flex-grow: 1;
 }
+
+.contentWrapper {
+  flex: 1;
+  max-width: 1024px;
+  padding: var(--sp-8);
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  transition: margin-left 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+

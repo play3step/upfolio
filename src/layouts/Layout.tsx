@@ -35,24 +35,26 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className={S['wrapper']}>
       <Header />
-      <div className={S['layout']}>
-        {showSidebar && <MyPageSidebar />}
-        <main className={S['main']}>
-          <Outlet />
-          {children}
-        </main>
+      <main className={S.main}>
+        <div className={S.layoutOuter}>
+          {showSidebar && <MyPageSidebar />}
+          <div className={S.contentWrapper}>
+            <Outlet />
+            {children}
+          </div>
+        </div>
+      </main>
 
-        {isAuthenticated && (
-          <>
-            <div className={S['alarm--button-position']}>
-              <AlarmWrapper />
-            </div>
-            <div className={S['dm--button-position']}>
-              <DmDropdownWrapper />
-            </div>
-          </>
-        )}
-      </div>
+      {isAuthenticated && (
+        <>
+          <div className={S['alarm--button-position']}>
+            <AlarmWrapper />
+          </div>
+          <div className={S['dm--button-position']}>
+            <DmDropdownWrapper />
+          </div>
+        </>
+      )}
       <Footer />
     </div>
   )
