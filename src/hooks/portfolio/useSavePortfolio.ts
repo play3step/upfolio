@@ -18,6 +18,8 @@ export const useSavePortfolio = ({
       alert('입력하지 않은 필수 항목이 있어요. 확인해주세요.')
       return
     }
+    console.log(portfolioData.userId)
+
     try {
       const id = await uploadPortfolio({ portfolioData, userInfo })
       alert('포트폴리오가 저장되었습니다.')

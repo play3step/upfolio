@@ -55,6 +55,22 @@ export const usePortfolioDetail = (portfolioId: string | null) => {
         return
       }
 
+      const { error: updateError } = await supabase
+        .from('Portfolio')
+        .update({
+          viewCount: data.viewCount + 1
+        })
+        .eq('id', portfolioId)
+        .select()
+
+      if (updateError) {
+        console.error(
+          '포트폴리오 뷰 카운트 업데이트 중 오류 발생: ',
+          updateError
+        )
+        return
+      }
+
       console.log('raw supabase data:', data)
 
       setData(data)
