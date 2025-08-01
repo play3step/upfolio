@@ -1,5 +1,5 @@
 .container {
-  padding-top: var(--sp-8);
+  padding: var(--sp-8);
   margin: 30px 0;
   display: flex;
   flex-direction: column;
