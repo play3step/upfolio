@@ -83,12 +83,12 @@
         display: block;
         width: 24px;
         height: 24px;
-        background: url(../../assets/icon/close-circle-red.svg) no-repeat
+        background: url(../../assets/icon/close-circle-gray.svg) no-repeat
           center/contain;
         border-radius: 50%;
 
         &:hover {
-          box-shadow: 0 0 4px 6px var(--danger-20);
+          box-shadow: 0 0 4px 4px var(--danger-50);
         }
       }
     }
