@@ -56,3 +56,72 @@
   color: var(--primary);
   cursor: pointer;
 }
+
+/* 반응형: PC 이하 (1024px 이하) */
+@media (max-width: 1024px) {
+  .container {
+    padding: var(--sp-6);
+    gap: var(--sp-8);
+  }
+  .itemContent {
+    max-width: 400px;
+  }
+}
+
+/* 반응형: 태블릿 이하 (768px 이하) */
+@media (max-width: 768px) {
+  .container {
+    padding-top: 45px;
+    gap: var(--sp-6);
+  }
+  .item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-2);
+  }
+  .itemContent {
+    max-width: 350px;
+    font-size: var(--fs-xs);
+  }
+  .date {
+    position: absolute;
+    bottom: var(--sp-1);
+    right: var(--sp-1);
+    font-size: var(--fs-xxs);
+    color: var(--black);
+  }
+}
+
+/* 반응형: 모바일 이하 (640px 이하) */
+@media (max-width: 640px) {
+  .container {
+    padding: var(--sp-2);
+    gap: var(--sp-4);
+  }
+  .title {
+    font-size: var(--fs-md);
+  }
+  .item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-bottom: var(--sp-6);
+    position: relative;
+  }
+
+  .left {
+    width: 100%;
+  }
+
+  .itemContent {
+    max-width: 350px;
+    font-size: var(--fs-xxs);
+  }
+
+  .date {
+    position: absolute;
+    bottom: var(--sp-1);
+    right: var(--sp-1);
+    font-size: var(--fs-xxs);
+    color: var(--black);
+  }
+}
