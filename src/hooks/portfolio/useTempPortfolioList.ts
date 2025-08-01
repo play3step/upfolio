@@ -1,3 +1,4 @@
+import { deleteTempPortfolioItem } from '@/apis/portfolio/deleteTempItem.controller'
 import { fetchTempPortfolioItem } from '@/apis/portfolio/fetchTempItem.controller'
 import { fetchTempPortfolioList } from '@/apis/portfolio/fetchTempList.controller'
 import type {
@@ -65,6 +66,18 @@ export const useTempPortfolioList = ({
     }
   }
 
+  // 임시저장 항목 삭제하기
+  const deleteTempItem = async (id: string) => {
+    try {
+      const ok = confirm('정말 이 항목을 삭제할까요?')
+      if (!ok) return
+      await deleteTempPortfolioItem(id)
+      setTempList(prev => prev.filter(item => item.id !== id))
+    } catch (error) {
+      console.error('임시저장된 항목 삭제 실패', error)
+    }
+  }
+
   return {
     tempList,
     fetchTempList,
@@ -72,6 +85,7 @@ export const useTempPortfolioList = ({
     isSideOpen,
     handleOpenSide,
     handleCloseSide,
-    handleSelectTempItem
+    handleSelectTempItem,
+    deleteTempItem
   }
 }
