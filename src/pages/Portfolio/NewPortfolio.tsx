@@ -39,6 +39,29 @@ const TempData: PortfolioData = {
 }
 
 export const NewPortfolio = () => {
+
+  /* --- 지원분야 라디오 그룹 상태 및 옵션 --- */
+  const INTEREST_SELECT = [
+    { label: '프론트엔드 개발', value: 'FE' },
+    { label: '백엔드 개발', value: 'BE' },
+    { label: '풀스택 개발', value: 'FullStack' },
+    { label: '모바일 개발', value: 'Mobile' },
+    { label: '임베디드 개발', value: 'Embedded' },
+    { label: 'UI/UX 디자인', value: 'UIUX' },
+    { label: '그래픽 디자인', value: 'Graphic' },
+    { label: '모션 디자인', value: 'Motion' },
+    { label: '일러스트', value: 'Illustration' }
+  ]
+
+  /* --- 경력 수준 라디오 그룹 상태 및 옵션 --- */
+  const CAREER_SELECT = [
+    { label: '신입 (0년)', value: 'zeroYear' },
+    { label: '1년차 이상', value: 'oneYearsPlus' },
+    { label: '3년차 이상', value: 'threeYearsPlus' },
+    { label: '5년차 이상', value: 'fiveYearsPlus' },
+    { label: '10년차 이상', value: 'tenYearsPlus' }
+  ]
+
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(TempData)
 
   /* --- 로그인 시 유저정보 불러오기 --- */

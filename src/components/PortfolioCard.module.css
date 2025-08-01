@@ -82,7 +82,7 @@
     right: 10px;
 
     .like,
-    .view {
+    .viewCount {
       display: flex;
       flex-direction: row;
       justify-content: center;

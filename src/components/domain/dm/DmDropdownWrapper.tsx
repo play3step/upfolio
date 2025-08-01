@@ -1,4 +1,4 @@
-import DmChatContainer from './chat/DmChatContainer'
+import DmChatContainer from './message/DmChatContainer'
 import DmToggleButton from './button/DmToggleButton'
 import { useEffect, useState } from 'react'
 import { useThreads } from '@/hooks/dm/useThreads'

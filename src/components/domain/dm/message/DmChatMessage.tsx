@@ -1,4 +1,5 @@
 import S from './DmChatMessage.module.css'
+import { memo } from 'react'
 
 interface Props {
   message: string
@@ -7,12 +8,7 @@ interface Props {
   profile: string
 }
 
-export default function DmChatMessage({
-  message,
-  isMine,
-  name,
-  profile
-}: Props) {
+function DmChatMessage({ message, isMine, name, profile }: Props) {
   return (
     <div className={`${S.wrapper} ${isMine ? S.mine : S.other}`}>
       <div className={S.header}>
@@ -32,3 +28,4 @@ export default function DmChatMessage({
     </div>
   )
 }
+export default memo(DmChatMessage)

@@ -9,6 +9,8 @@ export function Signup() {
   const {
     birthDate,
     phone,
+    nickname,
+    setNickname,
     handleBirthChange,
     handlePhoneChange,
     handleSignup
@@ -35,8 +37,8 @@ export function Signup() {
           <Input
             id="exId02"
             label="이름"
-            value={authData?.nickname ?? ''}
-            readOnly
+            value={nickname}
+            onChange={e => setNickname(e.target.value)}
           />
           <Input
             id="exId03"
