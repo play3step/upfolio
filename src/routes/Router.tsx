@@ -15,6 +15,7 @@ import FormAndText from '@/pages/Example/FormAndText'
 import { Signup } from '@/pages/Signup'
 import { ProtectedRoute } from '@/components/layouts/ProtectedRoute'
 import EditPortfolio from '@/pages/Portfolio/EditPortfolio'
+import MyPage from '@/pages/MyPage/MyPage'
 
 interface RouteItem {
   path: string
@@ -66,7 +67,7 @@ const protectedRoutes: RouteItem[] = [
   },
   {
     path: '/mypage',
-    element: undefined,
+    element: <MyPage />,
     children: [
       {
         path: '',
