@@ -8,25 +8,23 @@ export const uploadPortfolio = async ({
   portfolioData: PortfolioData
   userInfo: UserInfo | null
 }) => {
-<<<<<<< HEAD
-  const { error } = await supabase.from('Portfolio').insert({
-    ...portfolioData,
-    userId: userInfo?.id,
-    id: undefined,
-    viewCount: 0
-  })
-=======
+  if (!userInfo || !userInfo.id) {
+    throw new Error('유저정보 없음')
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id, ...rest } = portfolioData
+
   const { data, error } = await supabase
     .from('Portfolio')
     .insert({
-      ...portfolioData,
-      userId: userInfo?.id,
+      ...rest,
+      userId: userInfo.id,
       viewCount: 0
       // likeCount: 0
     })
     .select()
     .single()
->>>>>>> main
 
   if (error) throw error
 
