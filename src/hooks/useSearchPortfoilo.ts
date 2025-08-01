@@ -24,7 +24,7 @@ export const useSearchPortfoilo = (portfolio?: PortfolioItem[]) => {
       career,
       searchKeyword
     })
-  }, [searchParams, portfolio])
+  }, [searchParams])
 
   const handleSearch = ({ interest, career, searchKeyword }: SearchParams) => {
     const filtered = (portfolio || []).filter(item => {

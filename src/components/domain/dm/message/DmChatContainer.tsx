@@ -1,6 +1,6 @@
 import S from './DmChatContainer.module.css'
 import dmSendIcon from '@/assets/icon/dm.svg'
-import DmChatListItem from './DmChatListItem'
+import DmChatListItem from '../list/DmChatListItem'
 import DmChatMessage from './DmChatMessage'
 import type { Message, Thread } from '@/types/thread'
 import { useContext, useEffect, useRef, useState } from 'react'
