@@ -15,10 +15,10 @@ import { useCheckValidation } from '@/hooks/portfolio/useCheckValidation'
 import { useUserInfo } from '@/hooks/portfolio/useUserInfo'
 import { usePortfolioForm } from '@/hooks/portfolio/usePortfolioForm'
 import { useSavePortfolio } from '@/hooks/portfolio/useSavePortfolio'
-import BasicInfoSection from '@/components/domain/portfolio/BasicInfoSection'
-import TechInfoSection from '@/components/domain/portfolio/TechInfoSection'
-import IntroInfoSection from '@/components/domain/portfolio/IntroInfoSection'
-import DataInfoSection from '@/components/domain/portfolio/DataInfoSection'
+import BasicInfoSection from '@/components/portfolio/BasicInfoSection'
+import TechInfoSection from '@/components/portfolio/TechInfoSection'
+import IntroInfoSection from '@/components/portfolio/IntroInfoSection'
+import DataInfoSection from '@/components/portfolio/DataInfoSection'
 import { useStickyMenu } from '@/hooks/portfolio/useStickyMenu'
 
 const EMPTY_DATA: PortfolioData = {
@@ -40,7 +40,7 @@ const EMPTY_DATA: PortfolioData = {
 }
 
 const EditPortfolio = () => {
-  const { id } = useParams() 
+  const { id } = useParams()
   const navigate = useNavigate()
 
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(EMPTY_DATA)
@@ -87,13 +87,12 @@ const EditPortfolio = () => {
       } catch (e) {
         alert('포트폴리오 정보를 불러오는 데 실패했습니다.')
         console.error(e)
-        navigate('/portfolio') 
+        navigate('/portfolio')
       }
     }
 
     fetchPortfolio()
   }, [id, navigate])
-
 
   const convertLabel = (value: string): string => {
     const map = {
@@ -124,7 +123,9 @@ const EditPortfolio = () => {
 
   return (
     <div className={S.container}>
-      <div ref={stickyRef} className={`${S.head} ${isSticky ? S.sticky : ''}`}>
+      <div
+        ref={stickyRef}
+        className={`${S.head} ${isSticky ? S.sticky : ''}`}>
         <h2 className="a11y-hidden">포트폴리오 수정</h2>
         <div className={S['head__inner']}>
           <div className={`tit-withBtn ${S['tit-withBtn']}`}>
