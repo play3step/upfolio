@@ -1,19 +1,35 @@
 import S from './alarmWrapper.module.css'
 import AlarmCard from './alarmCard'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { AlarmContext } from '@/context/alarm/AlarmContext'
 
 export default function AlarmWrapper() {
   const [selected, setSelected] = useState<'comment' | 'like' | 'dm'>('comment')
 
-  const { alarm } = useContext(AlarmContext)
+  const { alarm, toggleAlarm } = useContext(AlarmContext)
 
-  console.log(alarm)
+  const alarmRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const clickOutside = (e: MouseEvent) => {
+      if (alarm && !alarmRef.current?.contains(e.target as Node)) {
+        toggleAlarm()
+      }
+    }
+
+    document.addEventListener('mousedown', clickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', clickOutside)
+    }
+  }, [alarm])
 
   if (!alarm) return null
 
   return (
-    <div className={S['alarm-wrapper']}>
+    <div
+      className={S['alarm-wrapper']}
+      ref={alarmRef}>
       <div className={S['alarm-header']}>
         <h1>알림</h1>
       </div>
