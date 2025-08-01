@@ -20,7 +20,7 @@ export interface PortfolioItem {
 }
 
 export interface PortfolioData {
-  id: string
+  id?: string
   userId: string
   profileImage: string
   name: string
