@@ -66,47 +66,40 @@ export const Home = () => {
   }
 
   const handleLikeToggle = async (id: string, next: boolean) => {
-    if (!authData?.id) return
-
-    // 1. Like 테이블에 반영
-    const { error: likeError } = await supabase
-      .from('Like')
-      .upsert({ portfolioid: id, userid: authData?.id })
-
-    // 2. likeCount 증가/감소
-    const { error: rpcError } = await supabase.rpc(
-      next ? 'increment_like_count' : 'decrement_like_count',
-      { portfolioid: id }
-    )
-
-    // 3. 에러 체크
-    if (likeError || rpcError) {
-      console.error(
-        '좋아요 처리 중 오류:',
-        likeError?.message,
-        rpcError?.message
-      )
-      return
-    }
-
+    if (!authData?.id) return;
+  
+    // 좋아요 반영
     if (next) {
-      const { error } = await supabase
-        .from('BookMark')
-        .upsert({ portfolioid: id, userid: authData?.id })
-      if (error) console.error('Error adding bookmark:', error.message)
+      await supabase
+        .from('like_table')
+        .upsert({ portfolioid: id, userid: authData.id });
     } else {
-      const { error } = await supabase
-        .from('BookMark')
+      await supabase
+        .from('like_table')
         .delete()
-        .eq('userid', authData?.id)
         .eq('portfolioid', id)
-      if (error) console.error('Error removing bookmark:', error.message)
+        .eq('userid', authData.id);
     }
-
+  
+    // 좋아요 수 & 관련 정보 다시 fetch (뷰 기반)
+    const { data: updated, error } = await supabase
+      .from('PortfolioWithLikes')
+      .select('*')
+      .eq('id', id)
+      .single();
+  
+    if (error) {
+      console.error('뷰에서 업데이트된 데이터 가져오기 실패:', error.message);
+      return;
+    }
+  
+    // 로컬 상태 반영
     setPortfolio(prev =>
-      prev.map(p => (p.id === id ? { ...p, isBookmarked: next } : p))
-    )
-  }
+      prev.map(p => (p.id === id ? { ...p, ...updated, likeCount: Number(updated.likeCount ?? 0) } : p))
+    );
+  };
+  
+  
 
   return (
     <div>
@@ -119,6 +112,7 @@ export const Home = () => {
           filteredPortfolio.map((p: PortfolioItem) => (
             <PortfolioCard
               key={p.id}
+              portfolioid={p.id}
               {...p}
               onToggleBookmark={handleBookmarkToggle}
               onToggleLike={handleLikeToggle}
