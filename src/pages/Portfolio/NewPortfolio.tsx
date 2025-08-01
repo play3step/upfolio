@@ -17,6 +17,7 @@ import BasicInfoSection from '@/components/domain/portfolio/BasicInfoSection'
 import IntroInfoSection from '@/components/domain/portfolio/IntroInfoSection'
 import DataInfoSection from '@/components/domain/portfolio/DataInfoSection'
 import { useTempPortfolioList } from '@/hooks/portfolio/useTempPortfolioList'
+import { usePortfolioReset } from '@/hooks/portfolio/usePortfolioReset'
 
 // 초기화 데이터
 const TempData: PortfolioData = {
@@ -40,6 +41,52 @@ const TempData: PortfolioData = {
 
 export const NewPortfolio = () => {
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(TempData)
+
+  /* --- 로그인 시 유저정보 불러오기 --- */
+  const { userInfo } = useUserInfo()
+  const userId = userInfo?.id ?? null
+
+  useEffect(() => {
+    if (userInfo) {
+      setPortfolioData(prev => ({
+        ...prev,
+        name: userInfo.nickname,
+        email: userInfo.email,
+        phone: userInfo.phone ?? '',
+        birthDate: userInfo.birthDate ?? '',
+        createdAt: new Date().toISOString()
+      }))
+    }
+  }, [userInfo])
+
+  /* --- error 체크 --- */
+  const { validate, errors, setErrors } = useCheckValidation()
+
+  /* --- 입력값 변경 시 상태 저장 및 관련 에러 제거 --- */
+  const { handleChangeForm, handleChangeRadio } = usePortfolioForm(
+    setPortfolioData,
+    setErrors
+  )
+
+  /* --- 임시저장목록, 항목 불러오기 --- */
+  const {
+    tempList,
+    fetchTempList,
+    isSideOpen,
+    handleOpenSide,
+    handleCloseSide,
+    handleSelectTempItem
+  } = useTempPortfolioList({ userId, setPortfolioData, setErrors })
+
+  /* --- 임시저장 --- */
+  const { handleSaveTemp } = useSaveTempPortfolio({
+    portfolioData,
+    userInfo,
+    onSave: fetchTempList
+  })
+
+  /* --- 저장 --- */
+  const { handleSave } = useSavePortfolio({ portfolioData, userInfo, validate })
 
   /* --- 마이페이지 임시저장글 불러오기 --- */
   const [searchParams] = useSearchParams()
@@ -72,78 +119,19 @@ export const NewPortfolio = () => {
     fetchPortfolioData()
   }, [id])
 
-  /* --- error 체크 --- */
-  const { validate, errors, setErrors } = useCheckValidation()
-
-  /* --- 로그인 시 유저정보 불러오기 --- */
-  const { userInfo } = useUserInfo()
-  const userId = userInfo?.id ?? null
-
-  useEffect(() => {
-    if (userInfo) {
-      setPortfolioData(prev => ({
-        ...prev,
-        name: userInfo.nickname,
-        email: userInfo.email,
-        phone: userInfo.phone ?? '',
-        birthDate: userInfo.birthDate ?? '',
-        createdAt: new Date().toISOString()
-      }))
-    }
-  }, [userInfo])
-
-  /* --- 입력값 변경 시 상태 저장 및 관련 에러 제거 --- */
-  const { handleChangeForm, handleChangeRadio } = usePortfolioForm(
-    setPortfolioData,
-    setErrors
-  )
-
-  /* --- 임시저장목록 --- */
-  const {
-    tempList,
-    fetchTempList,
-    isSideOpen,
-    handleOpenSide,
-    handleCloseSide,
-    handleSelectTempItem
-  } = useTempPortfolioList({ userId, setPortfolioData, setErrors })
-
-  /* --- 임시저장 --- */
-  const { handleSaveTemp } = useSaveTempPortfolio({
-    portfolioData,
-    userInfo,
-    onSave: fetchTempList
-  })
-
-  /* --- 저장 --- */
-  const { handleSave } = useSavePortfolio({ portfolioData, userInfo, validate })
-
   /* --- 타이틀 및 버튼 sticky --- */
   const stickyRef = useRef<HTMLDivElement | null>(null)
   const [isSticky, setIsSticky] = useState(false)
 
   useStickyMenu(stickyRef, setIsSticky)
+
   /* --- 내용 초기화 --- */
-  const [resetKey, setResetKey] = useState(0)
-
-  const handleReset = () => {
-    const Confirm = window.confirm('작성 중인 내용을 모두 초기화할까요?')
-    if (!Confirm) return
-
-    setPortfolioData(prev => ({
-      ...TempData,
-      id: prev.id,
-      userId: prev.userId,
-      name: userInfo?.nickname ?? '',
-      email: userInfo?.email ?? '',
-      phone: userInfo?.phone ?? '',
-      birthDate: userInfo?.birthDate ?? '',
-      createdAt: new Date().toISOString()
-    }))
-
-    setErrors({})
-    setResetKey(prev => prev + 1)
-  }
+  const { resetKey, handleReset } = usePortfolioReset({
+    setPortfolioData,
+    setErrors,
+    userInfo,
+    TempData
+  })
 
   return (
     <div
