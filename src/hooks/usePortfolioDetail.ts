@@ -11,8 +11,8 @@ interface PortfolioData {
   email: string
   title: string
   content: string
-  career: string
-  interest: string
+  career: string[]
+  interest: string[]
   techStack: string[]
   linkUrl: string
   imageUrls: string[]
@@ -54,6 +54,8 @@ export const usePortfolioDetail = (portfolioId: string | null) => {
         console.error('포트폴리오 데이터를 불러오는 중 오류 발생: ', error)
         return
       }
+
+      console.log('raw supabase data:', data)
 
       setData(data)
     }

@@ -66,47 +66,48 @@ export const Home = () => {
   }
 
   const handleLikeToggle = async (id: string, next: boolean) => {
-    if (!authData?.id) return
-
+    if (!authData?.id) return;
+  
     // 1. Like 테이블에 반영
-    const { error: likeError } = await supabase
-      .from('Like')
-      .upsert({ portfolioid: id, userid: authData?.id })
-
-    // 2. likeCount 증가/감소
-    const { error: rpcError } = await supabase.rpc(
-      next ? 'increment_like_count' : 'decrement_like_count',
-      { portfolioid: id }
-    )
-
-    // 3. 에러 체크
-    if (likeError || rpcError) {
-      console.error(
-        '좋아요 처리 중 오류:',
-        likeError?.message,
-        rpcError?.message
-      )
-      return
-    }
-
     if (next) {
-      const { error } = await supabase
-        .from('BookMark')
-        .upsert({ portfolioid: id, userid: authData?.id })
-      if (error) console.error('Error adding bookmark:', error.message)
+      // 좋아요 추가
+      await supabase
+        .from('like_table')
+        .upsert({ portfolioid: id, userid: authData.id });
     } else {
-      const { error } = await supabase
-        .from('BookMark')
+      // 좋아요 취소
+      await supabase
+        .from('like_table')
         .delete()
-        .eq('userid', authData?.id)
         .eq('portfolioid', id)
-      if (error) console.error('Error removing bookmark:', error.message)
+        .eq('userid', authData.id);
     }
-
+  
+    // 2. 현재 좋아요 수 가져오기 (count)
+    const { count, error: countError } = await supabase
+      .from('like_table')
+      .select('*', { count: 'exact', head: true })
+      .eq('portfolioid', id);
+  
+    if (countError) {
+      console.error('좋아요 수 가져오기 실패:', countError.message);
+      return;
+    }
+  
+    // 3. 로컬 상태 반영
     setPortfolio(prev =>
-      prev.map(p => (p.id === id ? { ...p, isBookmarked: next } : p))
-    )
-  }
+      prev.map(p =>
+        p.id === id
+          ? {
+              ...p,
+              likeCount: count ?? 0,
+              isBookmarked: next
+            }
+          : p
+      )
+    );
+  };
+  
 
   return (
     <div>
@@ -119,6 +120,7 @@ export const Home = () => {
           filteredPortfolio.map((p: PortfolioItem) => (
             <PortfolioCard
               key={p.id}
+              portfolioid={p.id}
               {...p}
               onToggleBookmark={handleBookmarkToggle}
               onToggleLike={handleLikeToggle}

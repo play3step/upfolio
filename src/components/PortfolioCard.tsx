@@ -7,8 +7,10 @@ import eye from '../assets/icon/eye.svg'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+
 export interface Props {
   id: string
+  portfolioid: string
   userId: string
   title: string
   content: string
@@ -51,6 +53,8 @@ export function PortfolioCard({
     setCurrentLikeCount(likeCount)
   }, [likeCount])
 
+ 
+
   const toggleBookmark = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     const next = !bookmarked
@@ -61,6 +65,7 @@ export function PortfolioCard({
   const toggleLike = () => {
     const next = !liked
     setLiked(next)
+    setCurrentLikeCount(prev => prev + (next ? 1 : -1))
     onToggleLike(id, next)
   }
 
@@ -72,7 +77,7 @@ export function PortfolioCard({
     <div
       className={S.container}
       onClick={handleCardClick}>
-      <div className={S.interest}>{interest}</div>
+      <div className={S.interest}>{interest?.label || interest}</div>
 
       <button
         onClick={toggleBookmark}
@@ -83,7 +88,7 @@ export function PortfolioCard({
         />
       </button>
 
-      <span className={S.career}>{career}</span>
+      <span className={S.career}>{career?.label || career}</span>
       <h3 className={S.title}>{title}</h3>
       <span className={S.content}>{content}</span>
 
@@ -108,7 +113,7 @@ export function PortfolioCard({
           )}
           {currentLikeCount}
         </span>
-        <span className={S.view}>
+        <span className={S.viewCount}>
           <img
             src={eye}
             alt="View Icon"
