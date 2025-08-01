@@ -4,8 +4,8 @@ export interface PortfolioItem {
   title: string
   content: string
   fileList: string[]
-  interest: string
-  career: string
+  interest: { label: string; value: string }
+  career: { label: string; value: string }
   isBookmarked: boolean
   linkUrl: string
   createdAt: string
@@ -29,13 +29,14 @@ export interface PortfolioData {
   email: string
   title: string
   content: string
-  career: string
-  interest: string
+  career: { label: string; value: string }
+  interest: { label: string; value: string }
   techStack: string[]
   linkUrl: string
   fileList: { name: string; url: string }[]
   viewCount?: number
   likeCount?: number
+  createdAt?: string
 }
 
 export interface UserInfo {
@@ -52,4 +53,35 @@ export interface TempItem {
   id: string
   title: string
   createdAt: string
+}
+
+export interface IBasicInfoSection {
+  portfolioData: PortfolioData
+  handleChangeForm: <K extends keyof PortfolioData>(
+    key: K,
+    value: PortfolioData[K]
+  ) => void
+}
+
+export interface ITechInfoSection {
+  portfolioData: PortfolioData
+  handleChangeForm: <K extends keyof PortfolioData>(
+    key: K,
+    value: PortfolioData[K]
+  ) => void
+  handleChangeRadio: (
+    key: 'career' | 'interest',
+    value: string,
+    options: { label: string; value: string }[]
+  ) => void
+  errors: ValidationError
+}
+
+export interface IIntroInfoSection {
+  portfolioData: PortfolioData
+  handleChangeForm: <K extends keyof PortfolioData>(
+    key: K,
+    value: PortfolioData[K]
+  ) => void
+  errors: ValidationError
 }

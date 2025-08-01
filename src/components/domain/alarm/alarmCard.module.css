@@ -1,0 +1,35 @@
+.alarm-card {
+  width: 100%;
+
+  display: flex;
+  border-bottom: 1px solid var(--gray2);
+  padding-top: var(--sp-4);
+  padding-bottom: var(--sp-4);
+  gap: var(--sp-3);
+
+  align-items: center;
+}
+
+.alarm-card-left {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: var(--gray2);
+  flex-shrink: 0;
+}
+
+.alarm-card-right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+.alarm-card-right-name {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+
+.alarm-card-right-content {
+  font-size: var(--fs-xs);
+  color: var(--gray3);
+}

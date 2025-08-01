@@ -1,12 +1,7 @@
 import Button from '@/components/common/Button'
 import S from './NewPortfolio.module.css'
 import Input from '@/components/common/Input'
-import RadioGroup from '@/components/common/RadioGroup'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import CheckboxSelect from '@/components/common/CheckboxSelect'
-import Textarea from '@/components/common/Textarea'
-import FileUploader from '@/components/common/FileUploader'
-import ImageUploader from '@/components/common/ImageUploader'
 import type { PortfolioData, TempItem } from '@/types/portfolio'
 import { useSavePortfolio } from '@/hooks/portfolio/useSavePortfolio'
 import { useCheckValidation } from '@/hooks/portfolio/useCheckValidation'
@@ -16,6 +11,11 @@ import { usePortfolioForm } from '@/hooks/portfolio/usePortfolioForm'
 import { useStickyMenu } from '@/hooks/portfolio/useStickyMenu'
 import SideTempList from './SideTempList'
 import supabase from '@/lib/supabaseClient'
+import { useSearchParams } from 'react-router-dom'
+import TechInfoSection from '@/components/domain/portfolio/TechInfoSection'
+import BasicInfoSection from '@/components/domain/portfolio/BasicInfoSection'
+import IntroInfoSection from '@/components/domain/portfolio/IntroInfoSection'
+import DataInfoSection from '@/components/domain/portfolio/DataInfoSection'
 
 // TODOS : 기본정보 마이페이지에서 불러와야함
 const TempData: PortfolioData = {
@@ -28,8 +28,8 @@ const TempData: PortfolioData = {
   email: '',
   title: '',
   content: '',
-  career: '',
-  interest: '',
+  career: { label: '', value: '' },
+  interest: { label: '', value: '' },
   techStack: [],
   linkUrl: '',
   fileList: [],
@@ -38,6 +38,7 @@ const TempData: PortfolioData = {
 }
 
 export const NewPortfolio = () => {
+
   /* --- 지원분야 라디오 그룹 상태 및 옵션 --- */
   const INTEREST_SELECT = [
     { label: '프론트엔드 개발', value: 'FE' },
@@ -62,6 +63,37 @@ export const NewPortfolio = () => {
 
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(TempData)
 
+  /* --- 마이페이지 임시저장글 불러오기 --- */
+  const [searchParams] = useSearchParams()
+  const id = searchParams.get('id')
+
+  useEffect(() => {
+    const fetchPortfolioData = async () => {
+      if (!id) return
+
+      try {
+        const { data, error } = await supabase
+          .from('TempPortfolio')
+          .select('*')
+          .eq('id', id)
+          .single()
+
+        if (error) throw error
+        if (!data) return
+
+        setPortfolioData(prev => ({
+          ...prev,
+          ...data,
+          id: data.id
+        }))
+      } catch (error) {
+        console.error('임시 저장된 글 불러오기 실패:', error)
+      }
+    }
+
+    fetchPortfolioData()
+  }, [id])
+
   /* --- error 체크 --- */
   const { validate, errors, setErrors } = useCheckValidation()
 
@@ -83,7 +115,10 @@ export const NewPortfolio = () => {
   }, [userInfo])
 
   /* --- 입력값 변경 시 상태 저장 및 관련 에러 제거 --- */
-  const { handleChangeForm } = usePortfolioForm(setPortfolioData, setErrors)
+  const { handleChangeForm, handleChangeRadio } = usePortfolioForm(
+    setPortfolioData,
+    setErrors
+  )
 
   /* --- 임시저장목록 --- */
   // 사이드 패널 열고 닫기
@@ -132,7 +167,7 @@ export const NewPortfolio = () => {
 
       if (error) throw error
       if (!data) return
-      console.log(typeof data.techStack, data.techStack)
+
       setErrors({})
 
       setPortfolioData(prev => ({
@@ -162,9 +197,32 @@ export const NewPortfolio = () => {
   const [isSticky, setIsSticky] = useState(false)
 
   useStickyMenu(stickyRef, setIsSticky)
+  /* --- 내용 초기화 --- */
+  const [resetKey, setResetKey] = useState(0)
+
+  const handleReset = () => {
+    const Confirm = window.confirm('작성 중인 내용을 모두 초기화할까요?')
+    if (!Confirm) return
+
+    setPortfolioData(prev => ({
+      ...TempData,
+      id: prev.id,
+      userId: prev.userId,
+      name: userInfo?.nickname ?? '',
+      email: userInfo?.email ?? '',
+      phone: userInfo?.phone ?? '',
+      birthDate: userInfo?.birthDate ?? '',
+      createdAt: new Date().toISOString()
+    }))
+
+    setErrors({})
+    setResetKey(prev => prev + 1)
+  }
 
   return (
-    <div className={S.container}>
+    <div
+      key={resetKey}
+      className={S.container}>
       {/* 임시저장목록 사이드 패널 */}
       <SideTempList
         isOpen={isSideOpen}
@@ -178,138 +236,67 @@ export const NewPortfolio = () => {
         ref={stickyRef}
         className={`${S.head} ${isSticky ? S.sticky : ''}`}>
         <h2 className="a11y-hidden">포트폴리오 등록</h2>
-        <button
-          type="button"
-          onClick={handleOpenSide}
-          className={S['head__tempListBtn']}>
-          임시저장 목록
-        </button>
-        <div className={'tit-withBtn'}>
-          <Input
-            className={`'tit__txt' ${S['tit__input']}`}
-            id="exTitle"
-            type="text"
-            value={portfolioData.title}
-            placeholder="포트폴리오 제목을 입력해주세요."
-            onChange={e => handleChangeForm('title', e.target.value)}
-            error={errors.title}
-            hideLabel
-          />
-          <div style={{ display: 'flex', gap: '.75rem' }}>
-            <Button
-              onClick={handleSaveTemp}
-              line>
-              임시저장
-            </Button>
-            <Button onClick={handleSave}>저장</Button>
+        <div className={S['head__inner']}>
+          <div className={S['head__btn']}>
+            <button
+              type="button"
+              onClick={handleReset}
+              className={S['head__btn-reset']}>
+              내용 초기화
+            </button>
+            <button
+              type="button"
+              onClick={handleOpenSide}
+              className={S['head__btn-temp']}>
+              임시저장 목록
+            </button>
+          </div>
+          <div className={`tit-withBtn ${S['tit-withBtn']}`}>
+            <Input
+              className={`'tit__txt' ${S['tit__input']}`}
+              id="exTitle"
+              type="text"
+              value={portfolioData.title}
+              placeholder="포트폴리오 제목을 입력해주세요."
+              onChange={e => handleChangeForm('title', e.target.value)}
+              error={errors.title}
+              hideLabel
+            />
+            <div style={{ display: 'flex', gap: '.75rem' }}>
+              <Button
+                onClick={handleSaveTemp}
+                line>
+                임시저장
+              </Button>
+              <Button onClick={handleSave}>저장</Button>
+            </div>
           </div>
         </div>
       </div>
       <form>
-        <section className={S['sec']}>
-          <h3 className="a11y-hidden">기본정보</h3>
-          <div className={S['sec__profile']}>
-            <ImageUploader
-              key={portfolioData.id}
-              id="exImage"
-              value={portfolioData.profileImage}
-              onChange={image => handleChangeForm('profileImage', image)}
-            />
-            <dl className={S['sec__profile__info']}>
-              <dt className="a11y-hidden">이름</dt>
-              <dd>{portfolioData.name}</dd>
+        <BasicInfoSection
+          portfolioData={portfolioData}
+          handleChangeForm={handleChangeForm}
+        />
 
-              <dt className="a11y-hidden">생년월일</dt>
-              <dd>{portfolioData.birthDate}</dd>
-            </dl>
-          </div>
+        <TechInfoSection
+          portfolioData={portfolioData}
+          handleChangeRadio={handleChangeRadio}
+          handleChangeForm={handleChangeForm}
+          errors={errors}
+        />
 
-          <div className={S.sec__form}>
-            <Input
-              id="exId01"
-              label="이메일"
-              value={portfolioData.email}
-              readOnly
-            />
+        <IntroInfoSection
+          portfolioData={portfolioData}
+          handleChangeForm={handleChangeForm}
+          errors={errors}
+        />
 
-            <Input
-              type="tel"
-              id="exId02"
-              label="전화번호"
-              value={portfolioData.phone}
-              readOnly
-            />
-          </div>
-        </section>
-
-        <section className={S['sec']}>
-          <h3 className="a11y-hidden">지원분야 / 경력 수준 / 기술 스택</h3>
-          <div className={S['sec__form']}>
-            <RadioGroup
-              label="경력수준"
-              name="careerOption"
-              options={CAREER_SELECT}
-              checked={portfolioData.career}
-              onChange={e => handleChangeForm('career', e.target.value)}
-              error={errors.career}
-            />
-
-            <RadioGroup
-              label="지원분야"
-              name="fieldOfSupport"
-              options={INTEREST_SELECT}
-              checked={portfolioData.interest}
-              onChange={e => handleChangeForm('interest', e.target.value)}
-              error={errors.interest}
-            />
-
-            <CheckboxSelect
-              value={portfolioData.techStack}
-              onChange={stack => {
-                handleChangeForm('techStack', stack)
-              }}
-              error={errors.techStack}
-            />
-          </div>
-        </section>
-
-        <section className={S['sec']}>
-          <h3 className="a11y-hidden">포트폴리오 소개</h3>
-          <div className={S['sec__form']}>
-            <Textarea
-              id="exText"
-              label="포트폴리오 소개"
-              value={portfolioData.content}
-              onChange={e => handleChangeForm('content', e.target.value)}
-              error={errors.content}
-            />
-          </div>
-        </section>
-
-        <section className={S['sec']}>
-          <h3 className={S['sec__tit']}>포트폴리오 자료</h3>
-          <div className={S['sec__form']}>
-            <div className={S['input-prefix']}>
-              <span className={S['prefix']}>https://</span>
-              <Input
-                type="text"
-                id="exId05"
-                label="URL"
-                value={portfolioData.linkUrl}
-                className={S['input-wrap']}
-                onChange={e => handleChangeForm('linkUrl', e.target.value)}
-                error={errors.linkUrl}
-              />
-            </div>
-
-            <FileUploader
-              key={portfolioData.id}
-              value={portfolioData.fileList}
-              onChange={files => handleChangeForm('fileList', files)}
-              error={errors.linkUrl}
-            />
-          </div>
-        </section>
+        <DataInfoSection
+          portfolioData={portfolioData}
+          handleChangeForm={handleChangeForm}
+          errors={errors}
+        />
       </form>
     </div>
   )

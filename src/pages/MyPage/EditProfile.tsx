@@ -18,7 +18,10 @@ export const EditProfile = () => {
   useEffect(() => {
     const fetchTempPortfolio = async () => {
       try {
-        const { data: user, error: userError } = await supabase.auth.getUser()
+        const {
+          data: { user },
+          error: userError
+        } = await supabase.auth.getUser()
         if (userError || !user) {
           console.error('사용자 인증 정보가 없습니다.')
           return
@@ -27,7 +30,7 @@ export const EditProfile = () => {
         const { data, error } = await supabase
           .from('TempPortfolio') // 임시 저장된 글이 저장된 테이블
           .select('id, title, content, createdAt')
-          .eq('userId', user.user.id)
+          .eq('userId', user.id)
 
         if (error) {
           console.error(
@@ -48,7 +51,7 @@ export const EditProfile = () => {
 
   // 임시 저장된 글을 수정하는 페이지로 이동 추후 수정
   function handleTempClick(id: number): void {
-    navigate(`/write/${id}`)
+    navigate(`/portfolio/new?id=${id}`)
   }
 
   return (
