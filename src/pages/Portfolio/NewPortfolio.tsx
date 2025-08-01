@@ -10,14 +10,13 @@ import { useSaveTempPortfolio } from '@/hooks/portfolio/useSaveTempPortfolio'
 import { usePortfolioForm } from '@/hooks/portfolio/usePortfolioForm'
 import { useStickyMenu } from '@/hooks/portfolio/useStickyMenu'
 import SideTempList from './SideTempList'
-import supabase from '@/lib/supabaseClient'
-import { useSearchParams } from 'react-router-dom'
 import TechInfoSection from '@/components/domain/portfolio/TechInfoSection'
 import BasicInfoSection from '@/components/domain/portfolio/BasicInfoSection'
 import IntroInfoSection from '@/components/domain/portfolio/IntroInfoSection'
 import DataInfoSection from '@/components/domain/portfolio/DataInfoSection'
 import { useTempPortfolioList } from '@/hooks/portfolio/useTempPortfolioList'
 import { usePortfolioReset } from '@/hooks/portfolio/usePortfolioReset'
+import { useTempPortfolioFromMyPage } from '@/hooks/portfolio/useTempPortfolioFromMyPage'
 
 // 초기화 데이터
 const TempData: PortfolioData = {
@@ -89,35 +88,7 @@ export const NewPortfolio = () => {
   const { handleSave } = useSavePortfolio({ portfolioData, userInfo, validate })
 
   /* --- 마이페이지 임시저장글 불러오기 --- */
-  const [searchParams] = useSearchParams()
-  const id = searchParams.get('id')
-
-  useEffect(() => {
-    const fetchPortfolioData = async () => {
-      if (!id) return
-
-      try {
-        const { data, error } = await supabase
-          .from('TempPortfolio')
-          .select('*')
-          .eq('id', id)
-          .single()
-
-        if (error) throw error
-        if (!data) return
-
-        setPortfolioData(prev => ({
-          ...prev,
-          ...data,
-          id: data.id
-        }))
-      } catch (error) {
-        console.error('임시 저장된 글 불러오기 실패:', error)
-      }
-    }
-
-    fetchPortfolioData()
-  }, [id])
+  useTempPortfolioFromMyPage(setPortfolioData)
 
   /* --- 타이틀 및 버튼 sticky --- */
   const stickyRef = useRef<HTMLDivElement | null>(null)
