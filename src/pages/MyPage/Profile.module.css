@@ -75,3 +75,49 @@
   background-color: var(--white);
   object-fit: cover;
 }
+
+@media (max-width: 1024px) {
+  .profile__imageSection {
+    margin-left: var(--sp-8);
+  }
+
+  .profile__image {
+  width: 6.25rem;
+  height: 6.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile {
+    padding: var(--sp-10);
+  }
+
+  .profile__imageSection {
+    flex-direction: column;
+    align-items: center;
+    margin-left: 0;
+  }
+
+  .profile__greeting {
+    text-align: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .profile {
+    gap: var(--sp-4);
+    padding: var(--sp-4);
+  }
+
+  .profile__title {
+    font-size: var(--fs-lg);
+  }
+
+  .profile__details {
+    padding: var(--sp-4);
+  }
+
+  .profile__details p {
+    font-size: var(--fs-sm);
+  }
+}

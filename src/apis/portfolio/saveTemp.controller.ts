@@ -11,7 +11,7 @@ export const uploadTempPortfolio = async ({
 }) => {
   const {
     viewCount,
-    likeCount,
+    // likeCount,
     id: _id,
     userId: _userId,
     ...rest

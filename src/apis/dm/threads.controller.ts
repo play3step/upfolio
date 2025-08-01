@@ -36,11 +36,12 @@ const addThreads = async (
     throw new Error('User not found')
   }
 
-  const searchThread = await supabase
+  const { data: searchThread } = await supabase
     .from('DMThread')
     .select('*')
-    .eq('useraid', userA.id)
-    .eq('userbid', userB.id)
+    .or(
+      `and(useraid.eq.${userA.id},userbid.eq.${userB.id}),and(useraid.eq.${userB.id},userbid.eq.${userA.id})`
+    )
     .single()
 
   if (searchThread) {

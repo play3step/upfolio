@@ -15,6 +15,8 @@ import filledBookmark from '@/assets/icon/bookmark-fill.svg'
 import dm from '@/assets/icon/dm-black.svg'
 import dmWhite from '@/assets/icon/dm.svg'
 import rightArrow from '@/assets/icon/right-arrow.svg'
+
+import { useThreads } from '@/hooks/dm/useThreads'
 import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
 
 interface CommentType {
@@ -55,9 +57,9 @@ export default function PortfolioDetail() {
   const techStackRef = useRef<HTMLDivElement>(null)
   const introductionRef = useRef<HTMLDivElement>(null)
   const portfolioRef = useRef<HTMLDivElement>(null)
+  const { handleAddThreads } = useThreads()
 
-  const isAuthor = authData?.id === data?.userId;
-
+  const isAuthor = authData?.id === data?.userId
 
   const fetchComments = async () => {
     const { data, error } = await supabase
@@ -202,22 +204,21 @@ export default function PortfolioDetail() {
   }
 
   const handleDelete = async () => {
-    const confirmDelete = window.confirm('정말로 삭제하시겠습니까?');
-    if (!confirmDelete) return;
-  
+    const confirmDelete = window.confirm('정말로 삭제하시겠습니까?')
+    if (!confirmDelete) return
+
     const { error } = await supabase
       .from('Portfolio')
       .delete()
-      .eq('id', data.id);
-  
+      .eq('id', data.id)
+
     if (error) {
-      alert('삭제 실패: ' + error.message);
+      alert('삭제 실패: ' + error.message)
     } else {
-      alert('삭제되었습니다.');
-      navigate('/'); // 홈 또는 포트폴리오 목록으로 이동
+      alert('삭제되었습니다.')
+      navigate('/') // 홈 또는 포트폴리오 목록으로 이동
     }
-  };
-  
+  }
 
   return (
     <>
@@ -304,7 +305,7 @@ export default function PortfolioDetail() {
             <span>{bookmark ? '북마크 취소' : '북마크'}</span>
           </div>
           <div className={S.dm}>
-            <button>
+            <button onClick={() => handleAddThreads(data?.userId ?? '')}>
               <img
                 src={dm}
                 alt="DM 아이콘"
@@ -366,27 +367,26 @@ export default function PortfolioDetail() {
                 <div className={S.editButtons}>
                   {isAuthor && (
                     <>
-                    <Button
-                    children="수정"
-                    className={
-                      activeEditButton === '수정'
-                        ? S.activeButton
-                        : S.inactiveButton
-                    }
-                    onClick={() => navigate(`/edit/${data.id}`)}
-                  />
-                  <Button
-                    children="삭제"
-                    className={
-                      activeEditButton === '삭제'
-                        ? S.activeButton
-                        : S.inactiveButton
-                    }
-                    onClick={handleDelete}
-                  />
-                  </>
+                      <Button
+                        children="수정"
+                        className={
+                          activeEditButton === '수정'
+                            ? S.activeButton
+                            : S.inactiveButton
+                        }
+                        onClick={() => navigate(`/edit/${data.id}`)}
+                      />
+                      <Button
+                        children="삭제"
+                        className={
+                          activeEditButton === '삭제'
+                            ? S.activeButton
+                            : S.inactiveButton
+                        }
+                        onClick={handleDelete}
+                      />
+                    </>
                   )}
-                  
                 </div>
               </div>
 
