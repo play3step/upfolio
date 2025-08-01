@@ -3,18 +3,8 @@
   width: 100%;
   padding: 2rem 0 5rem;
 
-  form {
-    max-width: 49.25rem;
-    margin: 0 auto;
-    padding: 0 0.75rem;
-  }
-
   @media (max-width: 40rem) {
     padding-bottom: 2.5rem;
-
-    form {
-      padding: 0 0.65rem;
-    }
   }
 }
 
@@ -101,8 +91,10 @@
 }
 
 .sec {
+  max-width: 49.25rem;
+  margin: 0 auto;
+  padding: 1.5rem 0.75rem;
   border-bottom: 1px solid var(--gray);
-  padding: 1.5rem 0;
 
   &:first-child {
     padding-top: 0;
@@ -115,10 +107,10 @@
   &:last-of-type {
     border: none;
   }
-}
 
-.sec__form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  .sec__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
 }

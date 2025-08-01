@@ -1,6 +1,11 @@
-.uploader--error {
-  .uploader__txt {
-    color: var(--danger);
+.uploader {
+  &.uploader-error {
+    .uploader__cont {
+      .uploader__fileList {
+        border: 1px solid var(--danger);
+        background-color: var(--danger-20);
+      }
+    }
   }
 }
 
@@ -13,6 +18,7 @@
 
 .uploader__txt {
   margin-bottom: var(--sp-2);
+  color: var(--black);
 }
 
 .uploader__fileList {

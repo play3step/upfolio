@@ -27,7 +27,7 @@ function BasicInfoSection({
         </dl>
       </div>
 
-      <div className={S.sec__form}>
+      <div className={NewPortfolioStyle['sec__form']}>
         <Input
           id="exId01"
           label="이메일"
