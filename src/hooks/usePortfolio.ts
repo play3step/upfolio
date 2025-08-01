@@ -11,7 +11,7 @@ export const usePortfolio = (userId: string | null) => {
   useEffect(() => {
     const fetchData = async () => {
       const { data: portfolioData, error: portfolioError } = await supabase
-        .from('Portfolio')
+        .from('PortfolioWithLikes')
         .select('*')
 
       if (portfolioError) {
@@ -36,10 +36,20 @@ export const usePortfolio = (userId: string | null) => {
 
       const mergedPortfolio = portfolioData.map(p => ({
         ...p,
+        likeCount: Number(p.likeCount ?? 0),
+        interest:
+          typeof p.interest === 'object'
+            ? p.interest
+            : { label: p.interest, value: p.interest },
+        career:
+          typeof p.career === 'object'
+            ? p.career
+            : { label: p.career, value: p.career },
         isBookmarked: bookmarkIds.includes(p.id)
       }))
 
       setPortfolio(mergedPortfolio)
+      console.log(portfolioData)
     }
 
     fetchData()

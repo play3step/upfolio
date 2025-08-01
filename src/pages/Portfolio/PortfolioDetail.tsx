@@ -43,7 +43,9 @@ export default function PortfolioDetail() {
     setBookmark,
     likeCount,
     setLikeCount,
-    userId
+    userId,
+    interest,
+    career
   } = usePortfolioDetail(decodedId)
 
   const basicInfoRef = useRef<HTMLDivElement>(null)
@@ -65,6 +67,25 @@ export default function PortfolioDetail() {
 
     setComments(data || [])
   }
+
+  useEffect(() => {
+    const incrementViews = async () => {
+      if (!id) {
+        console.error('id 값이 유효하지 않습니다.')
+        return
+      }
+
+      const { error } = await supabase.rpc('increment_views', {
+        portfolioid: id
+      })
+
+      if (error) {
+        console.error('조회수 증가 중 오류 발생:', error.message)
+      }
+    }
+
+    incrementViews()
+  }, [id])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -367,11 +388,11 @@ export default function PortfolioDetail() {
               <section className={S.interestStack}>
                 <h3>지원 분야</h3>
                 <div className={S.interest}>
-                  <p>{data.interest}</p>
+                  <p>{data.interest?.label || interest}</p>
                 </div>
 
                 <h3>경력</h3>
-                <p>{data.career === 'junior' ? '신입' : '경력'}</p>
+                <p>{data.career?.label || career}</p>
 
                 <h3>기술 스택</h3>
                 <p>{data.techStack?.join(' | ')}</p>
