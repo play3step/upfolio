@@ -8,9 +8,16 @@ interface Props {
   isClose: () => void
   tempList: TempItem[]
   onSelect: (tempItemId: string) => void
+  onDelete: (tempItemId: string) => void
 }
 
-function SideTempList({ isOpen, isClose, tempList, onSelect }: Props) {
+function SideTempList({
+  isOpen,
+  isClose,
+  tempList,
+  onSelect,
+  onDelete
+}: Props) {
   const sideRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -37,16 +44,24 @@ function SideTempList({ isOpen, isClose, tempList, onSelect }: Props) {
           <ul className={S['side__list']}>
             {tempList.map(item => (
               <li key={item.id}>
-                <button
-                  type="button"
-                  onClick={() => onSelect(item.id)}>
+                <div
+                  onClick={() => onSelect(item.id)}
+                  className={S['side__list__item']}>
                   <strong className={`${S['tit']} ${'ellipsis'}`}>
                     {item.title}
                   </strong>
                   <span className={S['side__list__date']}>
                     {formatDate(item.createdAt)}
                   </span>
-                </button>
+                  <button
+                    type="button"
+                    aria-label="삭제"
+                    onClick={e => {
+                      e.stopPropagation()
+                      onDelete(item.id)
+                    }}
+                    className={S['side__list__delBtn']}></button>
+                </div>
               </li>
             ))}
           </ul>
