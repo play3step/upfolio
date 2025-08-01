@@ -68,14 +68,12 @@ export const Home = () => {
   const handleLikeToggle = async (id: string, next: boolean) => {
     if (!authData?.id) return;
   
-    // 1. Like 테이블에 반영
+    // 좋아요 반영
     if (next) {
-      // 좋아요 추가
       await supabase
         .from('like_table')
         .upsert({ portfolioid: id, userid: authData.id });
     } else {
-      // 좋아요 취소
       await supabase
         .from('like_table')
         .delete()
@@ -83,30 +81,24 @@ export const Home = () => {
         .eq('userid', authData.id);
     }
   
-    // 2. 현재 좋아요 수 가져오기 (count)
-    const { count, error: countError } = await supabase
-      .from('like_table')
-      .select('*', { count: 'exact', head: true })
-      .eq('portfolioid', id);
+    // 좋아요 수 & 관련 정보 다시 fetch (뷰 기반)
+    const { data: updated, error } = await supabase
+      .from('PortfolioWithLikes')
+      .select('*')
+      .eq('id', id)
+      .single();
   
-    if (countError) {
-      console.error('좋아요 수 가져오기 실패:', countError.message);
+    if (error) {
+      console.error('뷰에서 업데이트된 데이터 가져오기 실패:', error.message);
       return;
     }
   
-    // 3. 로컬 상태 반영
+    // 로컬 상태 반영
     setPortfolio(prev =>
-      prev.map(p =>
-        p.id === id
-          ? {
-              ...p,
-              likeCount: count ?? 0,
-              isBookmarked: next
-            }
-          : p
-      )
+      prev.map(p => (p.id === id ? { ...p, ...updated, likeCount: Number(updated.likeCount ?? 0) } : p))
     );
   };
+  
   
 
   return (
