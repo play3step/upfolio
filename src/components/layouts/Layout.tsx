@@ -44,6 +44,17 @@ export default function Layout({ children }: LayoutProps) {
             </div>
           </>
         )}
+
+        {isAuthenticated && (
+          <>
+            <div className={S['alarm--button-position']}>
+              <AlarmWrapper />
+            </div>
+            <div className={S['dm--button-position']}>
+              <DmDropdownWrapper />
+            </div>
+          </>
+        )}
       </div>
       <Footer />
     </div>
