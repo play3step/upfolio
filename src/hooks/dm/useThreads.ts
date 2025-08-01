@@ -41,6 +41,9 @@ export const useThreads = () => {
   }
 
   const handleAddThreads = async (otherUserId: string) => {
+    if (authData?.id === otherUserId) {
+      return alert('자기자신은 채팅할 수 없습니다.')
+    }
     const threads = await addThreads(
       authData?.id ?? '',
       otherUserId,

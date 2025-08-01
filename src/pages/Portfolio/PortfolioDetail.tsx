@@ -15,6 +15,7 @@ import filledBookmark from '@/assets/icon/bookmark-fill.svg'
 import dm from '@/assets/icon/dm-black.svg'
 import dmWhite from '@/assets/icon/dm.svg'
 import rightArrow from '@/assets/icon/right-arrow.svg'
+import { useThreads } from '@/hooks/dm/useThreads'
 
 interface CommentType {
   id: string
@@ -52,6 +53,7 @@ export default function PortfolioDetail() {
   const techStackRef = useRef<HTMLDivElement>(null)
   const introductionRef = useRef<HTMLDivElement>(null)
   const portfolioRef = useRef<HTMLDivElement>(null)
+  const { handleAddThreads } = useThreads()
 
   const fetchComments = async () => {
     const { data, error } = await supabase
@@ -280,7 +282,7 @@ export default function PortfolioDetail() {
             <span>{bookmark ? '북마크 취소' : '북마크'}</span>
           </div>
           <div className={S.dm}>
-            <button>
+            <button onClick={() => handleAddThreads(data?.userId ?? '')}>
               <img
                 src={dm}
                 alt="DM 아이콘"
