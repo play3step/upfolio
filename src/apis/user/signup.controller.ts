@@ -1,6 +1,7 @@
 import supabase from '@/lib/supabaseClient'
 
 export const signupUser = async (
+  nickname: string,
   phone: string,
   birthDate: string,
   id: string
@@ -12,6 +13,13 @@ export const signupUser = async (
   }
 
   if (existing.data) {
-    return await supabase.from('User').update({ phone, birthDate }).eq('id', id)
+    return await supabase
+      .from('User')
+      .update({
+        nickname,
+        phone,
+        birthDate
+      })
+      .eq('id', id)
   }
 }

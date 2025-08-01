@@ -6,13 +6,15 @@ import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export const useSignup = () => {
+  const { authData } = useContext(AuthContext)
+
+  const [nickname, setNickname] = useState(authData?.nickname ?? '')
   const [birthDate, setBirthDate] = useState({
     year: '',
     month: '',
     day: ''
   })
   const [phone, setPhone] = useState('')
-  const { authData } = useContext(AuthContext)
   const { getSession } = useAuthLogin()
   const navigate = useNavigate()
   const handleBirthChange = (
@@ -45,11 +47,17 @@ export const useSignup = () => {
       return
     }
     const signupData = {
+      nickname,
       phone,
       birthDate: `${birthDate.year}.${birthDate.month}.${birthDate.day}`,
       id: authData?.id ?? ''
     }
-    await signupUser(signupData.phone, signupData.birthDate, signupData.id)
+    await signupUser(
+      signupData.nickname,
+      signupData.phone,
+      signupData.birthDate,
+      signupData.id
+    )
     await getSession()
     alert('회원가입이 완료되었습니다.')
     navigate('/')
@@ -58,6 +66,8 @@ export const useSignup = () => {
   return {
     birthDate,
     phone,
+    nickname,
+    setNickname,
     handleBirthChange,
     handlePhoneChange,
     handleSignup
