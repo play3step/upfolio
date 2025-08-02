@@ -1,30 +1,21 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import supabase from '@/lib/supabaseClient'
 import type { PortfolioData } from '@/types/portfolio'
 import {
   getPortfolio,
-  viewCountPortfolio
+  getLikeStatus,
+  viewCountPortfolio,
+  getLikeCount
 } from '@/apis/portfolio/portfolio.controller'
+import { AuthContext } from '@/context/auth/AuthContext'
 
 export const usePortfolioDetail = (portfolioId: string | null) => {
   const [data, setData] = useState<PortfolioData | null>(null)
   const [like, setLike] = useState(false)
   const [bookmark, setBookmark] = useState(false)
   const [likeCount, setLikeCount] = useState(0)
-  const [userId, setUserId] = useState<string | null>(null)
 
-  // 사용자 ID 가져오기
-  useEffect(() => {
-    const fetchUserId = async () => {
-      const { data, error } = await supabase.auth.getUser()
-      if (error || !data?.user) {
-        console.error('사용자가 인증되지 않았습니다.', error)
-        return
-      }
-      setUserId(data.user.id)
-    }
-    fetchUserId()
-  }, [])
+  const { authData } = useContext(AuthContext)
 
   // 포트폴리오 데이터 가져오기
   useEffect(() => {
@@ -36,59 +27,40 @@ export const usePortfolioDetail = (portfolioId: string | null) => {
 
       await viewCountPortfolio(portfolioId, data.viewCount || 0)
     }
+
     fetchPortfolio()
   }, [portfolioId])
 
   // 좋아요 상태와 개수 가져오기
   useEffect(() => {
-    if (!portfolioId || !userId) return
+    if (!portfolioId || !authData?.id) return
 
     const fetchLikeData = async () => {
       try {
         // 좋아요 상태 가져오기
-        const { data: likeData, error: likeError } = await supabase
-          .from('like_table')
-          .select('*', { count: 'exact' })
-          .eq('portfolioid', portfolioId)
-          .eq('userid', userId)
-          .maybeSingle()
-
-        if (likeError && likeError.code !== 'PGRST116') {
-          // PGRST116 : No rows found
-          console.error('좋아요 상태를 불러오는 중 오류 발생: ', likeError)
-          return
-        }
+        const likeData = await getLikeStatus(portfolioId, authData?.id)
         setLike(!!likeData) // 좋아요 상태 설정
 
         // 좋아요 개수 가져오기
-        const { count, error: countError } = await supabase
-          .from('like_table')
-          .select('*', { count: 'exact' })
-          .eq('portfolioid', portfolioId)
-
-        if (countError) {
-          console.error('좋아요 개수를 불러오는 중 오류 발생: ', countError)
-          return
-        }
-
-        setLikeCount(count || 0)
+        const count = await getLikeCount(portfolioId)
+        setLikeCount(count)
       } catch (error) {
         console.error('좋아요 데이터를 가져오는 중 오류 발생:', error)
       }
     }
     fetchLikeData()
-  }, [portfolioId, userId])
+  }, [portfolioId, authData?.id])
 
   // 북마크 상태 가져오기
   useEffect(() => {
-    if (!portfolioId || !userId) return
+    if (!portfolioId || !authData?.id) return
 
     const fetchBookmarkStatus = async () => {
       const { data, error } = await supabase
         .from('BookMark')
         .select('*')
         .eq('portfolioid', portfolioId)
-        .eq('userid', userId)
+        .eq('userid', authData?.id)
 
       if (error) {
         console.error('북마크 상태를 불러오는 중 오류 발생: ', error)
@@ -98,7 +70,7 @@ export const usePortfolioDetail = (portfolioId: string | null) => {
       setBookmark(data.length > 0)
     }
     fetchBookmarkStatus()
-  }, [portfolioId, userId])
+  }, [portfolioId, authData?.id])
 
   return {
     data,
@@ -107,7 +79,6 @@ export const usePortfolioDetail = (portfolioId: string | null) => {
     bookmark,
     setBookmark,
     likeCount,
-    setLikeCount,
-    userId
+    setLikeCount
   }
 }

@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useContext } from 'react'
 import { usePortfolioDetail } from '@/hooks/usePortfolioDetail'
 import { handleToggleBookmark } from '@/apis/bookmark/bookmarkUtils'
 import supabase from '@/lib/supabaseClient'
@@ -17,7 +17,7 @@ import dmWhite from '@/assets/icon/dm.svg'
 import rightArrow from '@/assets/icon/right-arrow.svg'
 
 import { useThreads } from '@/hooks/dm/useThreads'
-import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
+import { AuthContext } from '@/context/auth/AuthContext'
 
 interface CommentType {
   id: string
@@ -37,7 +37,7 @@ export default function PortfolioDetail() {
   const [inputValue, setInputValue] = useState('')
   const [comments, setComments] = useState<CommentType[]>([])
   const navigate = useNavigate()
-  const { authData } = useAuthLogin()
+  const { authData } = useContext(AuthContext)
 
   const {
     data,
@@ -46,8 +46,7 @@ export default function PortfolioDetail() {
     bookmark,
     setBookmark,
     likeCount,
-    setLikeCount,
-    userId
+    setLikeCount
   } = usePortfolioDetail(decodedId)
 
   const basicInfoRef = useRef<HTMLDivElement>(null)
@@ -113,7 +112,7 @@ export default function PortfolioDetail() {
   if (!data) return <p>불러오는 중...</p>
 
   const toggleLike = async () => {
-    if (!decodedId || !userId) return
+    if (!decodedId || !authData?.id) return
 
     const nextLike = !like
     setLike(nextLike)
@@ -121,7 +120,7 @@ export default function PortfolioDetail() {
     if (nextLike) {
       const { error } = await supabase.from('like_table').upsert({
         portfolioid: decodedId,
-        userid: userId
+        userid: authData?.id
       })
 
       if (error) {
@@ -136,7 +135,7 @@ export default function PortfolioDetail() {
         .from('like_table')
         .delete()
         .eq('portfolioid', decodedId)
-        .eq('userid', userId)
+        .eq('userid', authData?.id)
 
       if (error) {
         console.error('좋아요 취소 중 오류 발생:', error.message)
@@ -151,7 +150,11 @@ export default function PortfolioDetail() {
     const nextBookmark = !bookmark
     setBookmark(nextBookmark)
 
-    const success = await handleToggleBookmark(decodedId, userId, nextBookmark)
+    const success = await handleToggleBookmark(
+      decodedId,
+      authData?.id ?? null,
+      nextBookmark
+    )
     if (!success) {
       setBookmark(!nextBookmark) // 원래 상태로 되돌리기
     }

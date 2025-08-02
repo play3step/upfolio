@@ -33,3 +33,35 @@ export const viewCountPortfolio = async (
     return
   }
 }
+
+export const getLikeStatus = async (
+  portfolioId: string,
+  userId: string
+): Promise<boolean> => {
+  const { data: likeData, error: likeError } = await supabase
+    .from('like_table')
+    .select('*', { count: 'exact' })
+    .eq('portfolioid', portfolioId)
+    .eq('userid', userId)
+    .maybeSingle()
+
+  if (likeError && likeError.code !== 'PGRST116') {
+    console.error('좋아요 상태를 불러오는 중 오류 발생: ', likeError)
+  }
+
+  return likeData
+}
+
+export const getLikeCount = async (portfolioId: string) => {
+  const { data, error: countError } = await supabase
+    .from('PortfolioWithLikes')
+    .select('likeCount')
+    .eq('id', portfolioId)
+    .single()
+
+  if (countError) {
+    console.error('좋아요 개수를 불러오는 중 오류 발생: ', countError)
+  }
+
+  return data?.likeCount ?? 0
+}
