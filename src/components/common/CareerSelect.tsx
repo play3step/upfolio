@@ -13,7 +13,14 @@ interface CareerSelectProps {
 export default function CareerSelect({ value, onChange }: CareerSelectProps) {
   const [isOpen, setIsOpen] = useState(false)
 
-  const options = ['신입', '경력']
+  const options = [
+    '전체',
+    '신입 (0년)',
+    '1년차 이상',
+    '3년차 이상',
+    '5년차 이상',
+    '10년차 이상'
+  ]
 
   const selectRef = useRef<HTMLDivElement | null>(null)
 
