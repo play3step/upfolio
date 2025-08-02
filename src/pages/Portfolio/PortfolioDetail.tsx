@@ -130,7 +130,7 @@ export default function PortfolioDetail() {
     setIsCommentOpen(prev => !prev)
   }
 
-  const handleSendComment = async () => {
+  const handleSubmitComment = async () => {
     if (!authData?.id) {
       alert('로그인이 필요합니다.')
       return
@@ -138,6 +138,12 @@ export default function PortfolioDetail() {
 
     await sendComment(inputValue)
     setInputValue('')
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSubmitComment()
+    }
   }
 
   const handleDelete = async () => {
@@ -209,10 +215,11 @@ export default function PortfolioDetail() {
             placeholder="댓글을 입력하세요"
             value={inputValue}
             onChange={e => setInputValue(e.target.value)}
+            onKeyPress={handleKeyPress}
             className={S.commentInput}
           />
           <button
-            onClick={handleSendComment}
+            onClick={handleSubmitComment}
             className={S.sendButton}>
             <img
               src={dmWhite}
