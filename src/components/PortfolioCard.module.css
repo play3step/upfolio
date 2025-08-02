@@ -19,7 +19,8 @@
   border: 1px solid var(--gray-50);
   background: var(--white);
   position: relative;
-  height: 250px;
+  height: auto;
+  cursor: pointer;
 
   h3 {
     font-size: var(--fs-md);
@@ -44,13 +45,48 @@
   }
 
   .interest {
-    background-color: var(--primary);
     color: white;
-    padding: var(--sp-2) var(--sp-4);
+    padding: var(--sp-1) var(--sp-3);
     border-radius: 6px;
-    font-size: 14px;
-    max-width: 140px;
+    font-size: var(--fs-xs);
+    max-width: 100px;
     text-align: center;
+    white-space: normal;
+    word-break: keep-all;
+    line-height: 1.3;
+    min-height: auto;
+  }
+
+  .frontend {
+    background-color: var(--color-interest-frontend);
+  }
+  .backend {
+    background-color: var(--color-interest-backend);
+  }
+  .fullstack {
+    background-color: var(--color-interest-fullstack);
+  }
+  .mobile {
+    background-color: var(--color-interest-mobile);
+  }
+  .embedded {
+    background-color: var(--color-interest-embedded);
+  }
+  .uiux {
+    background-color: var(--color-interest-uiux);
+    color: var(--primary);
+  }
+  .graphic {
+    background-color: var(--color-interest-graphic);
+    color: var(--primary);
+  }
+  .motion {
+    background-color: var(--color-interest-motion);
+    color: var(--primary);
+  }
+  .illustration {
+    background-color: var(--color-interest-illustration);
+    color: var(--primary);
   }
 
   .bookmark {
@@ -75,6 +111,7 @@
     flex-direction: column;
     width: 100%;
     min-height: 60px;
+    margin-top: auto;
   }
 
   .myBadge {

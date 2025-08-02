@@ -99,12 +99,41 @@ export function PortfolioCard({
     navigate(`/portfolios/${portfolioid}`)
   }
 
+  const getInterestClass = (
+    interest: string | { label: string; value: string }
+  ) => {
+    switch (parsedInterest.label) {
+      case '프론트엔드 개발':
+        return S.frontend
+      case '백엔드 개발':
+        return S.backend
+      case '풀스택 개발':
+        return S.fullstack
+      case '모바일 개발':
+        return S.mobile
+      case '임베디드 개발':
+        return S.embedded
+      case 'UI/UX 디자인':
+        return S.uiux
+      case '그래픽 디자인':
+        return S.graphic
+      case '모션 디자인':
+        return S.motion
+      case '일러스트':
+        return S.illustration
+      default:
+        return ''
+    }
+  }
+
   return (
     <div
       className={S.container}
       onClick={handleCardClick}>
-      <div className={S.interest}>
-        {parsedInterest?.label || '지원분야 미지정'}
+      <div className={`${S.interest} ${getInterestClass(interest)}`}>
+        {typeof interest === 'string'
+          ? interest
+          : parsedInterest.label || '지원분야 미지정'}
       </div>
 
       <button
@@ -130,31 +159,31 @@ export function PortfolioCard({
 
       <div className={S.footer}>
         {isMine && <div className={S.myBadge}>내 포트폴리오</div>}
-        
+
         <div className={S.userInfo}>
-        <span className={S.userId}>{name}</span>
-        <div className={S.meta}>
-          <span className={S.like}>
-            <img
-              src={liked ? redHeart : grayHeart}
-              alt="Like Icon"
-              onClick={e => {
-                e.stopPropagation()
-                toggleLike()
-              }}
-              style={{ pointerEvents: 'none' }}
-            />
-            {currentLikeCount}
-          </span>
-          <span className={S.viewCount}>
-            <img
-              src={eye}
-              alt="View Icon"
-            />
-            {viewCount}
-          </span>
+          <span className={S.userId}>{name}</span>
+          <div className={S.meta}>
+            <span className={S.like}>
+              <img
+                src={liked ? redHeart : grayHeart}
+                alt="Like Icon"
+                onClick={e => {
+                  e.stopPropagation()
+                  toggleLike()
+                }}
+                style={{ pointerEvents: 'none' }}
+              />
+              {currentLikeCount}
+            </span>
+            <span className={S.viewCount}>
+              <img
+                src={eye}
+                alt="View Icon"
+              />
+              {viewCount}
+            </span>
+          </div>
         </div>
-       </div>
       </div>
     </div>
   )
