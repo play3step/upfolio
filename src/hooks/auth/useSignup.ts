@@ -60,7 +60,7 @@ export const useSignup = () => {
     )
     await getSession()
     alert('회원가입이 완료되었습니다.')
-    navigate('/')
+    navigate('/', { replace: true })
   }
 
   return {

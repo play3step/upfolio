@@ -26,10 +26,6 @@ interface RouteItem {
 // 인증이 필요 없는 라우트
 const publicRoutes: RouteItem[] = [
   {
-    path: '/',
-    element: <Home />
-  },
-  {
     path: '/login',
     element: <Login />
   },
@@ -60,6 +56,10 @@ const protectedRoutes: RouteItem[] = [
   {
     path: '/example/form',
     element: <FormAndText />
+  },
+  {
+    path: '/',
+    element: <Home />
   },
   {
     path: '/portfolio/new',
