@@ -167,10 +167,10 @@ export const Bookmarks = () => {
               onClick={() => handleBookmarkClick(likeportfolio.Portfolio.id)}>
               <div className={S.left}>
                 <strong>{idx + 1}</strong>
-                <p className={S.itemContent}>
+                <div className={S.itemContent}>
                   <p className={S.itemTitle}>{likeportfolio.Portfolio.title}</p>
-                  {likeportfolio.Portfolio.content}
-                </p>
+                  <p>{likeportfolio.Portfolio.content}</p>
+                </div>
               </div>
               <div className={S.date}>
                 {formatDate(likeportfolio.Portfolio.createdAt)}

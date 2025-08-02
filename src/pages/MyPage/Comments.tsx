@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import supabase from '@/lib/supabaseClient'
 import S from './Posts.module.css'
 import { formatDate } from '@/utils/formatDate'
+import { useNavigate } from 'react-router-dom'
 
 interface Comment {
   id: number
@@ -13,6 +14,7 @@ interface Comment {
 
 export default function Comments() {
   const [comments, setComments] = useState<Comment[]>([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -35,6 +37,10 @@ export default function Comments() {
     fetchComments()
   }, [])
 
+  const handleCommentsClick = (portfolioId: number) => {
+    navigate(`/portfolios/${portfolioId}`)
+  }
+
   return (
     <section className={S.section}>
       <h2 className={S.title}>내가 작성한 댓글</h2>
@@ -44,7 +50,8 @@ export default function Comments() {
         comments.map((comment, idx) => (
           <div
             key={comment.id}
-            className={S.item}>
+            className={S.item}
+            onClick={() => handleCommentsClick(comment.portfolioid)}>
             <div className={S.left}>
               <strong>{idx + 1}</strong>
               <p className={S.itemContent}>{comment.content}</p>

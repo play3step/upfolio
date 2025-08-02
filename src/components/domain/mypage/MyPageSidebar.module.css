@@ -4,7 +4,7 @@
   background-color: var(--tertiary);
   border-right: 1px solid var(--gray2-50);
   padding: var(--sp-8) var(--sp-6);
-  padding-top: 100px;
+  padding-top: 50px;
   box-sizing: border-box;
   transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
   transform: translateX(0);
@@ -60,6 +60,7 @@
 @media (max-width: 1024px) {
   .sidebar {
     width: 250px;
+    padding-top: 170px;
     position: absolute;
     left: 0;
     top: 0;
@@ -79,9 +80,8 @@
 @media (max-width: 768px) {
   .sidebar {
     width: 220px;
-    padding: auto;
     position: absolute;
-    min-height: auto;
+    padding-top: 100px;
   }
 
   .toggleButton {
@@ -90,10 +90,14 @@
   }
 
   .sidebar__title {
-    font-size: var(--fs-md);
+    font-size: var(--fs-xs);
+  }
+  .sidebar__divider {
+    margin-bottom: var(--sp-4);
   }
   .sidebar__list {
-    gap: var(--sp-4);
+    font-size: var(--fs-xs);
+    gap: var(--sp-3);
   }
 }
 
@@ -116,7 +120,7 @@
     margin-bottom: var(--sp-4);
   }
   .sidebar__list {
-    font-size: var(--fs-sm);
+
     gap: var(--sp-3);
   }
 }
