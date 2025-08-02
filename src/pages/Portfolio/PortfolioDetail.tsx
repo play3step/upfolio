@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useRef, useEffect, useContext } from 'react'
-import { usePortfolioDetail } from '@/hooks/usePortfolioDetail'
+import { usePortfolioDetail } from '@/hooks/portfolio/detail/usePortfolioDetail'
 import { handleToggleBookmark } from '@/apis/bookmark/bookmarkUtils'
 import supabase from '@/lib/supabaseClient'
 import S from './PortfolioDetail.module.css'
@@ -18,16 +18,7 @@ import rightArrow from '@/assets/icon/right-arrow.svg'
 
 import { useThreads } from '@/hooks/dm/useThreads'
 import { AuthContext } from '@/context/auth/AuthContext'
-
-interface CommentType {
-  id: string
-  content: string
-  profileimage: string
-  createdat: string
-  portfolioid: string
-  userid: string
-  nickname: string
-}
+import { useComment } from '@/hooks/portfolio/detail/useComment'
 
 export default function PortfolioDetail() {
   const { id } = useParams<{ id: string }>()
@@ -35,9 +26,10 @@ export default function PortfolioDetail() {
   const [activeNavButton, setActiveNavButton] = useState('기본 정보')
   const [isCommentOpen, setIsCommentOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
-  const [comments, setComments] = useState<CommentType[]>([])
   const navigate = useNavigate()
   const { authData } = useContext(AuthContext)
+
+  const { comments, sendComment } = useComment(decodedId)
 
   const {
     data,
@@ -57,21 +49,6 @@ export default function PortfolioDetail() {
 
   const isAuthor = authData?.id === data?.userId
 
-  const fetchComments = async () => {
-    const { data, error } = await supabase
-      .from('Comment')
-      .select('*')
-      .eq('portfolioid', decodedId)
-      .order('createdat', { ascending: true })
-
-    if (error) {
-      console.error('댓글 불러오기 실패:', error.message)
-      return
-    }
-
-    setComments(data || [])
-  }
-
   useEffect(() => {
     const incrementViews = async () => {
       if (!id) {
@@ -90,17 +67,6 @@ export default function PortfolioDetail() {
 
     incrementViews()
   }, [id])
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await fetchComments()
-      } catch (error) {
-        console.error('댓글 데이터를 가져오는 중 오류 발생: ', error)
-      }
-    }
-    fetchData()
-  }, [])
 
   const handleNavButtonClick = (
     buttonName: string,
@@ -165,41 +131,12 @@ export default function PortfolioDetail() {
   }
 
   const handleSendComment = async () => {
-    const {
-      data: { user }
-    } = await supabase.auth.getUser()
-
-    if (!user) {
+    if (!authData?.id) {
       alert('로그인이 필요합니다.')
       return
     }
 
-    const { data: userProfile, error: profileError } = await supabase
-      .from('User')
-      .select('nickname, profileimage')
-      .eq('id', user.id)
-      .single()
-
-    if (profileError) {
-      console.error('프로필 정보 조회 실패:', profileError)
-      return
-    }
-
-    if (!inputValue.trim()) return
-
-    const newComment = {
-      id: crypto.randomUUID(),
-      content: inputValue.trim(),
-      profileimage: userProfile.profileimage || defaultProfileImage,
-      createdat: new Date().toISOString(),
-      portfolioid: decodedId,
-      userid: user.id,
-      nickname: userProfile.nickname
-    }
-
-    await supabase.from('Comment').insert([newComment])
-
-    setComments(prev => [...prev, newComment])
+    await sendComment(inputValue)
     setInputValue('')
   }
 
@@ -240,7 +177,7 @@ export default function PortfolioDetail() {
           <h3>댓글</h3>
         </div>
         <div className={S.commentList}>
-          {isCommentOpen
+          {comments.length > 0
             ? comments.map(comment => (
                 <div
                   key={comment.id}
