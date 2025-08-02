@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import supabase from '@/lib/supabaseClient'
 import S from './Posts.module.css'
-import { formatDate } from '@/utils/formatDate'
+import { formatDate } from '@/utils/format'
 import { useNavigate } from 'react-router-dom'
 
 interface Comment {

@@ -50,18 +50,45 @@ export default function Profile() {
 
   const handleSave = async () => {
     const formattedPhone = formatPhoneNumber(phone)
-    await supabase
-      .from('User')
-      .update({
-        nickname: data?.nickname,
-        phone: formattedPhone,
-        birthDate: data?.birthDate,
-        profileimage: data?.profileimage || null
-      })
-      .eq('id', data?.id)
-    setIsEditing(false)
+    const oldProfileImage = data?.profileimage
+    const newProfileImage = data?.profileimage || null
 
-    alert('프로필이 저장되었습니다.')
+    try {
+      // 1. 댓글 테이블의 profileimage 값 업데이트
+      if (oldProfileImage !== newProfileImage) {
+        await supabase
+          .from('Comment')
+          .update({ profileimage: newProfileImage })
+          .eq('profileimage', oldProfileImage)
+          .eq('userid', data?.id)
+      }
+
+      // 2. 사용자 프로필 업데이트
+      await supabase
+        .from('User')
+        .update({
+          nickname: data?.nickname,
+          phone: formattedPhone,
+          birthDate: data?.birthDate,
+          profileimage: newProfileImage
+        })
+        .eq('id', data?.id)
+
+      // 3. 업데이트된 데이터 다시 가져오기
+      const { data: updatedUser } = await supabase
+        .from('User')
+        .select('id, email, nickname, phone, birthDate, profileimage')
+        .eq('id', data?.id)
+        .single()
+
+      // 상태 업데이트
+      setData(updatedUser)
+      setIsEditing(false)
+      alert('프로필이 저장되었습니다.')
+    } catch (err) {
+      console.error('예상치 못한 오류:', err)
+      alert('프로필 저장 중 오류가 발생했습니다.')
+    }
   }
 
   const handleChange = (field: keyof UserProfile, value: string) => {
@@ -156,7 +183,7 @@ export default function Profile() {
                 id="exId03"
                 label="전화번호"
                 placeholder="수정할 전화번호를 입력해 주세요"
-                value={phone}
+                value={phone || data?.phone || ''}
                 onChange={handlePhoneChange}
                 className={S.profile__input}
                 maxLength={13}
