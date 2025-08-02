@@ -6,6 +6,7 @@ import redHeart from '../assets/icon/heart.fill.svg'
 import eye from '../assets/icon/eye.svg'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '@/hooks/auth/useAuth'
 
 export interface Props {
   portfolioid: string
@@ -14,8 +15,8 @@ export interface Props {
   content: string
   likeCount: number
   viewCount: number
-  interest: { label: string; value: string } | string 
-  career: { label: string; value: string } | string 
+  interest: { label: string; value: string } | string
+  career: { label: string; value: string } | string
   isBookmarked: boolean
 }
 
@@ -25,6 +26,7 @@ interface PortfolioCardProps extends Props {
 }
 
 export function PortfolioCard({
+  userId,
   portfolioid,
   title,
   content,
@@ -40,6 +42,7 @@ export function PortfolioCard({
   const [liked, setLiked] = useState(false)
   const [currentLikeCount, setCurrentLikeCount] = useState(likeCount)
   const navigate = useNavigate()
+  const { authData } = useAuth()
 
   let parsedInterest = { label: '', value: '' }
   let parsedCareer = { label: '', value: '' }
@@ -72,6 +75,10 @@ export function PortfolioCard({
 
   const toggleBookmark = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
+    if (!authData) {
+      alert('로그인이 필요합니다.')
+      return
+    }
     const next = !bookmarked
     setBookmarked(next)
     onToggleBookmark(portfolioid, next)
@@ -95,7 +102,15 @@ export function PortfolioCard({
       <div className={S.interest}>{parsedInterest?.label || ''}</div>
 
       <button
-        onClick={toggleBookmark}
+        onClick={e => {
+          e.stopPropagation()
+          console.log('userid: ', userId)
+          if (!userId) {
+            alert('로그인이 필요합니다.')
+            return
+          }
+          toggleBookmark(e)
+        }}
         className={S.bookmark}>
         <img
           src={bookmarked ? bookmarkFilledIcon : bookmarkIcon}

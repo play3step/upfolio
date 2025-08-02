@@ -14,6 +14,7 @@ import {
   type SearchParams
 } from '@/hooks/useSearchPortfoilo'
 import type { PortfolioItem } from '@/types/portfolio'
+import { useAuth } from '@/hooks/auth/useAuth'
 
 export const INTEREST_MAP = {
   all: '전체',
@@ -115,9 +116,9 @@ export const Home = () => {
         {filteredPortfolio &&
           filteredPortfolio.map((p: PortfolioItem) => (
             <PortfolioCard
+              {...p} // PortfolioItem의 모든 속성을 전달
               key={p.id}
               portfolioid={p.id}
-              {...p}
               onToggleBookmark={handleBookmarkToggle}
               onToggleLike={handleLikeToggle}
             />
