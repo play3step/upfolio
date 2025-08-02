@@ -28,6 +28,7 @@
 
   @media (max-width: 48rem) {
     top: 8.25rem;
+    width: 100%;
   }
 
   @media (max-width: 40rem) {
