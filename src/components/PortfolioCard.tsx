@@ -11,6 +11,7 @@ import { useAuth } from '@/hooks/auth/useAuth'
 export interface Props {
   portfolioid: string
   userId: string
+  name: string
   title: string
   content: string
   likeCount: number
@@ -23,12 +24,14 @@ export interface Props {
 interface PortfolioCardProps extends Props {
   onToggleBookmark: (portfolioid: string, next: boolean) => void
   onToggleLike: (portfolioid: string, next: boolean) => void
+  isMine: boolean
 }
 
 export function PortfolioCard({
   userId,
   portfolioid,
   title,
+  name,
   content,
   likeCount,
   viewCount,
@@ -36,7 +39,8 @@ export function PortfolioCard({
   career,
   isBookmarked,
   onToggleBookmark,
-  onToggleLike
+  onToggleLike,
+  isMine
 }: PortfolioCardProps) {
   const [bookmarked, setBookmarked] = useState(isBookmarked)
   const [liked, setLiked] = useState(false)
@@ -99,7 +103,9 @@ export function PortfolioCard({
     <div
       className={S.container}
       onClick={handleCardClick}>
-      <div className={S.interest}>{parsedInterest?.label || ''}</div>
+      <div className={S.interest}>
+        {parsedInterest?.label || '지원분야 미지정'}
+      </div>
 
       <button
         onClick={e => {
@@ -118,30 +124,37 @@ export function PortfolioCard({
         />
       </button>
 
-      <span className={S.career}>{parsedCareer?.label || ''}</span>
+      <span className={S.career}>{parsedCareer?.label || '경력 미지정'}</span>
       <h3 className={S.title}>{title}</h3>
       <span className={S.content}>{content}</span>
 
-      <div className={S.meta}>
-        <span className={S.like}>
-          <img
-            src={liked ? redHeart : grayHeart}
-            alt="Like Icon"
-            onClick={e => {
-              e.stopPropagation()
-              toggleLike()
-            }}
-            style={{ pointerEvents: 'none' }}
-          />
-          {currentLikeCount}
-        </span>
-        <span className={S.viewCount}>
-          <img
-            src={eye}
-            alt="View Icon"
-          />
-          {viewCount}
-        </span>
+      <div className={S.footer}>
+        {isMine && <div className={S.myBadge}>내 포트폴리오</div>}
+        
+        <div className={S.userInfo}>
+        <span className={S.userId}>{name}</span>
+        <div className={S.meta}>
+          <span className={S.like}>
+            <img
+              src={liked ? redHeart : grayHeart}
+              alt="Like Icon"
+              onClick={e => {
+                e.stopPropagation()
+                toggleLike()
+              }}
+              style={{ pointerEvents: 'none' }}
+            />
+            {currentLikeCount}
+          </span>
+          <span className={S.viewCount}>
+            <img
+              src={eye}
+              alt="View Icon"
+            />
+            {viewCount}
+          </span>
+        </div>
+       </div>
       </div>
     </div>
   )

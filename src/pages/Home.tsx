@@ -116,11 +116,13 @@ export const Home = () => {
         {filteredPortfolio &&
           filteredPortfolio.map((p: PortfolioItem) => (
             <PortfolioCard
-              {...p} // PortfolioItem의 모든 속성을 전달
+              {...p} 
               key={p.id}
               portfolioid={p.id}
+              name={p.name}
               onToggleBookmark={handleBookmarkToggle}
               onToggleLike={handleLikeToggle}
+              isMine={p.userId === authData?.id}
             />
           ))}
       </div>

@@ -70,24 +70,47 @@
     content: ' | ';
   }
 
+  .footer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 60px;
+  }
+
+  .myBadge {
+    background-color: var(--tertiary);
+    color: var(--primary);
+    padding: var(--sp-1) var(--sp-2);
+    border-radius: 6px;
+    font-size: var(--fs-xs);
+    max-width: 100px;
+    text-align: center;
+    align-self: flex-start;
+  }
+
+  .userInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: auto;
+  }
+
+  .userId {
+    color: var(--gray-80);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+  }
+
   .meta {
     display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: center;
     gap: var(--sp-3);
-    width: 100%;
-    position: absolute;
-    bottom: var(--sp-2);
-    right: 10px;
+  }
 
-    .like,
-    .viewCount {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      gap: var(--sp-1);
-    }
+  .like,
+  .viewCount {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-1);
   }
 }
