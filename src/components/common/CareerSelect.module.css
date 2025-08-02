@@ -44,11 +44,6 @@
   background: #f0f0f0;
 }
 
-.careerSelectOption.selected {
-  background: #e0f0ff;
-  font-weight: bold;
-}
-
 @media (max-width: 48rem) {
   .careerSelect {
     width: 100%;

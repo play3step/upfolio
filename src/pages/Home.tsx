@@ -4,10 +4,12 @@ import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
 import { PortfolioCard } from '@/components/PortfolioCard'
 import styles from '@/components/PortfolioCard.module.css'
 import { SearchBar } from '@/components/SearchBar'
+import SortSelect from '@/components/common/SortSelect'
 import { handleToggleBookmark } from '@/apis/bookmark/bookmarkUtils'
 import supabase from '@/lib/supabaseClient'
 
 import { useSearchParams } from 'react-router-dom'
+import { useState, useMemo } from 'react'
 
 import {
   useSearchPortfoilo,
@@ -15,6 +17,7 @@ import {
 } from '@/hooks/useSearchPortfoilo'
 import type { PortfolioItem } from '@/types/portfolio'
 
+import S from './Home.module.css'
 
 export const INTEREST_MAP = {
   all: '전체',
@@ -37,6 +40,8 @@ export const Home = () => {
   console.log('filteredPortfolio:', filteredPortfolio)
 
   const [searchParams, setSearchParams] = useSearchParams()
+  const [sortOption, setSortOption] = useState('좋아요 순')
+
 
   const handleSearch = (params: SearchParams) => {
     const newSearchParams = new URLSearchParams(searchParams)
@@ -106,25 +111,46 @@ export const Home = () => {
     )
   }
 
+  const sortedPortfolio = useMemo(() => {
+    if (!filteredPortfolio) return []
+
+    const sorted = [...filteredPortfolio]
+
+    if(sortOption === '좋아요 순') {
+      sorted.sort((a,b) => (b.likeCount ?? 0) - (a.likeCount ?? 0))
+    } else if(sortOption === '조회수 순') {
+      sorted.sort((a, b) => (b.viewCount ?? 0) - (a.viewCount ?? 0))
+    }
+
+    return sorted
+  }, [filteredPortfolio, sortOption])
+
   return (
     <div>
       <SearchBar onSearch={handleSearch} />
-      <div className={styles['portfolio-grid']}>
-        {filteredPortfolio && filteredPortfolio.length === 0 && (
-          <div>검색 결과가 없습니다.</div>
-        )}
-        {filteredPortfolio &&
-          filteredPortfolio.map((p: PortfolioItem) => (
-            <PortfolioCard
-              {...p} 
-              key={p.id}
-              portfolioid={p.id}
-              name={p.name}
-              onToggleBookmark={handleBookmarkToggle}
-              onToggleLike={handleLikeToggle}
-              isMine={p.userId === authData?.id}
-            />
-          ))}
+      <div className={S.main}>
+        <SortSelect
+          value={sortOption}
+          onChange={setSortOption}
+        />
+
+        <div className={styles['portfolio-grid']}>
+          {sortedPortfolio && sortedPortfolio.length === 0 && (
+            <div>검색 결과가 없습니다.</div>
+          )}
+          {sortedPortfolio &&
+            sortedPortfolio.map((p: PortfolioItem) => (
+              <PortfolioCard
+                {...p}
+                key={p.id}
+                portfolioid={p.id}
+                name={p.name}
+                onToggleBookmark={handleBookmarkToggle}
+                onToggleLike={handleLikeToggle}
+                isMine={p.userId === authData?.id}
+              />
+            ))}
+        </div>
       </div>
     </div>
   )
