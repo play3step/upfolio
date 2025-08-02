@@ -1,6 +1,6 @@
 import { SocialLoginButton } from '@/components/common/SocialLoginButton'
 import S from './Login.module.css'
-import arrowBack from '../../../assets/icon/arrow-back.svg'
+import arrowBack from '../../assets/icon/arrow-back.svg'
 import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
 
 export function Login() {

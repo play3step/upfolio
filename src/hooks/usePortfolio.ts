@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import supabase from '@/lib/supabaseClient'
 import type { PortfolioItem } from '@/types/portfolio'
-import { AuthContext } from '@/context/AuthContext'
+import { AuthContext } from '@/context/auth/AuthContext'
 
 export const usePortfolio = (userId: string | null) => {
   const [portfolio, setPortfolio] = useState<PortfolioItem[]>([])

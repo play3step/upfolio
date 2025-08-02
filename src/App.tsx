@@ -1,6 +1,6 @@
 import { RouterProvider } from 'react-router-dom'
 import { router } from './routes/Router'
-import { AuthProvider } from './context/AuthProvider'
+import { AuthProvider } from './context/auth/AuthProvider'
 import { SearchProvider } from './context/search/SearchProvider'
 import { AlarmProvider } from './context/alarm/AlarmProvied'
 

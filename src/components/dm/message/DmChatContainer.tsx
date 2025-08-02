@@ -4,7 +4,7 @@ import DmChatListItem from '../list/DmChatListItem'
 import DmChatMessage from './DmChatMessage'
 import type { Message, Thread } from '@/types/thread'
 import { useContext, useEffect, useRef, useState } from 'react'
-import { AuthContext } from '@/context/AuthContext'
+import { AuthContext } from '@/context/auth/AuthContext'
 
 interface Props {
   isOpen: boolean

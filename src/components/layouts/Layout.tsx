@@ -3,9 +3,7 @@ import S from './Layout.module.css'
 import { Header } from '@/components/common/Header'
 import Footer from '@/components/common/Footer'
 
-import { Outlet } from 'react-router-dom'
-import { MyPageSidebar } from '@/components/mypage/MyPageSidebar'
-import { AuthContext } from '@/context/AuthContext'
+import { AuthContext } from '@/context/auth/AuthContext'
 import DmDropdownWrapper from '@/components/dm/DmDropdownWrapper'
 import { useContext } from 'react'
 import AlarmWrapper from '@/components/alarm/alarmWrapper'
@@ -22,7 +20,6 @@ export default function Layout({ children }: LayoutProps) {
   // const [filteredPortfolio, setFilteredPortfolio] = useState<PortfolioItem[]>(
   //   []
   // )
-  const showSidebar = window.location.pathname.includes('/mypage')
   const { isAuthenticated } = useContext(AuthContext)
 
   // const handleSearch = (keyword: string) => {
@@ -35,26 +32,30 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className={S['wrapper']}>
       <Header />
-      <main className={S.main}>
-        <div className={S.layoutOuter}>
-          {showSidebar && <MyPageSidebar />}
-          <div className={S.contentWrapper}>
-            <Outlet />
-            {children}
-          </div>
-        </div>
-      </main>
+      <div className={S.layout}>
+        <main className={S.main}>{children}</main>
+        {isAuthenticated && (
+          <>
+            <div className={S['alarm--button-position']}>
+              <AlarmWrapper />
+            </div>
+            <div className={S['dm--button-position']}>
+              <DmDropdownWrapper />
+            </div>
+          </>
+        )}
 
-      {isAuthenticated && (
-        <>
-          <div className={S['alarm--button-position']}>
-            <AlarmWrapper />
-          </div>
-          <div className={S['dm--button-position']}>
-            <DmDropdownWrapper />
-          </div>
-        </>
-      )}
+        {isAuthenticated && (
+          <>
+            <div className={S['alarm--button-position']}>
+              <AlarmWrapper />
+            </div>
+            <div className={S['dm--button-position']}>
+              <DmDropdownWrapper />
+            </div>
+          </>
+        )}
+      </div>
       <Footer />
     </div>
   )

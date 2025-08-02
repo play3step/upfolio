@@ -1,4 +1,4 @@
-import S from '@/pages/Portfolio/Login/Login.module.css'
+import S from '@/pages/Auth/Login.module.css'
 import googleIcon from '@/assets/icon/google.svg'
 import githubIcon from '@/assets/icon/github.svg'
 

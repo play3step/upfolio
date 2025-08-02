@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useThreads } from '@/hooks/dm/useThreads'
 import { useMessage } from '@/hooks/dm/useMessage'
 import { useContext } from 'react'
-import { AuthContext } from '@/context/AuthContext'
+import { AuthContext } from '@/context/auth/AuthContext'
 import { usePollingMessages } from '@/hooks/dm/usePollingMessages'
 
 export default function DmDropdownWrapper() {

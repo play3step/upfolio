@@ -221,8 +221,9 @@ export default function PortfolioDetail() {
   }
 
   return (
-    <>
-      <nav
+    <div className={S.wrapper}>
+      <aside
+        title="댓글창"
         className={S.commentContainer}
         style={{
           transform: isCommentOpen
@@ -282,7 +283,7 @@ export default function PortfolioDetail() {
             />
           </button>
         </div>
-      </nav>
+      </aside>
 
       <div className={S.container}>
         <div className={S.bookmarkLike}>
@@ -292,8 +293,8 @@ export default function PortfolioDetail() {
                 src={like ? filledHeart : emptyHeart}
                 alt={like ? '채워진 하트 아이콘' : '빈 하트 아이콘'}
               />
+              <span>{likeCount}</span>
             </button>
-            <span>{likeCount}</span>
           </div>
           <div className={S.bookmark}>
             <button onClick={toggleBookmark}>
@@ -301,8 +302,8 @@ export default function PortfolioDetail() {
                 src={bookmark ? filledBookmark : emptyBookmark}
                 alt={bookmark ? '채워진 북마크 아이콘' : '빈 북마크 아이콘'}
               />
+              <span>{bookmark ? '북마크 취소' : '북마크'}</span>
             </button>
-            <span>{bookmark ? '북마크 취소' : '북마크'}</span>
           </div>
           <div className={S.dm}>
             <button onClick={() => handleAddThreads(data?.userId ?? '')}>
@@ -310,8 +311,8 @@ export default function PortfolioDetail() {
                 src={dm}
                 alt="DM 아이콘"
               />
+              <span>DM 보내기</span>
             </button>
-            <span>DM 보내기</span>
           </div>
         </div>
 
@@ -327,14 +328,14 @@ export default function PortfolioDetail() {
               onClick={() => handleNavButtonClick('기본 정보', basicInfoRef)}
             />
             <Button
-              children="지원 분야 / 기술 스택"
+              children="경력 / 지원 / 기술"
               className={
-                activeNavButton === '지원 분야 / 기술 스택'
+                activeNavButton === '경력 / 지원 / 기술'
                   ? S.activeButton
                   : S.inactiveButton
               }
               onClick={() =>
-                handleNavButtonClick('지원 분야 / 기술 스택', techStackRef)
+                handleNavButtonClick('경력 / 지원 / 기술', techStackRef)
               }
             />
             <Button
@@ -362,9 +363,9 @@ export default function PortfolioDetail() {
           </nav>
           <div className={S.detailWrapper}>
             <div ref={basicInfoRef}>
-              <div className={S.titleWrapper}>
-                <h1 className={S.title}>{data.title}</h1>
-                <div className={S.editButtons}>
+              <div className="tit-withBtn">
+                <h1 className="tit__txt">{data.title}</h1>
+                <div style={{ display: 'flex', gap: '.75rem' }}>
                   {isAuthor && (
                     <>
                       <Button
@@ -374,6 +375,7 @@ export default function PortfolioDetail() {
                             ? S.activeButton
                             : S.inactiveButton
                         }
+                        line
                         onClick={() => navigate(`/edit/${data.id}`)}
                       />
                       <Button
@@ -415,13 +417,13 @@ export default function PortfolioDetail() {
 
             <div ref={techStackRef}>
               <section className={S.interestStack}>
+                <h3>경력</h3>
+                <p>{data.career?.label || career}</p>
+
                 <h3>지원 분야</h3>
                 <div className={S.interest}>
                   <p>{data.interest?.label || interest}</p>
                 </div>
-
-                <h3>경력</h3>
-                <p>{data.career?.label || career}</p>
 
                 <h3>기술 스택</h3>
                 <p>{data.techStack?.join(' | ')}</p>
@@ -460,6 +462,6 @@ export default function PortfolioDetail() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
