@@ -19,6 +19,7 @@
     "react-query": "^3.39.3",
     "react-router-dom": "^7.0.2",
     "supabase": "^2.31.8",
+    "sweetalert2": "^11.22.2",
     "zustand": "^5.0.2"
   },
   "devDependencies": {

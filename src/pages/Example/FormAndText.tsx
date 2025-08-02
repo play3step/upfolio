@@ -5,6 +5,12 @@ import CheckboxSelect from '@/components/common/CheckboxSelect'
 import RadioGroup from '@/components/common/RadioGroup'
 import { useState } from 'react'
 import ImageUploader from '@/components/common/ImageUploader'
+import {
+  alertSuccess,
+  alertError,
+  alertWarning,
+  alertConfirm
+} from '@/utils/alertUtils'
 
 function FormAndText() {
   /* --- component 스타일 --- */
@@ -29,11 +35,11 @@ function FormAndText() {
   /* --- 라디오 그룹 상태 및 옵션 --- */
   const [interest, setInterest] = useState('')
   const INTEREST_SELECT = [
-    { label: '프론트엔드', value: 'FE' },
-    { label: '백엔드', value: 'BE' },
-    { label: '풀스택', value: 'FullStack' },
-    { label: '모바일', value: 'Mobile' },
-    { label: '임베디드', value: 'Embedded' },
+    { label: '프론트엔드 개발', value: 'FE' },
+    { label: '백엔드 개발', value: 'BE' },
+    { label: '풀스택 개발', value: 'FullStack' },
+    { label: '모바일 개발', value: 'Mobile' },
+    { label: '임베디드 개발', value: 'Embedded' },
     { label: 'UI/UX 디자인', value: 'UIUX' },
     { label: '그래픽 디자인', value: 'Graphic' },
     { label: '모션 디자인', value: 'Motion' },
@@ -44,11 +50,41 @@ function FormAndText() {
   const [selectedStack, setSelectedStack] = useState<string[]>([])
   const [selectedImage, setSelectedImage] = useState('')
 
+  const handleSuccess = () => {
+    alertSuccess({ text: '성공문구를 적어주세요' })
+  }
+
+  const handleError = () => {
+    alertError({ text: '실패문구를 적어주세요.' })
+  }
+
+  const handleWarning = () => {
+    alertWarning({ text: '경고문구를 적어주세요.' })
+  }
+
+  const handleConfirm = async () => {
+    const confirmed = await alertConfirm({
+      text: '로그아웃 하시겠습니까?'
+    })
+    if (confirmed) {
+      alertSuccess({ title: '완료', text: '로그아웃 되었습니다.' })
+    }
+  }
+
   return (
     <div style={{ padding: '2rem' }}>
       <h1 style={{ fontSize: 'var(--fs-xxl)', marginBottom: 'var(--sp-4)' }}>
         ✅component
       </h1>
+
+      <h2 style={h2Style}>0. alert</h2>
+
+      <div style={divStyle}>
+        <Button onClick={handleSuccess}>성공</Button>
+        <Button onClick={handleError}>실패</Button>
+        <Button onClick={handleWarning}>경고</Button>
+        <Button onClick={handleConfirm}>확인</Button>
+      </div>
 
       <h2 style={h2Style}>1. 버튼</h2>
 
