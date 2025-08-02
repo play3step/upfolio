@@ -1,12 +1,53 @@
 .portfolio-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--sp-4) var(--sp-4);
   padding: var(--sp-4);
   max-width: 1200px;
   margin: var(--sp-4) auto;
   grid-auto-rows: 1fr;
   align-items: stretch;
+  justify-content: start;
+}
+
+/* 추후 important 제거 */
+@media screen and (max-width: 48rem) {
+  .portfolio-grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: var(--sp-3);
+    justify-items: center;
+    width: 100%;
+  }
+  .container {
+    width: 100%;
+    max-width: 100% !important ; 
+    padding: var(--sp-2);
+  }
+}
+
+@media screen and (max-width: 40rem) {
+  html,
+  body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: var(--sp-2);
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 100% !important;
+    padding: var(--sp-2);
+    box-sizing: border-box;
+  }
 }
 
 .container {
@@ -21,6 +62,7 @@
   position: relative;
   height: auto;
   cursor: pointer;
+  max-width: 280px;
 
   h3 {
     font-size: var(--fs-md);
