@@ -67,7 +67,7 @@ function FormAndText() {
       text: '로그아웃 하시겠습니까?'
     })
     if (confirmed) {
-      alertSuccess({ title: '완료', text: '로그아웃 되었습니다.' })
+      alertSuccess({ text: '로그아웃 되었습니다.' })
     }
   }
 
