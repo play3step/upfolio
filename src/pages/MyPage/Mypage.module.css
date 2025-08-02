@@ -1,17 +1,24 @@
 .layoutOuter {
   display: flex;
+  position: relative;
   flex-direction: row;
   width: 100%;
-  margin: auto;
+  margin: 0 auto;
   max-width: 1200px;
 }
 
 .contentWrapper {
   flex: 1;
+  width: 100%;
   max-width: 1024px;
-  padding: var(--sp-8);
+  padding: var(--sp-8) var(--sp-3) var(--sp-8) var(--sp-8);
   display: flex;
   flex-direction: column;
   background: #fff;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  @media (max-width: 1024px) {
+    padding-left: var(--sp-3);
+    padding-top: var(--sp-11);
+  }
 }
