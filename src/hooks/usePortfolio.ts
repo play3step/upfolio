@@ -38,13 +38,18 @@ export const usePortfolio = (userId: string | null) => {
         ...p,
         likeCount: Number(p.likeCount ?? 0),
         interest:
-          typeof p.interest === 'object'
+          p.interest && typeof p.interest === 'object'
             ? p.interest
-            : { label: p.interest, value: p.interest },
+            : typeof p.interest === 'string' && p.interest !== 'null'
+              ? { label: p.interest, value: p.interest }
+              : { label: '', value: '' },
+
         career:
-          typeof p.career === 'object'
+          p.career && typeof p.career === 'object'
             ? p.career
-            : { label: p.career, value: p.career },
+            : typeof p.career === 'string' && p.career !== 'null'
+              ? { label: p.career, value: p.career }
+              : { label: '', value: '' },
         isBookmarked: bookmarkIds.includes(p.id)
       }))
 

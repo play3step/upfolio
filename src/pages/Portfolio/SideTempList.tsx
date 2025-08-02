@@ -1,6 +1,6 @@
 import type { TempItem } from '@/types/portfolio'
 import S from './SideTempList.module.css'
-import { formatDate } from '@/utils/formatDate'
+import { formatDate } from '@/utils/format'
 import { useEffect, useRef } from 'react'
 
 interface Props {

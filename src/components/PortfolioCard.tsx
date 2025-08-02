@@ -7,27 +7,25 @@ import eye from '../assets/icon/eye.svg'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-
 export interface Props {
-  id: string
   portfolioid: string
   userId: string
   title: string
   content: string
   likeCount: number
   viewCount: number
-  interest: string
-  career: string
+  interest: { label: string; value: string } | string 
+  career: { label: string; value: string } | string 
   isBookmarked: boolean
 }
 
 interface PortfolioCardProps extends Props {
-  onToggleBookmark: (id: string, next: boolean) => void
-  onToggleLike: (id: string, next: boolean) => void
+  onToggleBookmark: (portfolioid: string, next: boolean) => void
+  onToggleLike: (portfolioid: string, next: boolean) => void
 }
 
 export function PortfolioCard({
-  id,
+  portfolioid,
   title,
   content,
   likeCount,
@@ -43,41 +41,58 @@ export function PortfolioCard({
   const [currentLikeCount, setCurrentLikeCount] = useState(likeCount)
   const navigate = useNavigate()
 
+  let parsedInterest = { label: '', value: '' }
+  let parsedCareer = { label: '', value: '' }
+
+  try {
+    parsedInterest =
+      typeof interest === 'string' && interest
+        ? JSON.parse(interest)
+        : (interest as { label: string; value: string })
+  } catch (e) {
+    console.error('interest 파싱 에러:', interest, e)
+  }
+
+  try {
+    parsedCareer =
+      typeof career === 'string' && career
+        ? JSON.parse(career)
+        : (career as { label: string; value: string })
+  } catch (e) {
+    console.error('career 파싱 에러:', career, e)
+  }
+
   useEffect(() => {
-    // 새로고침 후 북마크 상태 반영
     setBookmarked(isBookmarked)
   }, [isBookmarked])
 
   useEffect(() => {
-    // 새로고침 후 좋아요 수 반영
     setCurrentLikeCount(likeCount)
   }, [likeCount])
-
- 
 
   const toggleBookmark = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     const next = !bookmarked
     setBookmarked(next)
-    onToggleBookmark(id, next)
+    onToggleBookmark(portfolioid, next)
   }
 
   const toggleLike = () => {
     const next = !liked
     setLiked(next)
     setCurrentLikeCount(prev => prev + (next ? 1 : -1))
-    onToggleLike(id, next)
+    onToggleLike(portfolioid, next)
   }
 
   const handleCardClick = () => {
-    navigate(`/portfolios/${id}`)
+    navigate(`/portfolios/${portfolioid}`)
   }
 
   return (
     <div
       className={S.container}
       onClick={handleCardClick}>
-      <div className={S.interest}>{interest?.label || interest}</div>
+      <div className={S.interest}>{parsedInterest?.label || ''}</div>
 
       <button
         onClick={toggleBookmark}
@@ -88,29 +103,21 @@ export function PortfolioCard({
         />
       </button>
 
-      <span className={S.career}>{career?.label || career}</span>
+      <span className={S.career}>{parsedCareer?.label || ''}</span>
       <h3 className={S.title}>{title}</h3>
       <span className={S.content}>{content}</span>
 
       <div className={S.meta}>
         <span className={S.like}>
-          {liked ? (
-            <img
-              src={redHeart}
-              alt="Like Icon"
-              onClick={e => {
-                e.stopPropagation()
-                toggleLike()
-              }}
-              style={{ pointerEvents: 'none' }}
-            />
-          ) : (
-            <img
-              src={grayHeart}
-              alt="Like Icon"
-              style={{ pointerEvents: 'none' }}
-            />
-          )}
+          <img
+            src={liked ? redHeart : grayHeart}
+            alt="Like Icon"
+            onClick={e => {
+              e.stopPropagation()
+              toggleLike()
+            }}
+            style={{ pointerEvents: 'none' }}
+          />
           {currentLikeCount}
         </span>
         <span className={S.viewCount}>

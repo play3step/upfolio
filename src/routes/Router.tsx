@@ -10,10 +10,11 @@ import { NewPortfolio } from '@/pages/Portfolio/NewPortfolio'
 import PortfolioDetail from '@/pages/Portfolio/PortfolioDetail'
 import { PortfolioList } from '@/pages/Portfolio/PortfolioList'
 import { createBrowserRouter } from 'react-router-dom'
-import Layout from '@/layouts/Layout'
+import Layout from '@/components/layouts/Layout'
 import FormAndText from '@/pages/Example/FormAndText'
 import { Signup } from '@/pages/Signup'
-import { ProtectedRoute } from '@/layouts/ProtectedRoute'
+import { ProtectedRoute } from '@/components/layouts/ProtectedRoute'
+import EditPortfolio from '@/pages/Portfolio/EditPortfolio'
 
 interface RouteItem {
   path: string
@@ -42,6 +43,10 @@ const publicRoutes: RouteItem[] = [
   {
     path: '/portfolios/:id',
     element: <PortfolioDetail />
+  },
+  {
+    path: 'edit/:id',
+    element: <EditPortfolio />
   },
   {
     path: '*',
