@@ -24,22 +24,18 @@ function SideNavList({ isOpen, isClose }: Props) {
         className={`${S.side} ${isOpen ? S.open : ''}`}>
         <nav className={S['side__nav']}>
           <ul>
-            <li>
-              <NavLink
-                to="/portfolios"
-                className={({ isActive }) => (isActive ? S.selected : '')}
-                onClick={isClose}>
-                인기 포트폴리오
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/portfolio/new"
-                className={({ isActive }) => (isActive ? S.selected : '')}
-                onClick={isClose}>
-                포트폴리오 등록
-              </NavLink>
-            </li>
+            {isAuthenticated ? (
+              <li>
+                <NavLink
+                  to="/portfolio/new"
+                  className={({ isActive }) => (isActive ? S.selected : '')}
+                  onClick={isClose}>
+                  포트폴리오 등록
+                </NavLink>
+              </li>
+            ) : (
+              ''
+            )}
             <li>
               <NavLink
                 to="/mypage"
