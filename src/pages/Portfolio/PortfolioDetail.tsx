@@ -47,7 +47,26 @@ export default function PortfolioDetail() {
   const portfolioRef = useRef<HTMLDivElement>(null)
   const { handleAddThreads } = useThreads()
 
+  const commentRef = useRef<HTMLInputElement>(null)
+
   const isAuthor = authData?.id === data?.userId
+
+  useEffect(() => {
+    const clickOutside = (e: MouseEvent) => {
+      if (
+        commentRef.current &&
+        !commentRef.current.contains(e.target as Node)
+      ) {
+        setIsCommentOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', clickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', clickOutside)
+    }
+  }, [isCommentOpen])
 
   useEffect(() => {
     const incrementViews = async () => {
@@ -168,6 +187,7 @@ export default function PortfolioDetail() {
       <aside
         title="댓글창"
         className={S.commentContainer}
+        ref={commentRef}
         style={{
           transform: isCommentOpen
             ? 'translateX(0)'
