@@ -3,7 +3,7 @@ import S from './Signup.module.css'
 import { useSignup } from '@/hooks/auth/useSignup'
 import Button from '@/components/common/Button'
 import { useContext } from 'react'
-import { AuthContext } from '@/context/AuthContext'
+import { AuthContext } from '@/context/auth/AuthContext'
 
 export function Signup() {
   const {

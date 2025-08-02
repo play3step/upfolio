@@ -1,4 +1,4 @@
-import { AuthContext } from '@/context/AuthContext'
+import { AuthContext } from '@/context/auth/AuthContext'
 import type { UserInfo } from '@/types/portfolio'
 import { useContext, useMemo } from 'react'
 

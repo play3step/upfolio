@@ -1,6 +1,6 @@
 import { signupUser } from '@/apis/user/signup.controller'
 import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
-import { AuthContext } from '@/context/AuthContext'
+import { AuthContext } from '@/context/auth/AuthContext'
 import { formatPhoneNumber } from '@/utils/format'
 import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -60,7 +60,7 @@ export const useSignup = () => {
     )
     await getSession()
     alert('회원가입이 완료되었습니다.')
-    navigate('/')
+    navigate('/', { replace: true })
   }
 
   return {

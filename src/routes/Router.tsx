@@ -1,5 +1,5 @@
 import { Home } from '@/pages/Home'
-import { Login } from '@/pages/Portfolio/Login'
+import { Login } from '@/pages/Auth/Login'
 import { Bookmarks } from '@/pages/MyPage/Bookmarks'
 import { EditProfile } from '@/pages/MyPage/EditProfile'
 
@@ -12,9 +12,10 @@ import { PortfolioList } from '@/pages/Portfolio/PortfolioList'
 import { createBrowserRouter } from 'react-router-dom'
 import Layout from '@/components/layouts/Layout'
 import FormAndText from '@/pages/Example/FormAndText'
-import { Signup } from '@/pages/Signup'
+import { Signup } from '@/pages/Auth/Signup'
 import { ProtectedRoute } from '@/components/layouts/ProtectedRoute'
 import EditPortfolio from '@/pages/Portfolio/EditPortfolio'
+import MyPage from '@/pages/MyPage/MyPage'
 
 interface RouteItem {
   path: string
@@ -24,10 +25,6 @@ interface RouteItem {
 
 // 인증이 필요 없는 라우트
 const publicRoutes: RouteItem[] = [
-  {
-    path: '/',
-    element: <Home />
-  },
   {
     path: '/login',
     element: <Login />
@@ -61,12 +58,16 @@ const protectedRoutes: RouteItem[] = [
     element: <FormAndText />
   },
   {
+    path: '/',
+    element: <Home />
+  },
+  {
     path: '/portfolio/new',
     element: <NewPortfolio />
   },
   {
     path: '/mypage',
-    element: undefined,
+    element: <MyPage />,
     children: [
       {
         path: '',
