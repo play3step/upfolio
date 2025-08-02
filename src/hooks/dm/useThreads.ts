@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { addThreads, fetchThreads } from '@/apis/dm/threads.controller'
-import { AuthContext } from '@/context/AuthContext'
+import { AuthContext } from '@/context/auth/AuthContext'
 
 import supabase from '@/lib/supabaseClient'
 

@@ -3,7 +3,7 @@ import S from './Layout.module.css'
 import { Header } from '@/components/common/Header'
 import Footer from '@/components/common/Footer'
 
-import { AuthContext } from '@/context/AuthContext'
+import { AuthContext } from '@/context/auth/AuthContext'
 import DmDropdownWrapper from '@/components/dm/DmDropdownWrapper'
 import { useContext } from 'react'
 import AlarmWrapper from '@/components/alarm/alarmWrapper'

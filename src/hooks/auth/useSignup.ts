@@ -1,6 +1,6 @@
 import { signupUser } from '@/apis/user/signup.controller'
 import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
-import { AuthContext } from '@/context/AuthContext'
+import { AuthContext } from '@/context/auth/AuthContext'
 import { formatPhoneNumber } from '@/utils/format'
 import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
