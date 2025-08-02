@@ -36,8 +36,7 @@ export const useSearchPortfoilo = (portfolio?: PortfolioItem[]) => {
       const matchCareer = !career || item.career.label === career
       const matchKeyword =
         !searchKeyword ||
-        item.title?.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-        item.content?.toLowerCase().includes(searchKeyword.toLowerCase())
+        item.title?.toLowerCase().includes(searchKeyword.toLowerCase())
 
       return matchInterest && matchCareer && matchKeyword
     })
