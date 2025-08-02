@@ -14,7 +14,7 @@ import {
   type SearchParams
 } from '@/hooks/useSearchPortfoilo'
 import type { PortfolioItem } from '@/types/portfolio'
-import { useAuth } from '@/hooks/auth/useAuth'
+
 
 export const INTEREST_MAP = {
   all: '전체',

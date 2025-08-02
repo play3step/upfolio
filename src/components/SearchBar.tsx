@@ -2,7 +2,7 @@ import Input from './common/Input'
 import S from './SearchBar.module.css'
 import search from '../assets/icon/search.svg'
 import RadioGroup from './common/RadioGroup'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CareerSelect from './common/CareerSelect'
 import { useDebounce } from '../hooks/useDebounce'
 import { type SearchParams } from '@/hooks/useSearchPortfoilo'
@@ -38,10 +38,19 @@ export const SearchBar = ({ onSearch }: SearchBarProps) => {
     const params = {
       interest,
       career,
-      searchKeyword: debouncedKeyword.trim()
+      searchKeyword: keyword.trim()
     }
     onSearch(params)
   }
+
+  useEffect(() => {
+    const params = {
+      interest,
+      career,
+      searchKeyword: debouncedKeyword
+    }
+    onSearch(params)
+  }, [debouncedKeyword, interest, career])
 
   return (
     <div className={S.container}>
@@ -62,6 +71,11 @@ export const SearchBar = ({ onSearch }: SearchBarProps) => {
               hideLabel
               value={keyword}
               onChange={e => setKeyword(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  handleSearch()
+                }
+              }}
             />
             <button
               type="button"
