@@ -62,15 +62,18 @@ export default function Profile() {
 
   function ProfileButton({
     children,
-    onClick
+    onClick,
+    line = false
   }: {
     children: React.ReactNode
     onClick: () => void
+    line?: boolean
   }) {
     return (
       <Button
         onClick={onClick}
-        className={S.profile__button}>
+        className={S.profile__button}
+        line={line}>
         {children}
       </Button>
     )
@@ -87,10 +90,11 @@ export default function Profile() {
         <div className={S.profile__title}>
           <h1>내 프로필</h1>
           <div className={S.profile__btnWrap}>
-            <ProfileButton onClick={() => setIsEditing(prev => !prev)}>
+            <ProfileButton
+              onClick={() => setIsEditing(prev => !prev)}
+              line={isEditing}>
               {isEditing ? '취소' : '프로필 수정'}
             </ProfileButton>
-            <hr />
             {isEditing && (
               <ProfileButton onClick={handleSave}>저장</ProfileButton>
             )}

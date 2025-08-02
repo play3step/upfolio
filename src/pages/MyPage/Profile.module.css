@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--sp-8);
-  padding: var(--sp-8);
 }
 
 .profile__content {
@@ -68,7 +67,7 @@
   color: var(--black);
 }
 
-.profile__image{
+.profile__image {
   width: 6.25rem;
   height: 6.25rem;
   border-radius: 50%;
@@ -82,16 +81,12 @@
   }
 
   .profile__image {
-  width: 6.25rem;
-  height: 6.25rem;
+    width: 6.25rem;
+    height: 6.25rem;
   }
 }
 
 @media (max-width: 768px) {
-  .profile {
-    padding: var(--sp-10);
-  }
-
   .profile__imageSection {
     flex-direction: column;
     align-items: center;
@@ -106,7 +101,6 @@
 @media (max-width: 640px) {
   .profile {
     gap: var(--sp-4);
-    padding: var(--sp-4);
   }
 
   .profile__title {
