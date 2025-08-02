@@ -1,23 +1,6 @@
 import { useState, useEffect } from 'react'
 import supabase from '@/lib/supabaseClient'
-
-interface PortfolioData {
-  id: string
-  userId: string
-  profileimage: string
-  name: string
-  birthDate: string
-  phone: string
-  email: string
-  title: string
-  content: string
-  career: string[]
-  interest: string[]
-  techStack: string[]
-  linkUrl: string
-  imageUrls: string[]
-  likeCount: number
-}
+import type { PortfolioData } from '@/types/portfolio'
 
 export const usePortfolioDetail = (portfolioId: string | null) => {
   const [data, setData] = useState<PortfolioData | null>(null)

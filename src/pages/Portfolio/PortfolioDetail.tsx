@@ -33,7 +33,6 @@ export default function PortfolioDetail() {
   const { id } = useParams<{ id: string }>()
   const decodedId = decodeURIComponent(id ?? '')
   const [activeNavButton, setActiveNavButton] = useState('기본 정보')
-  const [activeEditButton, setActiveEditButton] = useState('수정')
   const [isCommentOpen, setIsCommentOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [comments, setComments] = useState<CommentType[]>([])
@@ -48,9 +47,7 @@ export default function PortfolioDetail() {
     setBookmark,
     likeCount,
     setLikeCount,
-    userId,
-    interest,
-    career
+    userId
   } = usePortfolioDetail(decodedId)
 
   const basicInfoRef = useRef<HTMLDivElement>(null)
@@ -370,21 +367,11 @@ export default function PortfolioDetail() {
                     <>
                       <Button
                         children="수정"
-                        className={
-                          activeEditButton === '수정'
-                            ? S.activeButton
-                            : S.inactiveButton
-                        }
                         line
                         onClick={() => navigate(`/edit/${data.id}`)}
                       />
                       <Button
                         children="삭제"
-                        className={
-                          activeEditButton === '삭제'
-                            ? S.activeButton
-                            : S.inactiveButton
-                        }
                         onClick={handleDelete}
                       />
                     </>
@@ -395,7 +382,7 @@ export default function PortfolioDetail() {
               <section className={S.profile}>
                 <img
                   src={
-                    data.profileimage ? data.profileimage : defaultProfileImage
+                    data.profileImage ? data.profileImage : defaultProfileImage
                   }
                   alt="프로필"
                 />
@@ -418,11 +405,11 @@ export default function PortfolioDetail() {
             <div ref={techStackRef}>
               <section className={S.interestStack}>
                 <h3>경력</h3>
-                <p>{data.career?.label || career}</p>
+                <p>{data.career?.label}</p>
 
                 <h3>지원 분야</h3>
                 <div className={S.interest}>
-                  <p>{data.interest?.label || interest}</p>
+                  <p>{data.interest.label}</p>
                 </div>
 
                 <h3>기술 스택</h3>
