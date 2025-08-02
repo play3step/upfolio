@@ -1,11 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import S from './CheckboxSelect.module.css'
 
-/*
-  추가 이유 : 해당 컴포넌트의 선택된 값을 받아와 상위 컴포넌트에서 상태를 관리 하고
-  ONcHANGE 콜백을 전달해야합니다.
-  이 컴포넌트는 선택된 값만 관리하고, 상위 컴포넌트에서 상태를 관리합니다.
-*/
 interface Props {
   value: string[]
   onChange: (newTechStack: string[]) => void
@@ -31,6 +26,7 @@ function CheckboxSelect({
   error
 }: Props) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const parentRef = useRef<HTMLDivElement>(null)
 
   const toggleTech = (stack: string) => {
     if (value.includes(stack)) {
@@ -40,11 +36,28 @@ function CheckboxSelect({
     }
   }
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (parentRef.current && !parentRef.current.contains(e.target as Node)) {
+        setIsExpanded(false)
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  })
+
   return (
     <fieldset
       className={`${S['CS-wrap']} ${error ? S['CS-wrap--err'] : ''} ${className}`}>
       <legend className={hideLabel ? 'a11y-hidden' : ''}>기술스택</legend>
-      <div className={S['CS__selectedList']}>
+      <div
+        ref={parentRef}
+        className={S['CS__selectedList']}
+        onClick={() => setIsExpanded(prev => !prev)}>
         {value.length === 0 && (
           <span className={S['CS__placeholder']}>1개 이상 선택해주세요.</span>
         )}
@@ -53,7 +66,11 @@ function CheckboxSelect({
             key={stack}
             className={S['CS__selecteditem']}>
             <span>{stack}</span>
-            <button onClick={() => toggleTech(stack)}>
+            <button
+              onClick={e => {
+                e.stopPropagation()
+                toggleTech(stack)
+              }}>
               <svg
                 width="24"
                 height="24"
@@ -70,7 +87,6 @@ function CheckboxSelect({
         ))}
         <button
           type="button"
-          onClick={() => setIsExpanded(prev => !prev)}
           className={`${S['CS__accordionButton']} ${isExpanded ? S['rotated'] : ''}`}>
           <span className="a11y-hidden">
             {isExpanded ? '스택 목록 접기' : '스택 목록 열기'}
@@ -84,12 +100,13 @@ function CheckboxSelect({
           <li
             key={stack}
             className={`${value.includes(stack) ? `${S['checked']}` : ''}`}>
-            <label>
+            <label onClick={e => e.stopPropagation()}>
               <input
                 type="checkbox"
                 name="stacks"
                 checked={value.includes(stack)}
                 onChange={() => toggleTech(stack)}
+                onClick={e => e.stopPropagation()}
                 className="a11y-hidden"
               />
               <span className={S.CS__checkbox}></span>
