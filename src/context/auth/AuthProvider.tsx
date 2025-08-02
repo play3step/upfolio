@@ -13,11 +13,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsAuth(true)
     setAuthData(userData)
   }
-
   const logout = () => {
-    setIsAuth(false)
-    setAuthData(null)
-    localStorage.clear()
+    if (window.confirm('로그아웃 하시겠습니까?')) {
+      setIsAuth(false)
+      setAuthData(null)
+      localStorage.clear()
+    }
   }
 
   useEffect(() => {
