@@ -1,6 +1,5 @@
 import supabase from '@/lib/supabaseClient'
-
-type alarmType = 'comment' | 'dm' | 'like'
+import type { alarmType } from '@/types/notification'
 
 export const sendAlarm = async (
   senderid: string,
@@ -25,13 +24,18 @@ export const sendAlarm = async (
   return data
 }
 
-export const fetchAlarms = async (userid: string) => {
+export const fetchAlarms = async (
+  userid: string,
+  type: alarmType,
+  isread: boolean
+) => {
   const { data, error } = await supabase
     .from('Notification')
     .select('*')
-    .eq('userid', userid) //  받는 사람 아이디로 해야하는데...
+    .eq('receiver_id', userid)
+    .eq('type', type)
+    .eq('isread', isread)
     .order('createdat', { ascending: false })
-
   if (error) {
     throw error
   }

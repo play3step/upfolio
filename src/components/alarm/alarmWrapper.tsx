@@ -2,11 +2,15 @@ import S from './alarmWrapper.module.css'
 import AlarmCard from './alarmCard'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { AlarmContext } from '@/context/alarm/AlarmContext'
+import { useAlarm } from '@/hooks/alarm/useAlarm'
+import type { alarmType } from '@/types/notification'
 
 export default function AlarmWrapper() {
-  const [selected, setSelected] = useState<'comment' | 'like' | 'dm'>('comment')
+  const [selected, setSelected] = useState<alarmType>('comment')
 
   const { alarm, toggleAlarm } = useContext(AlarmContext)
+
+  const { alarmsData, fetchAlarms } = useAlarm()
 
   const alarmRef = useRef<HTMLDivElement>(null)
 
@@ -24,6 +28,13 @@ export default function AlarmWrapper() {
     }
   }, [alarm])
 
+  const handleFetchAlarms = (type: alarmType) => {
+    setSelected(type)
+    fetchAlarms(type)
+  }
+
+  console.log(alarmsData)
+
   if (!alarm) return null
 
   return (
@@ -36,17 +47,17 @@ export default function AlarmWrapper() {
       <div className={S['alarm-select']}>
         <p
           className={selected === 'comment' ? S['alarm-select-active'] : ''}
-          onClick={() => setSelected('comment')}>
+          onClick={() => handleFetchAlarms('comment')}>
           댓글
         </p>
         <p
           className={selected === 'like' ? S['alarm-select-active'] : ''}
-          onClick={() => setSelected('like')}>
+          onClick={() => handleFetchAlarms('like')}>
           좋아요
         </p>
         <p
           className={selected === 'dm' ? S['alarm-select-active'] : ''}
-          onClick={() => setSelected('dm')}>
+          onClick={() => handleFetchAlarms('dm')}>
           DM
         </p>
       </div>
