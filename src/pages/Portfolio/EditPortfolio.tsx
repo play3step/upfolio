@@ -5,21 +5,17 @@ import supabase from '@/lib/supabaseClient'
 import Input from '@/components/common/Input'
 import Button from '@/components/common/Button'
 import S from './NewPortfolio.module.css' // 재사용
-import {
-  type PortfolioData,
-  type TempItem,
-  type UserInfo,
-  type ValidationError
-} from '@/types/portfolio'
+import { type PortfolioData } from '@/types/portfolio'
 import { useCheckValidation } from '@/hooks/portfolio/useCheckValidation'
-import { useUserInfo } from '@/hooks/portfolio/useUserInfo'
+
 import { usePortfolioForm } from '@/hooks/portfolio/usePortfolioForm'
-import { useSavePortfolio } from '@/hooks/portfolio/useSavePortfolio'
+
 import BasicInfoSection from '@/components/portfolio/BasicInfoSection'
 import TechInfoSection from '@/components/portfolio/TechInfoSection'
 import IntroInfoSection from '@/components/portfolio/IntroInfoSection'
 import DataInfoSection from '@/components/portfolio/DataInfoSection'
 import { useStickyMenu } from '@/hooks/portfolio/useStickyMenu'
+import { useEditPortfolio } from '@/hooks/portfolio/detail/useEditPortfolio'
 
 const EMPTY_DATA: PortfolioData = {
   id: '',
@@ -45,10 +41,7 @@ const EditPortfolio = () => {
 
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(EMPTY_DATA)
 
-  const { userInfo } = useUserInfo()
-  const userId = userInfo?.id ?? null
-
-  const { validate, errors, setErrors } = useCheckValidation()
+  const { errors, setErrors } = useCheckValidation()
 
   const { handleChangeForm, handleChangeRadio } = usePortfolioForm(
     setPortfolioData,
@@ -71,14 +64,6 @@ const EditPortfolio = () => {
 
         setPortfolioData({
           ...data,
-          career: {
-            label: convertLabel(data.career),
-            value: data.career
-          },
-          interest: {
-            label: convertLabel(data.interest),
-            value: data.interest
-          },
           fileList: data.fileList.map((url: string) => ({
             name: url.split('/').pop() || '',
             url
@@ -94,28 +79,7 @@ const EditPortfolio = () => {
     fetchPortfolio()
   }, [id, navigate])
 
-  const convertLabel = (value: string): string => {
-    const map = {
-      zeroYear: '신입 (0년)',
-      oneYearsPlus: '1년차 이상',
-      threeYearsPlus: '3년차 이상',
-      fiveYearsPlus: '5년차 이상',
-      tenYearsPlus: '10년차 이상',
-      FE: '프론트엔드 개발',
-      BE: '백엔드 개발',
-      FullStack: '풀스택 개발',
-      Mobile: '모바일 개발',
-      Embedded: '임베디드 개발',
-      UIUX: 'UI/UX 디자인',
-      Graphic: '그래픽 디자인',
-      Motion: '모션 디자인',
-      Illustration: '일러스트'
-    }
-
-    return map[value as keyof typeof map] ?? value
-  }
-
-  const { handleSave } = useSavePortfolio({ portfolioData, userInfo, validate })
+  const { handleEditPortfolio } = useEditPortfolio(portfolioData)
 
   const stickyRef = useRef<HTMLDivElement>(null)
   const [isSticky, setIsSticky] = useState(false)
@@ -139,7 +103,7 @@ const EditPortfolio = () => {
               error={errors.title}
               hideLabel
             />
-            <Button onClick={handleSave}>저장</Button>
+            <Button onClick={handleEditPortfolio}>저장</Button>
           </div>
         </div>
       </div>

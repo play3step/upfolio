@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { useState, useRef, useEffect } from 'react'
-import { usePortfolioDetail } from '@/hooks/usePortfolioDetail'
+import { useState, useRef, useEffect, useContext } from 'react'
+import { usePortfolioDetail } from '@/hooks/portfolio/detail/usePortfolioDetail'
 import { handleToggleBookmark } from '@/apis/bookmark/bookmarkUtils'
 import supabase from '@/lib/supabaseClient'
 import S from './PortfolioDetail.module.css'
@@ -17,28 +17,19 @@ import dmWhite from '@/assets/icon/dm.svg'
 import rightArrow from '@/assets/icon/right-arrow.svg'
 
 import { useThreads } from '@/hooks/dm/useThreads'
-import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
-
-interface CommentType {
-  id: string
-  content: string
-  profileimage: string
-  createdat: string
-  portfolioid: string
-  userid: string
-  nickname: string
-}
+import { AuthContext } from '@/context/auth/AuthContext'
+import { useComment } from '@/hooks/portfolio/detail/useComment'
 
 export default function PortfolioDetail() {
   const { id } = useParams<{ id: string }>()
   const decodedId = decodeURIComponent(id ?? '')
   const [activeNavButton, setActiveNavButton] = useState('기본 정보')
-  const [activeEditButton, setActiveEditButton] = useState('수정')
   const [isCommentOpen, setIsCommentOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
-  const [comments, setComments] = useState<CommentType[]>([])
   const navigate = useNavigate()
-  const { authData } = useAuthLogin()
+  const { authData } = useContext(AuthContext)
+
+  const { comments, sendComment } = useComment(decodedId)
 
   const {
     data,
@@ -47,10 +38,7 @@ export default function PortfolioDetail() {
     bookmark,
     setBookmark,
     likeCount,
-    setLikeCount,
-    userId,
-    interest,
-    career
+    setLikeCount
   } = usePortfolioDetail(decodedId)
 
   const basicInfoRef = useRef<HTMLDivElement>(null)
@@ -59,22 +47,26 @@ export default function PortfolioDetail() {
   const portfolioRef = useRef<HTMLDivElement>(null)
   const { handleAddThreads } = useThreads()
 
+  const commentRef = useRef<HTMLInputElement>(null)
+
   const isAuthor = authData?.id === data?.userId
 
-  const fetchComments = async () => {
-    const { data, error } = await supabase
-      .from('Comment')
-      .select('*')
-      .eq('portfolioid', decodedId)
-      .order('createdat', { ascending: true })
-
-    if (error) {
-      console.error('댓글 불러오기 실패:', error.message)
-      return
+  useEffect(() => {
+    const clickOutside = (e: MouseEvent) => {
+      if (
+        commentRef.current &&
+        !commentRef.current.contains(e.target as Node)
+      ) {
+        setIsCommentOpen(false)
+      }
     }
 
-    setComments(data || [])
-  }
+    document.addEventListener('mousedown', clickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', clickOutside)
+    }
+  }, [isCommentOpen])
 
   useEffect(() => {
     const incrementViews = async () => {
@@ -95,17 +87,6 @@ export default function PortfolioDetail() {
     incrementViews()
   }, [id])
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await fetchComments()
-      } catch (error) {
-        console.error('댓글 데이터를 가져오는 중 오류 발생: ', error)
-      }
-    }
-    fetchData()
-  }, [])
-
   const handleNavButtonClick = (
     buttonName: string,
     ref: React.RefObject<HTMLDivElement>
@@ -116,7 +97,7 @@ export default function PortfolioDetail() {
   if (!data) return <p>불러오는 중...</p>
 
   const toggleLike = async () => {
-    if (!decodedId || !userId) return
+    if (!decodedId || !authData?.id) return
 
     const nextLike = !like
     setLike(nextLike)
@@ -124,7 +105,7 @@ export default function PortfolioDetail() {
     if (nextLike) {
       const { error } = await supabase.from('like_table').upsert({
         portfolioid: decodedId,
-        userid: userId
+        userid: authData?.id
       })
 
       if (error) {
@@ -139,7 +120,7 @@ export default function PortfolioDetail() {
         .from('like_table')
         .delete()
         .eq('portfolioid', decodedId)
-        .eq('userid', userId)
+        .eq('userid', authData?.id)
 
       if (error) {
         console.error('좋아요 취소 중 오류 발생:', error.message)
@@ -154,7 +135,11 @@ export default function PortfolioDetail() {
     const nextBookmark = !bookmark
     setBookmark(nextBookmark)
 
-    const success = await handleToggleBookmark(decodedId, userId, nextBookmark)
+    const success = await handleToggleBookmark(
+      decodedId,
+      authData?.id ?? null,
+      nextBookmark
+    )
     if (!success) {
       setBookmark(!nextBookmark) // 원래 상태로 되돌리기
     }
@@ -164,43 +149,20 @@ export default function PortfolioDetail() {
     setIsCommentOpen(prev => !prev)
   }
 
-  const handleSendComment = async () => {
-    const {
-      data: { user }
-    } = await supabase.auth.getUser()
-
-    if (!user) {
+  const handleSubmitComment = async () => {
+    if (!authData?.id) {
       alert('로그인이 필요합니다.')
       return
     }
 
-    const { data: userProfile, error: profileError } = await supabase
-      .from('User')
-      .select('nickname, profileimage')
-      .eq('id', user.id)
-      .single()
-
-    if (profileError) {
-      console.error('프로필 정보 조회 실패:', profileError)
-      return
-    }
-
-    if (!inputValue.trim()) return
-
-    const newComment = {
-      id: crypto.randomUUID(),
-      content: inputValue.trim(),
-      profileimage: userProfile.profileimage || defaultProfileImage,
-      createdat: new Date().toISOString(),
-      portfolioid: decodedId,
-      userid: user.id,
-      nickname: userProfile.nickname
-    }
-
-    await supabase.from('Comment').insert([newComment])
-
-    setComments(prev => [...prev, newComment])
+    await sendComment(inputValue)
     setInputValue('')
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSubmitComment()
+    }
   }
 
   const handleDelete = async () => {
@@ -225,6 +187,7 @@ export default function PortfolioDetail() {
       <aside
         title="댓글창"
         className={S.commentContainer}
+        ref={commentRef}
         style={{
           transform: isCommentOpen
             ? 'translateX(0)'
@@ -240,7 +203,7 @@ export default function PortfolioDetail() {
           <h3>댓글</h3>
         </div>
         <div className={S.commentList}>
-          {isCommentOpen
+          {comments.length > 0
             ? comments.map(comment => (
                 <div
                   key={comment.id}
@@ -272,10 +235,11 @@ export default function PortfolioDetail() {
             placeholder="댓글을 입력하세요"
             value={inputValue}
             onChange={e => setInputValue(e.target.value)}
+            onKeyPress={handleKeyPress}
             className={S.commentInput}
           />
           <button
-            onClick={handleSendComment}
+            onClick={handleSubmitComment}
             className={S.sendButton}>
             <img
               src={dmWhite}
@@ -370,21 +334,11 @@ export default function PortfolioDetail() {
                     <>
                       <Button
                         children="수정"
-                        className={
-                          activeEditButton === '수정'
-                            ? S.activeButton
-                            : S.inactiveButton
-                        }
                         line
                         onClick={() => navigate(`/edit/${data.id}`)}
                       />
                       <Button
                         children="삭제"
-                        className={
-                          activeEditButton === '삭제'
-                            ? S.activeButton
-                            : S.inactiveButton
-                        }
                         onClick={handleDelete}
                       />
                     </>
@@ -395,7 +349,7 @@ export default function PortfolioDetail() {
               <section className={S.profile}>
                 <img
                   src={
-                    data.profileimage ? data.profileimage : defaultProfileImage
+                    data.profileImage ? data.profileImage : defaultProfileImage
                   }
                   alt="프로필"
                 />
@@ -418,11 +372,11 @@ export default function PortfolioDetail() {
             <div ref={techStackRef}>
               <section className={S.interestStack}>
                 <h3>경력</h3>
-                <p>{data.career?.label || career}</p>
+                <p>{data.career?.label}</p>
 
                 <h3>지원 분야</h3>
                 <div className={S.interest}>
-                  <p>{data.interest?.label || interest}</p>
+                  <p>{data.interest.label}</p>
                 </div>
 
                 <h3>기술 스택</h3>
