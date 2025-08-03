@@ -39,6 +39,7 @@ const TempData: PortfolioData = {
 
 export const NewPortfolio = () => {
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(TempData)
+  const [tempPortfolioId, setTempPortfolioId] = useState('')
 
   /* --- 로그인 시 유저정보 불러오기 --- */
   const { userInfo } = useUserInfo()
@@ -81,11 +82,17 @@ export const NewPortfolio = () => {
   const { handleSaveTemp } = useSaveTempPortfolio({
     portfolioData,
     userInfo,
+    setTempPortfolioId,
     onSave: fetchTempList
   })
 
   /* --- 저장 --- */
-  const { handleSave } = useSavePortfolio({ portfolioData, userInfo, validate })
+  const { handleSave } = useSavePortfolio({
+    portfolioData,
+    userInfo,
+    tempPortfolioId,
+    validate
+  })
 
   /* --- 마이페이지 임시저장글 불러오기 --- */
   useTempPortfolioFromMyPage(setPortfolioData)

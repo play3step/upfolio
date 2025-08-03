@@ -9,25 +9,26 @@ export const uploadTempPortfolio = async ({
   portfolioData: PortfolioData
   userInfo: UserInfo | null
 }) => {
-  const {
-    viewCount,
-    // likeCount,
-    id: _id,
-    userId: _userId,
-    ...rest
-  } = portfolioData
+  const { viewCount, id: _id, userId: _userId, ...rest } = portfolioData
 
   const safeId = _id?.trim?.()
   const safeUserId = userInfo?.id?.trim?.()
 
-  const { error } = await supabase.from('TempPortfolio').upsert(
-    {
-      ...rest,
-      ...(safeId ? { id: safeId } : {}),
-      ...(safeUserId ? { userId: safeUserId } : {})
-    },
-    { onConflict: 'id' }
-  )
+  const { data, error } = await supabase
+    .from('TempPortfolio')
+    .upsert(
+      {
+        ...rest,
+        ...(safeId ? { id: safeId } : {}),
+        ...(safeUserId ? { userId: safeUserId } : {}),
+        createdAt: new Date().toISOString()
+      },
+      { onConflict: 'id' }
+    )
+    .select()
+    .single()
 
   if (error) throw error
+
+  return data.id
 }

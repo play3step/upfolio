@@ -4,11 +4,13 @@ import type { PortfolioData, UserInfo } from '@/types/portfolio'
 export const useSaveTempPortfolio = ({
   portfolioData,
   userInfo,
-  onSave
+  onSave,
+  setTempPortfolioId
 }: {
   portfolioData: PortfolioData
   userInfo: UserInfo | null
   onSave?: () => void
+  setTempPortfolioId?: (id: string) => void
 }) => {
   const handleSaveTemp = async () => {
     try {
@@ -17,9 +19,15 @@ export const useSaveTempPortfolio = ({
         title:
           portfolioData.title.trim() === '' ? '제목없음' : portfolioData.title
       }
-      await uploadTempPortfolio({ portfolioData: tempData, userInfo })
+      const id = await uploadTempPortfolio({
+        portfolioData: tempData,
+        userInfo
+      })
       alert('임시저장되었습니다.')
 
+      if (setTempPortfolioId) {
+        setTempPortfolioId(id)
+      }
       if (onSave) {
         onSave()
       }
