@@ -158,10 +158,11 @@ export function PortfolioCard({
       <span className={S.content}>{content}</span>
 
       <div className={S.footer}>
-        {isMine && <div className={S.myBadge}>내 포트폴리오</div>}
-
         <div className={S.userInfo}>
-          <span className={S.userId}>{name}</span>
+          <div className={S.userIdContainer}>
+            <span className={S.userId}>{name}</span>
+            {isMine && <span className={S.myBadge}>내 포트폴리오</span>}
+          </div>
           <div className={S.meta}>
             <span className={S.like}>
               <img

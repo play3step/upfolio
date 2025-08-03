@@ -20,7 +20,7 @@
   }
   .container {
     width: 100%;
-    max-width: 100% !important ; 
+    max-width: 100% !important ;
     padding: var(--sp-2);
   }
 }
@@ -156,15 +156,11 @@
     margin-top: auto;
   }
 
-  .myBadge {
-    background-color: var(--tertiary);
-    color: var(--primary);
-    padding: var(--sp-1) var(--sp-2);
-    border-radius: 6px;
-    font-size: var(--fs-xs);
-    max-width: 100px;
-    text-align: center;
-    align-self: flex-start;
+  .userInfoContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--sp-1);
   }
 
   .userInfo {
@@ -179,6 +175,20 @@
     color: var(--gray-80);
     font-size: var(--fs-xs);
     font-weight: 500;
+  }
+
+  .myBadge {
+    color: var(--gray-80);
+    padding: var(--sp-1) var(--sp-2) var(--sp-1) 0;
+    border-radius: 6px;
+    font-size: var(--fs-xs);
+    max-width: 100px;
+    text-align: center;
+    align-self: flex-start;
+  }
+
+  .myBadge::before {
+    content: ' /  ';
   }
 
   .meta {
