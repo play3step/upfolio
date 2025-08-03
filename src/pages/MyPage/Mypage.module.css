@@ -9,7 +9,7 @@
 
 .contentWrapper {
   flex: 1;
-  width: 100%;
+  width: calc(100% - 18.75rem);
   max-width: 1024px;
   padding: var(--sp-8) var(--sp-3) var(--sp-8) var(--sp-8);
   display: flex;

@@ -3,10 +3,7 @@
   width: 18.75rem;
   background-color: var(--tertiary);
   border-right: 1px solid var(--gray2-50);
-
-  padding: var(--sp-8) var(--sp-6);
-  padding-top: 50px;
-
+  padding: var(--sp-8) var(--sp-5);
   box-sizing: border-box;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateX(0);
@@ -60,9 +57,6 @@
 
 @media (max-width: 1024px) {
   .sidebar {
-    width: 250px;
-    padding-top: 170px;
-
     position: absolute;
     left: 0;
     top: 0;
@@ -84,24 +78,16 @@
 @media (max-width: 768px) {
   .sidebar {
     width: 220px;
-    position: absolute;
-    padding-top: 100px;
-  }
-
-  .toggleButton {
-    top: 370px;
-    left: 5px;
   }
 
   .sidebar__title {
-    font-size: var(--fs-xs);
+    font-size: var(--fs-lg);
   }
   .sidebar__divider {
     margin-bottom: var(--sp-4);
   }
   .sidebar__list {
-    font-size: var(--fs-xs);
-    gap: var(--sp-3);
+    gap: var(--sp-4);
   }
 }
 
@@ -114,6 +100,7 @@
     margin-bottom: var(--sp-4);
   }
   .sidebar__list {
+    font-size: var(--fs-sm);
     gap: var(--sp-3);
   }
 }

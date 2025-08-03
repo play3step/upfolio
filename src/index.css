@@ -40,7 +40,6 @@ html {
   justify-content: space-between;
   margin-bottom: 2.5rem;
   gap: var(--sp-3);
-  align-items: center;
   background-color: var(--white);
   transition: all 0.3s ease;
 
@@ -49,7 +48,7 @@ html {
     font-weight: bold;
   }
 
-  @media (max-width: 40rem) {
+  @media (max-width: 48rem) {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
