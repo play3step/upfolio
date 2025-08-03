@@ -11,11 +11,13 @@ import { useCallback, useEffect, useState } from 'react'
 export const useTempPortfolioList = ({
   userId,
   setPortfolioData,
-  setErrors
+  setErrors,
+  setTempPortfolioId
 }: {
   userId: string | null
   setPortfolioData: React.Dispatch<React.SetStateAction<PortfolioData>>
   setErrors: (e: ValidationError) => void
+  setTempPortfolioId: React.Dispatch<React.SetStateAction<string>>
 }) => {
   // 사이드 패널 열고 닫기
   const [isSideOpen, setSideOpen] = useState(false)
@@ -59,6 +61,8 @@ export const useTempPortfolioList = ({
         ...data,
         id: data.id
       }))
+
+      setTempPortfolioId(id)
 
       setSideOpen(false)
     } catch (error) {

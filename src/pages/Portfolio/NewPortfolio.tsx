@@ -76,7 +76,12 @@ export const NewPortfolio = () => {
     handleCloseSide,
     handleSelectTempItem,
     deleteTempItem
-  } = useTempPortfolioList({ userId, setPortfolioData, setErrors })
+  } = useTempPortfolioList({
+    userId,
+    setPortfolioData,
+    setErrors,
+    setTempPortfolioId
+  })
 
   /* --- 임시저장 --- */
   const { handleSaveTemp } = useSaveTempPortfolio({
@@ -156,7 +161,8 @@ export const NewPortfolio = () => {
                 id="exTitle"
                 type="text"
                 value={portfolioData.title}
-                placeholder="포트폴리오 제목을 입력해주세요."
+                maxLength={27}
+                placeholder="포트폴리오 제목 입력(25자 이내)"
                 onChange={e => handleChangeForm('title', e.target.value)}
                 error={errors.title}
                 hideLabel
