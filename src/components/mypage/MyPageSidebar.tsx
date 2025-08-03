@@ -22,6 +22,7 @@ export function MyPageSidebar() {
     <>
       {isMobile && (
         <button
+          title="마이페이지 메뉴 보기"
           className={S.toggleButton}
           onClick={handleToggle}
           aria-label="사이드바 토글">

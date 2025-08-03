@@ -68,24 +68,21 @@ export const DesktopHeader = () => {
               alt="Upfolio 로고"
             />
           </Link>
-          <nav className={S.header__left__nav}>
-            <ul>
-              <li>
-                <NavLink
-                  to="/portfolios"
-                  className={({ isActive }) => (isActive ? S.selected : '')}>
-                  인기 포트폴리오
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/portfolio/new"
-                  className={({ isActive }) => (isActive ? S.selected : '')}>
-                  포트폴리오 등록
-                </NavLink>
-              </li>
-            </ul>
-          </nav>
+          {isAuthenticated ? (
+            <nav className={S.header__left__nav}>
+              <ul>
+                <li>
+                  <NavLink
+                    to="/portfolio/new"
+                    className={({ isActive }) => (isActive ? S.selected : '')}>
+                    포트폴리오 등록
+                  </NavLink>
+                </li>
+              </ul>
+            </nav>
+          ) : (
+            ''
+          )}
         </div>
         <div className={S.header__right}>
           <div className={S.header__right__search}>
