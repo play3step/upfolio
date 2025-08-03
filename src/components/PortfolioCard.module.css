@@ -3,6 +3,7 @@
   grid-template-columns: repeat(4, 1fr);
   gap: var(--sp-4) var(--sp-4);
   padding: var(--sp-4);
+  width: 100%;
   max-width: 1200px;
   margin: var(--sp-4) auto;
   grid-auto-rows: 1fr;
@@ -87,11 +88,11 @@
   }
 
   .interest {
-    color: white;
+    color: black;
     padding: var(--sp-1) var(--sp-3);
     border-radius: 6px;
     font-size: var(--fs-xs);
-    max-width: 100px;
+    align-self: flex-start;
     text-align: center;
     white-space: normal;
     word-break: keep-all;
@@ -116,19 +117,15 @@
   }
   .uiux {
     background-color: var(--color-interest-uiux);
-    color: var(--primary);
   }
   .graphic {
     background-color: var(--color-interest-graphic);
-    color: var(--primary);
   }
   .motion {
     background-color: var(--color-interest-motion);
-    color: var(--primary);
   }
   .illustration {
     background-color: var(--color-interest-illustration);
-    color: var(--primary);
   }
 
   .bookmark {
