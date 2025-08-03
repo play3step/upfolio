@@ -21,7 +21,7 @@ interface UserProfile {
 export default function Profile() {
   const [data, setData] = useState<UserProfile | null>(null)
   const [isEditing, setIsEditing] = useState(false)
-  const { phone, handlePhoneChange } = useSignup()
+  const { phone, handlePhoneChange, setPhone } = useSignup()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,10 +43,14 @@ export default function Profile() {
         profile.phone = formatPhoneNumber(profile.phone)
       }
 
+      if (isEditing && data?.phone) {
+        setPhone(data.phone)
+      }
+
       setData(profile)
     }
     fetchData()
-  }, [])
+  }, [isEditing, data?.phone, setPhone])
 
   const handleSave = async () => {
     const formattedPhone = formatPhoneNumber(phone)
@@ -183,7 +187,7 @@ export default function Profile() {
                 id="exId03"
                 label="전화번호"
                 placeholder="수정할 전화번호를 입력해 주세요"
-                value={phone || data?.phone || ''}
+                value={phone}
                 onChange={handlePhoneChange}
                 className={S.profile__input}
                 maxLength={13}
