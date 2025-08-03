@@ -42,7 +42,6 @@ export const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [sortOption, setSortOption] = useState('좋아요 순')
 
-
   const handleSearch = (params: SearchParams) => {
     const newSearchParams = new URLSearchParams(searchParams)
     newSearchParams.set('searchKeyword', params.searchKeyword ?? '')
@@ -116,9 +115,9 @@ export const Home = () => {
 
     const sorted = [...filteredPortfolio]
 
-    if(sortOption === '좋아요 순') {
-      sorted.sort((a,b) => (b.likeCount ?? 0) - (a.likeCount ?? 0))
-    } else if(sortOption === '조회수 순') {
+    if (sortOption === '좋아요 순') {
+      sorted.sort((a, b) => (b.likeCount ?? 0) - (a.likeCount ?? 0))
+    } else if (sortOption === '조회수 순') {
       sorted.sort((a, b) => (b.viewCount ?? 0) - (a.viewCount ?? 0))
     }
 
@@ -134,12 +133,21 @@ export const Home = () => {
           onChange={setSortOption}
         />
 
-        <div className={styles['portfolio-grid']}>
-          {sortedPortfolio && sortedPortfolio.length === 0 && (
-            <div>검색 결과가 없습니다.</div>
-          )}
-          {sortedPortfolio &&
-            sortedPortfolio.map((p: PortfolioItem) => (
+        {sortedPortfolio && sortedPortfolio.length === 0 ? (
+          <span
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              height: '100vh',
+              textAlign: 'center'
+            }}>
+            검색 결과가 없습니다.
+          </span>
+        ) : (
+          <div className={styles['portfolio-grid']}>
+            {sortedPortfolio.map((p: PortfolioItem) => (
               <PortfolioCard
                 {...p}
                 key={p.id}
@@ -150,7 +158,8 @@ export const Home = () => {
                 isMine={p.userId === authData?.id}
               />
             ))}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   )
