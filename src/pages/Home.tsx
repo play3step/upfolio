@@ -140,7 +140,7 @@ export const Home = () => {
               justifyContent: 'center',
               alignItems: 'center',
               width: '100%',
-              height: '100vh',
+              height: '100px',
               textAlign: 'center'
             }}>
             검색 결과가 없습니다.
