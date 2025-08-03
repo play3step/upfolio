@@ -71,6 +71,12 @@ export const Bookmarks = () => {
           }
         })
 
+        fixedBookmarks.sort(
+          (a, b) =>
+            new Date(b.Portfolio.createdAt).getTime() -
+            new Date(a.Portfolio.createdAt).getTime()
+        )
+
         setBookmarks(fixedBookmarks)
       }
 
@@ -115,6 +121,10 @@ export const Bookmarks = () => {
               }
             }
           }
+        )
+
+        fixedLikedPortfolios.sort(
+          (a, b) => b.Portfolio.likeCount - a.Portfolio.likeCount
         )
 
         setLikedComments(fixedLikedPortfolios)

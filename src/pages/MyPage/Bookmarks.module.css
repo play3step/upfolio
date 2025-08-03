@@ -27,6 +27,7 @@
 .left {
   display: flex;
   min-width: 0;
+  gap: var(--sp-3);
 }
 
 .itemTitle {

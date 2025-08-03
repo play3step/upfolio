@@ -27,6 +27,7 @@ export default function Comments() {
         .from('Comment')
         .select('id, portfolioid, userid, content, createdat')
         .eq('userid', user.id)
+        .order('createdat', { ascending: false })
 
       if (error) {
         console.error('댓글 목록을 가져오는 중 오류 발생:', error.message)

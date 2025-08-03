@@ -28,8 +28,9 @@ export default function Posts() {
       const { data } = await supabase
         // .from('Portfolio')
         .from('PortfolioWithLikes')
-        .select('id, title, content, createdAt, likeCount,viewCount')
+        .select('id, title, content, createdAt, likeCount, viewCount')
         .eq('userId', user.id)
+        .order('createdAt', { ascending: false })
 
       setPosts(data || [])
     }
