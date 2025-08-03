@@ -6,6 +6,8 @@ import supabase from '@/lib/supabaseClient'
 import { formatDate } from '@/utils/format'
 import Input from '@/components/common/Input'
 import defaultProfile from '../../assets/images/default-profile.png'
+import { useSignup } from '@/hooks/auth/useSignup'
+import { formatPhoneNumber } from '@/utils/format'
 
 interface UserProfile {
   id: string
@@ -19,6 +21,7 @@ interface UserProfile {
 export default function Profile() {
   const [data, setData] = useState<UserProfile | null>(null)
   const [isEditing, setIsEditing] = useState(false)
+  const { phone, handlePhoneChange, setPhone } = useSignup()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,24 +39,60 @@ export default function Profile() {
         .eq('id', user.id)
         .single()
 
+      if (profile) {
+        profile.phone = formatPhoneNumber(profile.phone)
+      }
+
+      if (isEditing && data?.phone) {
+        setPhone(data.phone)
+      }
+
       setData(profile)
     }
     fetchData()
-  }, [])
+  }, [isEditing, data?.phone, setPhone])
 
   const handleSave = async () => {
-    await supabase
-      .from('User')
-      .update({
-        nickname: data?.nickname,
-        phone: data?.phone,
-        birthDate: data?.birthDate,
-        profileimage: data?.profileimage || null
-      })
-      .eq('id', data?.id)
-    setIsEditing(false)
+    const formattedPhone = formatPhoneNumber(phone)
+    const oldProfileImage = data?.profileimage
+    const newProfileImage = data?.profileimage || null
 
-    alert('프로필이 저장되었습니다.')
+    try {
+      // 1. 댓글 테이블의 profileimage 값 업데이트
+      if (oldProfileImage !== newProfileImage) {
+        await supabase
+          .from('Comment')
+          .update({ profileimage: newProfileImage })
+          .eq('profileimage', oldProfileImage)
+          .eq('userid', data?.id)
+      }
+
+      // 2. 사용자 프로필 업데이트
+      await supabase
+        .from('User')
+        .update({
+          nickname: data?.nickname,
+          phone: formattedPhone,
+          birthDate: data?.birthDate,
+          profileimage: newProfileImage
+        })
+        .eq('id', data?.id)
+
+      // 3. 업데이트된 데이터 다시 가져오기
+      const { data: updatedUser } = await supabase
+        .from('User')
+        .select('id, email, nickname, phone, birthDate, profileimage')
+        .eq('id', data?.id)
+        .single()
+
+      // 상태 업데이트
+      setData(updatedUser)
+      setIsEditing(false)
+      alert('프로필이 저장되었습니다.')
+    } catch (err) {
+      console.error('예상치 못한 오류:', err)
+      alert('프로필 저장 중 오류가 발생했습니다.')
+    }
   }
 
   const handleChange = (field: keyof UserProfile, value: string) => {
@@ -106,11 +145,14 @@ export default function Profile() {
               <ImageUploader
                 id="profile-image"
                 value={imageSrc}
-                onChange={url => handleChange('profileimage', url)}
+                onChange={url => {
+                  console.log('Image URL:', url) // URL이 제대로 전달되는지 확인
+                  handleChange('profileimage', url)
+                }}
               />
             ) : (
               <img
-                src={imageSrc}
+                src={imageSrc || defaultProfile}
                 alt="profile"
                 className={S.profile__image}
               />
@@ -124,10 +166,10 @@ export default function Profile() {
         </div>
         <hr className={S.profile__divider} />
         <div className={S.profile__details}>
-          <p>
+          <div>
             <strong>이메일 : </strong> {data?.email || '정보 없음'}
-          </p>
-          <p>
+          </div>
+          <div>
             {!isEditing && <strong>닉네임 : </strong>}
             {isEditing ? (
               <Input
@@ -141,23 +183,24 @@ export default function Profile() {
             ) : (
               data?.nickname || '정보 없음'
             )}
-          </p>
-          <p>
+          </div>
+          <div>
             {!isEditing && <strong>전화번호 : </strong>}
             {isEditing ? (
               <Input
-                id="phone"
+                id="exId03"
                 label="전화번호"
-                value={data?.phone || ''}
-                readOnly={!isEditing}
-                onChange={e => handleChange('phone', e.target.value)}
+                placeholder="수정할 전화번호를 입력해 주세요"
+                value={phone}
+                onChange={handlePhoneChange}
                 className={S.profile__input}
+                maxLength={13}
               />
             ) : (
               data?.phone || '정보 없음'
             )}
-          </p>
-          <p>
+          </div>
+          <div>
             {!isEditing && <strong>생년월일 : </strong>}
             {isEditing ? (
               <Input
@@ -172,7 +215,7 @@ export default function Profile() {
             ) : (
               formatDate(data?.birthDate ?? '') || '정보 없음'
             )}
-          </p>
+          </div>
         </div>
       </div>
     </div>

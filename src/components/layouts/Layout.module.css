@@ -48,3 +48,16 @@
   right: 17rem;
   z-index: 100;
 }
+
+.layoutOuter {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin: auto;
+  max-width: 1200px;
+}
+
+.contentWrapper {
+  flex: 1;
+}
+

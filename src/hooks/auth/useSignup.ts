@@ -66,6 +66,7 @@ export const useSignup = () => {
   return {
     birthDate,
     phone,
+    setPhone,
     nickname,
     setNickname,
     handleBirthChange,
