@@ -33,7 +33,7 @@ export default function SortSelect({ value, onChange }: SortSelectProps) {
       className={S.careerSelect}
       ref={selectRef}
       style={{
-        padding: 'var(--sp-4) var(--sp-4) 0 0',
+        padding: 'var(--sp-4) var(--sp-4)  0 var(--sp-4)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center'
@@ -50,7 +50,7 @@ export default function SortSelect({ value, onChange }: SortSelectProps) {
       {isOpen && (
         <ul
           className={S.careerSelectList}
-          style={{ padding: '0', width: '164px' }}>
+          style={{ marginLeft: 'var(--sp-4)', width: '148px' }}>
           {SORT_OPTIONS.map(option => (
             <li
               key={option}
