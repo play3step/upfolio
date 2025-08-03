@@ -22,7 +22,7 @@ const INTEREST_SELECT = [
 
 interface SearchBarProps {
   onSearch: (params: SearchParams) => void
-  onFilterChange: (careerFilter: string) => void
+  onFilterChange?: (careerFilter: string) => void
 }
 
 export const SearchBar = ({ onSearch, onFilterChange }: SearchBarProps) => {

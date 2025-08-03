@@ -156,6 +156,7 @@ export const Home = () => {
                 onToggleBookmark={handleBookmarkToggle}
                 onToggleLike={handleLikeToggle}
                 isMine={p.userId === authData?.id}
+                likeCount={p.likeCount ?? 0}
               />
             ))}
           </div>
