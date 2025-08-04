@@ -3,39 +3,33 @@ import supabase from '@/lib/supabaseClient'
 import S from './Posts.module.css'
 import { formatDate } from '@/utils/format'
 import { useNavigate } from 'react-router-dom'
-
-interface Comment {
-  id: number
-  portfolioid: number
-  userid: string
-  content: string
-  createdat: string
-}
+import useComment from '@/hooks/mypage/posts/useComment'
 
 export default function Comments() {
-  const [comments, setComments] = useState<Comment[]>([])
+  const [userId, setUserId] = useState<string | null>(null)
   const navigate = useNavigate()
 
   useEffect(() => {
-    const fetchComments = async () => {
+    const fetchUser = async () => {
       const {
-        data: { user }
+        data: { user },
+        error: userError
       } = await supabase.auth.getUser()
-      if (!user) return
-
-      const { data, error } = await supabase
-        .from('Comment')
-        .select('id, portfolioid, userid, content, createdat')
-        .eq('userid', user.id)
-
-      if (error) {
-        console.error('댓글 목록을 가져오는 중 오류 발생:', error.message)
-      } else {
-        setComments(data || [])
+      if (userError || !user) {
+        console.error('사용자 인증 정보가 없습니다.')
+        return
       }
+      setUserId(user.id)
     }
-    fetchComments()
+
+    fetchUser()
   }, [])
+
+  const { comments, loading, error } = useComment(userId || '')
+
+  if (!userId) return <p>사용자 정보를 불러오는 중...</p>
+  if (loading) return <p>로딩 중...</p>
+  if (error) return <p>오류 발생: {error}</p>
 
   const handleCommentsClick = (portfolioId: number) => {
     navigate(`/portfolios/${portfolioId}`)

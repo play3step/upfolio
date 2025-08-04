@@ -49,7 +49,6 @@ export const EditProfile = () => {
     fetchTempPortfolio()
   }, [])
 
-  // 임시 저장된 글을 수정하는 페이지로 이동 추후 수정
   function handleTempClick(id: number): void {
     navigate(`/portfolio/new?id=${id}`)
   }
