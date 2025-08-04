@@ -25,10 +25,12 @@ export const useThreads = () => {
 
     const threadList = await Promise.all(
       threads.map(async d => {
-        const { data: userB } = await supabase
+        const otherUserId = d.useraid === authData?.id ? d.userbid : d.useraid
+
+        const { data: otherUser } = await supabase
           .from('User')
           .select('*')
-          .eq('id', d.userbid)
+          .eq('id', otherUserId)
           .single()
 
         const { data: lastMessage } = await supabase
@@ -37,10 +39,11 @@ export const useThreads = () => {
           .eq('threadid', d.id)
           .order('createdat', { ascending: false })
           .limit(1)
+
         return {
           id: d.id,
-          name: userB?.nickname,
-          profile: userB?.profileimage,
+          name: otherUser?.nickname,
+          profile: otherUser?.profileimage,
           lastMessage: lastMessage?.[0]?.message,
           senderid: d.useraid,
           receiverid: d.userbid
@@ -55,12 +58,8 @@ export const useThreads = () => {
     if (authData?.id === otherUserId) {
       return alert('자기자신은 채팅할 수 없습니다.')
     }
-    const threads = await addThreads(
-      authData?.id ?? '',
-      otherUserId,
-      new Date().toISOString()
-    )
-    console.log(threads)
+
+    await addThreads(authData?.id ?? '', otherUserId, new Date().toISOString())
   }
 
   return { handleFetchThreads, handleAddThreads }

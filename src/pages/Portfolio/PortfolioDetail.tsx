@@ -44,8 +44,6 @@ export default function PortfolioDetail() {
     setLikeCount
   } = usePortfolioDetail(decodedId)
 
-  console.log(data)
-
   const basicInfoRef = useRef<HTMLDivElement>(null)
   const techStackRef = useRef<HTMLDivElement>(null)
   const introductionRef = useRef<HTMLDivElement>(null)
