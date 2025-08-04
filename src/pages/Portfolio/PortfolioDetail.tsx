@@ -20,6 +20,8 @@ import { useThreads } from '@/hooks/dm/useThreads'
 import { AuthContext } from '@/context/auth/AuthContext'
 import { useComment } from '@/hooks/portfolio/detail/useComment'
 
+import download from '@/assets/icon/download.svg'
+
 export default function PortfolioDetail() {
   const { id } = useParams<{ id: string }>()
   const decodedId = decodeURIComponent(id ?? '')
@@ -40,6 +42,8 @@ export default function PortfolioDetail() {
     likeCount,
     setLikeCount
   } = usePortfolioDetail(decodedId)
+
+  console.log(data)
 
   const basicInfoRef = useRef<HTMLDivElement>(null)
   const techStackRef = useRef<HTMLDivElement>(null)
@@ -437,6 +441,43 @@ export default function PortfolioDetail() {
                 </a>
 
                 <h3>첨부파일</h3>
+
+                {data.fileList.map(file => (
+                  <div className={S.fileList}>
+                    <a
+                      href={
+                        file.url?.startsWith('http')
+                          ? file.url
+                          : `https://${file.url}`
+                      }
+                      target="_blank"
+                      rel="noreferrer">
+                      {file.name}
+                    </a>
+                    <img
+                      src={download}
+                      onClick={e => {
+                        e.preventDefault()
+                        const url = file.url?.startsWith('http')
+                          ? file.url
+                          : `https://${file.url}`
+                        fetch(url)
+                          .then(response => response.blob())
+                          .then(blob => {
+                            const blobUrl = window.URL.createObjectURL(blob)
+                            const link = document.createElement('a')
+                            link.href = blobUrl
+                            link.download = file.name
+                            document.body.appendChild(link)
+                            link.click()
+                            document.body.removeChild(link)
+                            window.URL.revokeObjectURL(blobUrl)
+                          })
+                      }}
+                      alt="다운로드"
+                    />
+                  </div>
+                ))}
               </section>
             </div>
           </div>

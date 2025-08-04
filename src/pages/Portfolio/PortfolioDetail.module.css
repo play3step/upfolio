@@ -387,10 +387,23 @@ section h4 {
   font-size: 0.875rem;
 }
 
-/* TODOS: 첨부파일 리스트 들어올 시 여기 추가 */
-/* .urlFile {
+.fileList {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
 
-} */
+  & > img {
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
 
 .frontend {
   background-color: var(--color-interest-frontend);
