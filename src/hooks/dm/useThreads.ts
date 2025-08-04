@@ -4,14 +4,23 @@ import { AuthContext } from '@/context/auth/AuthContext'
 
 import supabase from '@/lib/supabaseClient'
 
+interface ThreadType {
+  id: string
+  name: string
+  profile: string
+  lastMessage: string
+  senderid: string
+  receiverid: string
+}
+
 export const useThreads = () => {
   const { authData } = useContext(AuthContext)
 
-  const handleFetchThreads = async () => {
+  const handleFetchThreads = async (): Promise<ThreadType[]> => {
     const threads = await fetchThreads(authData?.id ?? '')
 
     if (!threads) {
-      return
+      return []
     }
 
     const threadList = await Promise.all(
@@ -32,7 +41,9 @@ export const useThreads = () => {
           id: d.id,
           name: userB?.nickname,
           profile: userB?.profileimage,
-          lastMessage: lastMessage?.[0]?.message
+          lastMessage: lastMessage?.[0]?.message,
+          senderid: d.useraid,
+          receiverid: d.userbid
         }
       })
     )
