@@ -1,4 +1,6 @@
+import { useContext } from 'react'
 import S from './alarmCard.module.css'
+import { DmContext } from '@/context/dm/DmContext'
 
 interface AlarmCardProps {
   type: 'comment' | 'like' | 'dm'
@@ -15,10 +17,17 @@ export default function AlarmCard({
   referenceid,
   handleMovement
 }: AlarmCardProps) {
+  const { toggleDm } = useContext(DmContext)
   return (
     <div
       className={S['alarm-card']}
-      onClick={() => handleMovement(referenceid)}>
+      onClick={() => {
+        if (type === 'dm') {
+          toggleDm()
+        } else {
+          handleMovement(referenceid)
+        }
+      }}>
       <div className={S['alarm-card-left']}>
         <img
           src={profile_image}
