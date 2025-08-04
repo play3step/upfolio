@@ -1,7 +1,7 @@
 import S from './PortfolioCard.module.css'
 import bookmarkIcon from '../assets/icon/bookmark-empty.svg'
 import bookmarkFilledIcon from '../assets/icon/bookmark-fill.svg'
-import grayHeart from '../assets/icon/grayHeart.svg'
+import grayHeart from '../assets/icon/grayheart.svg'
 import redHeart from '../assets/icon/heart.fill.svg'
 import eye from '../assets/icon/eye.svg'
 import { useState, useEffect } from 'react'
