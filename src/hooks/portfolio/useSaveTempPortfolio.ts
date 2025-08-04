@@ -1,4 +1,4 @@
-import { uploadTempPortfolio } from '@/apis/portfolio/saveTemp.controller'
+import { uploadTempPortfolio } from '@/apis/portfolio/tempPortfolio.controller'
 import type { PortfolioData, UserInfo } from '@/types/portfolio'
 import { isEqual, omit } from 'lodash'
 

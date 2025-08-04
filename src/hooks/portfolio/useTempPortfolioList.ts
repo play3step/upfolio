@@ -1,6 +1,6 @@
-import { deleteTempPortfolioItem } from '@/apis/portfolio/deleteTempItem.controller'
-import { fetchTempPortfolioItem } from '@/apis/portfolio/fetchTempItem.controller'
-import { fetchTempPortfolioList } from '@/apis/portfolio/fetchTempList.controller'
+import { fetchTempPortfolioItem } from '@/apis/portfolio/tempPortfolio.controller'
+import { fetchTempPortfolioList } from '@/apis/portfolio/tempPortfolio.controller'
+import { deleteTempPortfolioItem } from '@/apis/portfolio/tempPortfolio.controller'
 import type {
   PortfolioData,
   TempItem,

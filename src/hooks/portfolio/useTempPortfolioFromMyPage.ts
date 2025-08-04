@@ -1,4 +1,4 @@
-import { fetchTempPortfolioItem } from '@/apis/portfolio/fetchTempItem.controller'
+import { fetchTempPortfolioItem } from '@/apis/portfolio/tempPortfolio.controller'
 import type { PortfolioData } from '@/types/portfolio'
 import { omit } from 'lodash'
 import { useEffect } from 'react'
