@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useState, useRef, useEffect, useContext } from 'react'
 import { usePortfolioDetail } from '@/hooks/portfolio/detail/usePortfolioDetail'
 import { handleToggleBookmark } from '@/apis/bookmark/bookmarkUtils'
@@ -30,6 +30,7 @@ export default function PortfolioDetail() {
   const [isCommentOpen, setIsCommentOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const navigate = useNavigate()
+  const location = useLocation()
   const { authData } = useContext(AuthContext)
 
   const { comments, sendComment } = useComment(decodedId)
@@ -195,7 +196,9 @@ export default function PortfolioDetail() {
         text: '포트폴리오 삭제가 완료되었습니다.',
         icon: 'success'
       })
-      navigate(-1)
+
+      const from = location.state?.from || '/'
+      navigate(from)
     }
   }
 
@@ -432,7 +435,7 @@ export default function PortfolioDetail() {
             <div ref={introductionRef}>
               <section className={S.description}>
                 <h3>소개</h3>
-                <p>{data.content}</p>
+                <p className={S.content}>{data.content}</p>
               </section>
             </div>
 
