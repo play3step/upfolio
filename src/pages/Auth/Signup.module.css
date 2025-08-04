@@ -61,7 +61,15 @@
   border: 1px solid var(--gray-300);
   border-radius: 0.375rem;
   text-align: center;
-  font-size: 0.875rem;
+  font-size: var(--fs-sm);
+}
+
+@media (max-width: 640px) {
+  .birth-inputs input {
+    width: 4rem;
+    padding: 0.375rem;
+    font-size: var(--fs-xs);
+  }
 }
 
 .birth-inputs input:focus {
@@ -72,5 +80,11 @@
 
 .birth-inputs span {
   color: var(--gray-600);
-  font-size: 0.875rem;
+  font-size: var(--fs-sm);
+}
+
+@media (max-width: 640px) {
+  .birth-inputs span {
+    font-size: var(--fs-xs);
+  }
 }
