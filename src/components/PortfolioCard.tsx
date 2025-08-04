@@ -145,7 +145,6 @@ export function PortfolioCard({
       <button
         onClick={async e => {
           e.stopPropagation()
-          console.log('userid: ', userId)
           if (!userId) {
             const ok = await alertConfirm({
               title: '로그인이 필요합니다.',
