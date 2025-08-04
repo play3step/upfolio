@@ -8,10 +8,6 @@
   &.success {
     border: 1px solid #91d5a9;
 
-    .swal__title {
-      color: #389e54;
-    }
-
     .swal__confirmBtn {
       background-color: #91d5a9;
     }
@@ -19,10 +15,6 @@
 
   &.error {
     border: 1px solid #f4a9aa;
-
-    .swal__title {
-      color: #d4380d;
-    }
 
     .swal__confirmBtn {
       background-color: #f4a9aa;
@@ -32,10 +24,6 @@
   &.warning {
     border: 1px solid #f8c97b;
 
-    .swal__title {
-      color: #d46b08;
-    }
-
     .swal__confirmBtn {
       background-color: #f8c97b;
     }
@@ -43,10 +31,6 @@
 
   &.confirm {
     border: 1px solid #ffe58f;
-
-    .swal__title {
-      color: #d4b106;
-    }
 
     .swal__confirmBtn {
       background-color: #ffe58f;
@@ -56,7 +40,9 @@
     text-align: left;
     padding: 0;
     padding-left: 32px;
-    font-size: var(--fs-md);
+    padding-bottom: 8px;
+    font-size: var(--fs-sm);
+    color: var(--black);
   }
 
   .swal2-html-container {
@@ -64,8 +50,9 @@
   }
 
   .swal2-html-container {
-    padding-top: 8px;
+    padding-top: 2px;
     padding-left: 32px;
+    padding-right: 0;
     text-align: left;
     color: var(--black);
   }
@@ -73,7 +60,7 @@
   .swal2-icon {
     position: absolute;
     left: var(--sp-5);
-    top: var(--sp-6);
+    top: var(--sp-5);
     border: none;
     width: 24px;
     height: 24px;

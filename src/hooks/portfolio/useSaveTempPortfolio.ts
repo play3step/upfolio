@@ -1,5 +1,6 @@
 import { uploadTempPortfolio } from '@/apis/portfolio/tempPortfolio.controller'
 import type { PortfolioData, UserInfo } from '@/types/portfolio'
+import { alertError, alertSuccess, alertWarning } from '@/utils/alertUtils'
 import { isEqual, omit } from 'lodash'
 
 export const useSaveTempPortfolio = ({
@@ -28,7 +29,7 @@ export const useSaveTempPortfolio = ({
       lastSavedDataRef?.current &&
       isEqual(prevData, currData)
     ) {
-      alert('수정사항이 없습니다.')
+      alertWarning({ text: '수정사항이 없습니다.' })
       return
     }
     try {
@@ -46,21 +47,27 @@ export const useSaveTempPortfolio = ({
         portfolioData: tempData,
         userInfo
       })
-      alert(tempPortfolioId ? '수정되었습니다.' : '임시저장되었습니다.')
+      alertSuccess(
+        tempPortfolioId
+          ? { text: '수정되었습니다.' }
+          : { text: '임시저장되었습니다.' }
+      )
 
       if (setTempPortfolioId) {
         setTempPortfolioId(id)
       }
       if (lastSavedDataRef) {
         lastSavedDataRef.current = omit(tempData, ['createdAt', 'viewCount'])
-        console.log('lastSavedDataRef after save:', lastSavedDataRef.current)
       }
 
       if (onSave) {
         onSave()
       }
     } catch (error) {
-      alert('임시저장에 실패하였습니다. 다시 시도해주세요.')
+      alertError({
+        title: '임시저장 실패',
+        text: '다시 시도해 주세요.'
+      })
       console.error(error)
     }
   }

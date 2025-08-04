@@ -5,7 +5,7 @@ type InsertPortfolioData = Omit<
   PortfolioData,
   'id' | 'viewCount' | 'createdAt' | 'userId'
 >
-
+/* --- 저장 --- */
 export const uploadPortfolio = async ({
   portfolioData,
   userInfo,

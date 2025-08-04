@@ -3,6 +3,7 @@ import defaultProfile from '../../assets/images/default-profile.png'
 import S from './ImageUploader.module.css'
 import supabase from '@/lib/supabaseClient'
 import sanitizeFileName from '@/utils/sanitizeFileName'
+import { alertConfirm, alertError } from '@/utils/alertUtils'
 
 interface Props {
   id: string
@@ -22,7 +23,9 @@ function ImageUploader({ id, value, onChange, status = 'profile' }: Props) {
 
   const handleDeleteImage = async () => {
     if (!imageSrc) return
-    const check = confirm('등록한 이미지를 삭제하시겠습니까?')
+    const check = alertConfirm({
+      text: '등록한 이미지를 삭제할까요?'
+    })
     if (!check) return
     try {
       const url = new URL(imageSrc)
@@ -34,7 +37,10 @@ function ImageUploader({ id, value, onChange, status = 'profile' }: Props) {
           .remove([fileName])
 
         if (error) {
-          alert('이미지 삭제 실패')
+          alertError({
+            title: '이미지 삭제 실패',
+            text: '다시 시도해 주세요.'
+          })
           console.error(error)
 
           return
@@ -65,7 +71,10 @@ function ImageUploader({ id, value, onChange, status = 'profile' }: Props) {
       })
 
     if (error) {
-      alert('이미지 업로드 실패')
+      alertError({
+        title: '이미지 등록 실패',
+        text: '다시 시도해 주세요.'
+      })
       console.error(error)
       return
     }
