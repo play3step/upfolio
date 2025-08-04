@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { addThreads, fetchThreads } from '@/apis/dm/threads.controller'
 import { AuthContext } from '@/context/auth/AuthContext'
+
 import supabase from '@/lib/supabaseClient'
 import { alertError, alertSuccess } from '@/utils/alertUtils'
 
@@ -8,7 +9,8 @@ interface ThreadType {
   id: string
   name: string
   profile: string
-  lastMessage: string
+  lastMessage: string | null
+  lastMessageTime: string | null
   myId: string
   otherId: string
   isUserA: boolean
@@ -82,6 +84,7 @@ export const useThreads = () => {
       alertError({
         title: '채팅방 생성 실패',
         text: '자기자신은 채팅할 수 없습니다.',
+        icon: 'error'
       })
       return
     }
@@ -95,12 +98,14 @@ export const useThreads = () => {
       return alertError({
         title: '채팅방 생성 실패',
         text: '이미 존재하는 채팅방입니다.',
+        icon: 'error'
       })
     }
 
     alertSuccess({
       title: '채팅방 생성 완료',
       text: '채팅방이 생성되었습니다.',
+      icon: 'success'
     })
   }
 
