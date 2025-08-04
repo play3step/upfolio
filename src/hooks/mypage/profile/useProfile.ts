@@ -91,7 +91,7 @@ export const useProfile = () => {
       console.error('예상치 못한 오류:', err)
       alertError({
         title: '프로필 저장 실패',
-        text: '프로필 정보를 저장하는 데 실패했습니다. 다시 시도해주세요.'
+        text: '다시 시도해주세요.'
       })
     }
   }

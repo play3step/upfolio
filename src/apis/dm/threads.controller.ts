@@ -1,4 +1,5 @@
 import supabase from '@/lib/supabaseClient'
+import { alertWarning } from '@/utils/alertUtils'
 
 const fetchThreads = async (userId: string) => {
   if (!userId) {
@@ -45,7 +46,7 @@ const addThreads = async (
     .single()
 
   if (searchThread) {
-    return alert('이미 존재하는 채팅방입니다.')
+    return alertWarning({ text: '이미 존재하는 채팅방입니다.' })
   }
 
   const { data, error } = await supabase.from('DMThread').insert({

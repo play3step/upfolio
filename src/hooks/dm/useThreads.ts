@@ -3,6 +3,7 @@ import { addThreads, fetchThreads } from '@/apis/dm/threads.controller'
 import { AuthContext } from '@/context/auth/AuthContext'
 
 import supabase from '@/lib/supabaseClient'
+import { alertWarning } from '@/utils/alertUtils'
 
 interface ThreadType {
   id: string
@@ -53,7 +54,7 @@ export const useThreads = () => {
 
   const handleAddThreads = async (otherUserId: string) => {
     if (authData?.id === otherUserId) {
-      return alert('자기자신은 채팅할 수 없습니다.')
+      return alertWarning({ text: '자기자신은 채팅할 수 없습니다.' })
     }
     const threads = await addThreads(
       authData?.id ?? '',

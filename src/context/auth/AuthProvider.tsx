@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { AuthContext } from '@/context/auth/AuthContext'
 import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
 import type { UserData } from '@/types/auth'
+import { alertConfirm } from '@/utils/alertUtils'
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuth, setIsAuth] = useState(false)
@@ -13,8 +14,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsAuth(true)
     setAuthData(userData)
   }
-  const logout = () => {
-    if (window.confirm('로그아웃 하시겠습니까?')) {
+  const logout = async () => {
+    const ok = await alertConfirm({
+      text: '로그아웃 하시겠습니까?'
+    })
+    if (ok) {
       setIsAuth(false)
       setAuthData(null)
       localStorage.clear()

@@ -3,6 +3,7 @@ import Button from './Button'
 import S from './FileUploader.module.css'
 import supabase from '@/lib/supabaseClient'
 import sanitizeFileName from '@/utils/sanitizeFileName'
+import { alertError } from '@/utils/alertUtils'
 
 interface FileList {
   name: string
@@ -71,7 +72,7 @@ function FileUploader({ onChange, value = [], error, className }: Props) {
       .remove([fileName])
 
     if (error) {
-      alert('삭제가 실패되었음')
+      alertError({ title: '파일 삭제 실패', text: '다시 시도해주세요.' })
       console.error(error)
 
       return

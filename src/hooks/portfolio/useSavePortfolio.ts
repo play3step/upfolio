@@ -35,7 +35,7 @@ export const useSavePortfolio = ({
       navigate(`/portfolios/${id}`)
     } catch (error) {
       alertError({
-        title: '저장 실패',
+        title: '포트폴리오 저장 실패',
         text: '다시 시도해주세요.'
       })
       console.error(error)

@@ -16,7 +16,7 @@ import IntroInfoSection from '@/components/portfolio/IntroInfoSection'
 import DataInfoSection from '@/components/portfolio/DataInfoSection'
 import { useStickyMenu } from '@/hooks/portfolio/useStickyMenu'
 import { useEditPortfolio } from '@/hooks/portfolio/detail/useEditPortfolio'
-import { alertSuccess, alertWarning } from '@/utils/alertUtils'
+import { alertError, alertSuccess, alertWarning } from '@/utils/alertUtils'
 
 const EMPTY_DATA: PortfolioData = {
   id: '',
@@ -80,7 +80,10 @@ const EditPortfolio = () => {
         setPortfolioData(formattedData)
         setOriginalData(formattedData)
       } catch (e) {
-        alert('포트폴리오 정보를 불러오는 데 실패했습니다.')
+        alertError({
+          title: '포트폴리오 정보 불러오기 실패',
+          text: '다시 시도해보세요.'
+        })
         console.error(e)
         navigate('/portfolio')
       }
@@ -99,16 +102,14 @@ const EditPortfolio = () => {
     if (!hasChanges) {
       alertWarning({
         title: '변경된 내용이 없습니다.',
-        text: '포트폴리오 내용을 수정해 주세요.',
-        icon: 'warning'
+        text: '포트폴리오 내용을 수정해주세요.'
       })
       return
     }
 
     alertSuccess({
       title: '포트폴리오 수정 완료',
-      text: '포트폴리오 수정이 완료되었습니다.',
-      icon: 'success'
+      text: '포트폴리오 수정이 완료되었습니다.'
     })
 
     handleEditPortfolio()

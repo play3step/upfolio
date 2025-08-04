@@ -7,6 +7,7 @@ import eye from '../assets/icon/eye.svg'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/auth/useAuth'
+import { alertConfirm } from '@/utils/alertUtils'
 
 export interface Props {
   portfolioid: string
@@ -77,10 +78,17 @@ export function PortfolioCard({
     setCurrentLikeCount(likeCount)
   }, [likeCount])
 
-  const toggleBookmark = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const toggleBookmark = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     if (!authData) {
-      alert('로그인이 필요합니다.')
+      const ok = await alertConfirm({
+        title: '로그인이 필요합니다.',
+        text: '로그인 페이지로 이동할까요?'
+      })
+
+      if (ok) {
+        navigate('/login')
+      }
       return
     }
     const next = !bookmarked
@@ -135,11 +143,18 @@ export function PortfolioCard({
       </div>
 
       <button
-        onClick={e => {
+        onClick={async e => {
           e.stopPropagation()
           console.log('userid: ', userId)
           if (!userId) {
-            alert('로그인이 필요합니다.')
+            const ok = await alertConfirm({
+              title: '로그인이 필요합니다.',
+              text: '로그인 페이지로 이동할까요?'
+            })
+
+            if (ok) {
+              navigate('/login')
+            }
             return
           }
           toggleBookmark(e)

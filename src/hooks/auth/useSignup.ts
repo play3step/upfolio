@@ -4,6 +4,7 @@ import { AuthContext } from '@/context/auth/AuthContext'
 import { formatPhoneNumber } from '@/utils/format'
 import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { alertSuccess, alertWarning } from '@/utils/alertUtils'
 
 export const useSignup = () => {
   const { authData } = useContext(AuthContext)
@@ -43,7 +44,7 @@ export const useSignup = () => {
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!phone || !birthDate.year || !birthDate.month || !birthDate.day) {
-      alert('모든 필수 정보를 입력해주세요.')
+      alertWarning({ text: '모든 필수 정보를 입력해주세요.' })
       return
     }
     const signupData = {
@@ -59,7 +60,10 @@ export const useSignup = () => {
       signupData.id
     )
     await getSession()
-    alert('회원가입이 완료되었습니다.')
+    alertSuccess({
+      title: '회원가입 완료',
+      text: 'Upfolio의 다양한 기능을 이용해보세요.'
+    })
     navigate('/', { replace: true })
   }
 
