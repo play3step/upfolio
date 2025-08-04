@@ -1,6 +1,6 @@
 .alarm-wrapper {
   width: 280px;
-  height: 363px;
+  height: 24.3rem;
   background-color: white;
   border-radius: var(--sp-4);
   padding: var(--sp-4);
@@ -40,4 +40,19 @@
 .alarm-content {
   overflow-y: auto;
   height: 14rem;
+}
+
+.alarm-footer {
+  height: 2.75rem;
+  border-top: 1px solid var(--gray2);
+  font-size: var(--fs-xs);
+  color: var(--gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.alarm-footer:hover {
+  color: var(--primary);
 }

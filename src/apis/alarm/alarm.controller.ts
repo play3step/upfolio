@@ -63,3 +63,16 @@ export const fetchAlarms = async (
   }
   return alarmsData
 }
+
+export const readAllAlarms = async (userid: string, type: alarmType) => {
+  const { data, error } = await supabase
+    .from('Notification')
+    .update({ isread: true })
+    .eq('receiver_id', userid)
+    .eq('type', type)
+
+  if (error) {
+    throw error
+  }
+  return data
+}

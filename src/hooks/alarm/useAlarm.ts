@@ -1,4 +1,7 @@
-import { fetchAlarms as fetchAlarmsAPI } from '@/apis/alarm/alarm.controller'
+import {
+  fetchAlarms as fetchAlarmsAPI,
+  readAllAlarms as readAllAlarmsAPI
+} from '@/apis/alarm/alarm.controller'
 import { AuthContext } from '@/context/auth/AuthContext'
 import type { Notification, alarmType } from '@/types/notification'
 import { useContext, useState } from 'react'
@@ -17,9 +20,15 @@ export const useAlarm = () => {
     setIsLoading(false)
   }
 
+  const readAllAlarms = async (type: alarmType) => {
+    await readAllAlarmsAPI(authData?.id ?? '', type)
+    fetchAlarms(type)
+  }
+
   return {
     alarmsData,
     fetchAlarms,
-    isLoading
+    isLoading,
+    readAllAlarms
   }
 }

@@ -10,7 +10,7 @@ export default function AlarmWrapper() {
 
   const { alarm, toggleAlarm } = useContext(AlarmContext)
 
-  const { alarmsData, fetchAlarms } = useAlarm()
+  const { alarmsData, fetchAlarms, readAllAlarms } = useAlarm()
 
   const alarmRef = useRef<HTMLDivElement>(null)
 
@@ -72,6 +72,9 @@ export default function AlarmWrapper() {
             profile_image={alarm.sender.profile_image}
           />
         ))}
+      </div>
+      <div className={S['alarm-footer']}>
+        <p onClick={() => readAllAlarms(selected)}>알림 모두 읽음</p>
       </div>
     </div>
   )
