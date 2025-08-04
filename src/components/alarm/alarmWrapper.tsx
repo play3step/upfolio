@@ -8,25 +8,25 @@ import type { alarmType } from '@/types/notification'
 export default function AlarmWrapper() {
   const [selected, setSelected] = useState<alarmType>('comment')
 
-  const { alarm, toggleAlarm } = useContext(AlarmContext)
+  const { alarm } = useContext(AlarmContext)
 
   const { alarmsData, fetchAlarms, readAllAlarms } = useAlarm()
 
   const alarmRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const clickOutside = (e: MouseEvent) => {
-      if (alarm && !alarmRef.current?.contains(e.target as Node)) {
-        toggleAlarm()
-      }
-    }
+  // useEffect(() => {
+  //   const clickOutside = (e: MouseEvent) => {
+  //     if (alarm && !alarmRef.current?.contains(e.target as Node)) {
+  //       toggleAlarm()
+  //     }
+  //   }
 
-    document.addEventListener('mousedown', clickOutside)
+  //   document.addEventListener('mousedown', clickOutside)
 
-    return () => {
-      document.removeEventListener('mousedown', clickOutside)
-    }
-  }, [alarm])
+  //   return () => {
+  //     document.removeEventListener('mousedown', clickOutside)
+  //   }
+  // }, [alarm])
 
   const handleFetchAlarms = (type: alarmType) => {
     setSelected(type)

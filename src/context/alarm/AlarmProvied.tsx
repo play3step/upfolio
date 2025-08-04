@@ -5,7 +5,7 @@ export const AlarmProvider = ({ children }: { children: React.ReactNode }) => {
   const [alarm, setAlarm] = useState(false)
 
   const toggleAlarm = () => {
-    setAlarm(true)
+    setAlarm(prev => !prev)
   }
 
   return (
