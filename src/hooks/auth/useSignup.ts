@@ -5,7 +5,6 @@ import { formatPhoneNumber } from '@/utils/format'
 import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { alertSuccess, alertWarning } from '@/utils/alertUtils'
-
 export const useSignup = () => {
   const { authData, login } = useContext(AuthContext)
 
@@ -77,7 +76,7 @@ export const useSignup = () => {
     if (userData) {
       alertSuccess({
         title: '회원가입 완료',
-        text: 'Upfolio의 다양한 기능을 이용해보세요.'
+        text: '회원가입이 완료되었습니다.'
       })
       login(fetchData)
     }
