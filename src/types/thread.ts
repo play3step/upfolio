@@ -3,8 +3,9 @@ export interface Thread {
   lastMessage: string | null
   name: string
   profile: string
-  receiverid: string
-  senderid: string
+  myId: string
+  otherId: string
+  isUserA: boolean
 }
 
 export interface Message {

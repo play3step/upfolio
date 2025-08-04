@@ -20,8 +20,7 @@ export default function DmChatListItem({
 }: Props) {
   return (
     <div
-      className={S['dm-chat-list-item']}
-      style={{ backgroundColor: isSelected ? 'var(--primary)' : 'white' }}
+      className={`${S['dm-chat-list-item']} ${isSelected ? S.selected : ''}`}
       onClick={() => handleSelectChatRoom(id)}>
       <div className={S['dm-chat-list-item-left']}>
         <img
@@ -30,11 +29,7 @@ export default function DmChatListItem({
           alt={name}
         />
       </div>
-      <div
-        className={S['dm-chat-list-item-right']}
-        style={{
-          color: isSelected ? 'white' : ''
-        }}>
+      <div className={S['dm-chat-list-item-right']}>
         <span className={S['name']}>{name}</span>
         <span className={S['last-message']}>{lastMessage}</span>
       </div>

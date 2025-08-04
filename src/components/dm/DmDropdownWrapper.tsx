@@ -57,8 +57,8 @@ export default function DmDropdownWrapper() {
     handleAddMessages(
       selectedThreadId,
       message,
-      authData.id,
-      selectedThread.receiverid,
+      selectedThread.myId,
+      selectedThread.otherId,
       new Date()
     )
   }

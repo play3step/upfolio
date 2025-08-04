@@ -9,8 +9,9 @@ interface ThreadType {
   name: string
   profile: string
   lastMessage: string
-  senderid: string
-  receiverid: string
+  myId: string
+  otherId: string
+  isUserA: boolean
 }
 
 export const useThreads = () => {
@@ -40,13 +41,15 @@ export const useThreads = () => {
           .order('createdat', { ascending: false })
           .limit(1)
 
+        const isUserA = d.useraid === authData?.id
         return {
           id: d.id,
           name: otherUser?.nickname,
           profile: otherUser?.profileimage,
           lastMessage: lastMessage?.[0]?.message,
-          senderid: d.useraid,
-          receiverid: d.userbid
+          myId: authData?.id ?? '',
+          otherId: otherUserId,
+          isUserA: isUserA
         }
       })
     )

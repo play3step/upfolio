@@ -6,6 +6,17 @@
   align-items: center;
   min-width: 0;
   cursor: pointer;
+  transition: all 0.2s;
+  background-color: white;
+  border-bottom: 1px solid var(--gray2);
+}
+
+.dm-chat-list-item.selected {
+  background-color: var(--gray2);
+}
+
+.dm-chat-list-item:hover {
+  background-color: var(--gray2);
 }
 
 .dm-chat-list-item-left-profile {
