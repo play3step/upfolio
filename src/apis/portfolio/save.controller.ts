@@ -25,7 +25,7 @@ export const uploadPortfolio = async ({
     'viewCount',
     'createdAt',
     'userId'
-  ])
+  ]) as InsertPortfolioData
 
   const { data, error } = await supabase
     .from('Portfolio')
