@@ -1,5 +1,5 @@
 import supabase from '@/lib/supabaseClient'
-import type { alarmType } from '@/types/notification'
+import type { alarmType, Notification } from '@/types/notification'
 
 export const sendAlarm = async (
   senderid: string,
@@ -28,7 +28,7 @@ export const fetchAlarms = async (
   userid: string,
   type: alarmType,
   isread: boolean
-) => {
+): Promise<Notification[]> => {
   const { data, error } = await supabase
     .from('Notification')
     .select('*')
@@ -36,8 +36,30 @@ export const fetchAlarms = async (
     .eq('type', type)
     .eq('isread', isread)
     .order('createdat', { ascending: false })
+
+  const alarmsData = await Promise.all(
+    (data || []).map(async (item: Notification) => {
+      const { data: userData, error: userError } = await supabase
+        .from('User')
+        .select('*')
+        .eq('id', item.sender_id)
+        .single()
+
+      if (userError) {
+        throw userError
+      }
+
+      item.sender = {
+        id: userData?.id,
+        name: userData?.nickname,
+        profile_image: userData?.profileimage
+      }
+
+      return item
+    })
+  )
   if (error) {
     throw error
   }
-  return data
+  return alarmsData
 }

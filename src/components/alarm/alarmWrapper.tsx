@@ -33,7 +33,9 @@ export default function AlarmWrapper() {
     fetchAlarms(type)
   }
 
-  console.log(alarmsData)
+  useEffect(() => {
+    fetchAlarms(selected)
+  }, [selected])
 
   if (!alarm) return null
 
@@ -50,11 +52,11 @@ export default function AlarmWrapper() {
           onClick={() => handleFetchAlarms('comment')}>
           댓글
         </p>
-        <p
+        {/* <p
           className={selected === 'like' ? S['alarm-select-active'] : ''}
           onClick={() => handleFetchAlarms('like')}>
           좋아요
-        </p>
+        </p> */}
         <p
           className={selected === 'dm' ? S['alarm-select-active'] : ''}
           onClick={() => handleFetchAlarms('dm')}>
@@ -62,24 +64,14 @@ export default function AlarmWrapper() {
         </p>
       </div>
       <div className={S['alarm-content']}>
-        {selected === 'comment' && (
+        {alarmsData.map(alarm => (
           <AlarmCard
-            type="comment"
-            name="구르르르"
+            key={alarm.id}
+            type={alarm.type}
+            name={alarm.sender.name}
+            profile_image={alarm.sender.profile_image}
           />
-        )}
-        {selected === 'like' && (
-          <AlarmCard
-            type="like"
-            name="치르르르"
-          />
-        )}
-        {selected === 'dm' && (
-          <AlarmCard
-            type="dm"
-            name="삐삐삐삐"
-          />
-        )}
+        ))}
       </div>
     </div>
   )
