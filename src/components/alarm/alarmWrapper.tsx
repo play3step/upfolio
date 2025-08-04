@@ -4,6 +4,7 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import { AlarmContext } from '@/context/alarm/AlarmContext'
 import { useAlarm } from '@/hooks/alarm/useAlarm'
 import type { alarmType } from '@/types/notification'
+import { useNavigate } from 'react-router-dom'
 
 export default function AlarmWrapper() {
   const [selected, setSelected] = useState<alarmType>('comment')
@@ -11,6 +12,8 @@ export default function AlarmWrapper() {
   const { alarm } = useContext(AlarmContext)
 
   const { alarmsData, fetchAlarms, readAllAlarms } = useAlarm()
+
+  const navigate = useNavigate()
 
   const alarmRef = useRef<HTMLDivElement>(null)
 
@@ -31,6 +34,10 @@ export default function AlarmWrapper() {
   const handleFetchAlarms = (type: alarmType) => {
     setSelected(type)
     fetchAlarms(type)
+  }
+
+  const handleMovement = (referenceid: string) => {
+    navigate(`/portfolios/${referenceid}`)
   }
 
   useEffect(() => {
@@ -70,6 +77,8 @@ export default function AlarmWrapper() {
             type={alarm.type}
             name={alarm.sender.name}
             profile_image={alarm.sender.profile_image}
+            referenceid={alarm.referenceid}
+            handleMovement={handleMovement}
           />
         ))}
       </div>
