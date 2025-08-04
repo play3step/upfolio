@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { AlarmContext } from './AlarmContext'
+import { AlarmContext } from './AlarmContext.tsx'
 
 export const AlarmProvider = ({ children }: { children: React.ReactNode }) => {
   const [alarm, setAlarm] = useState(false)
