@@ -14,14 +14,24 @@
   --primary-80: rgba(53, 87, 73, 0.8);
   --primary-50: rgba(53, 87, 73, 0.5);
 
+  --color-interest-frontend: #d6eee0;
+  --color-interest-backend: #e1e6f0;
+  --color-interest-fullstack: #d5f4f3;
+  --color-interest-mobile: #fbebc7;
+  --color-interest-embedded: #fad9c8;
+  --color-interest-uiux: #f4e1bd;
+  --color-interest-graphic: #eadffb;
+  --color-interest-motion: #dceaf8;
+  --color-interest-illustration: #fcd8e5;
+
   --secondary: rgba(37, 61, 56, 1);
   --secondary-80: rgba(37, 61, 56, 0.8);
   --secondary-50: rgba(37, 61, 56, 0.5);
 
-  --tertiary: rgba(230, 255, 250, 1);
-  --tertiary-80: rgba(230, 255, 250, 0.8);
-  --tertiary-50: rgba(230, 255, 250, 0.5);
-  --tertiary-20: rgba(230, 255, 250, 0.2);
+  --tertiary: rgba(213, 235, 229, 1);
+  --tertiary-80: rgba(213, 235, 229, 0.8);
+  --tertiary-50: rgba(213, 235, 229, 0.5);
+  --tertiary-20: rgba(213, 235, 229, 0.2);
 
   --fourth: rgba(205, 255, 244, 1);
   --fourth-80: rgba(205, 255, 244, 0.8);

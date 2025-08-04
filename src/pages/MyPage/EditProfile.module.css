@@ -29,7 +29,7 @@
 }
 
 .item:hover {
-  background-color: var(--primary-50);
+  background-color: var(--gray2);
 }
 
 .content {
