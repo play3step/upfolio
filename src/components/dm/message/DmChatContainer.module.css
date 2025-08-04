@@ -5,14 +5,15 @@
   box-shadow: var(--bs-drop);
   background-color: white;
   display: flex;
-}
 
-@media (max-width: 640px) {
-  .dm-chat-container {
-    width: calc(100vw - 4rem);
+  @media (max-width: 48rem) {
+    width: calc(100vw - 4.2rem);
     height: 500px;
     border-radius: 0;
-    box-shadow: none;
+  }
+
+  @media (max-width: 40rem) {
+    width: calc(100vw - 3.25rem);
   }
 }
 

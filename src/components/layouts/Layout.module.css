@@ -38,7 +38,13 @@
   min-height: 0;
   bottom: 6rem;
   right: 2.25rem;
-  z-index: 100;
+  z-index: 10001;
+
+  @media (max-width: 48rem) {
+    top: 3.25rem;
+    bottom: unset;
+    right: 3.25rem;
+  }
 }
 
 .alarm--button-position {
@@ -60,4 +66,3 @@
 .contentWrapper {
   flex: 1;
 }
-
