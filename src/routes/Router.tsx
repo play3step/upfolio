@@ -1,9 +1,9 @@
 import { Home } from '@/pages/Home'
 import { Login } from '@/pages/Auth/Login'
-import { Bookmarks } from '@/pages/MyPage/Bookmarks'
+import BookmarkAndLike from '@/pages/MyPage/BookMark/BookmarkAndLike'
 import { EditProfile } from '@/pages/MyPage/EditProfile'
 
-import Posts from '@/pages/MyPage/Posts'
+import PostsAndComments from '@/pages/MyPage/Post/PostsAndComments'
 import Profile from '@/pages/MyPage/Profile'
 import { NotFound } from '@/pages/NotFound'
 import { NewPortfolio } from '@/pages/Portfolio/NewPortfolio'
@@ -75,7 +75,7 @@ const protectedRoutes: RouteItem[] = [
       },
       {
         path: 'posts',
-        element: <Posts />
+        element: <PostsAndComments />
       },
       {
         path: 'edit',
@@ -83,7 +83,7 @@ const protectedRoutes: RouteItem[] = [
       },
       {
         path: 'bookmarks',
-        element: <Bookmarks />
+        element: <BookmarkAndLike />
       }
     ]
   }

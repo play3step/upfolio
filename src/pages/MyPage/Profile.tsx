@@ -8,15 +8,8 @@ import Input from '@/components/common/Input'
 import defaultProfile from '../../assets/images/default-profile.png'
 import { useSignup } from '@/hooks/auth/useSignup'
 import { formatPhoneNumber } from '@/utils/format'
-
-interface UserProfile {
-  id: string
-  nickname: string
-  phone: string
-  birthDate: string
-  email: string
-  profileimage: string
-}
+import { alertError, alertSuccess } from '@/utils/alertUtils'
+import type { UserProfile } from '@/types/mypage'
 
 export default function Profile() {
   const [data, setData] = useState<UserProfile | null>(null)
@@ -88,10 +81,16 @@ export default function Profile() {
       // 상태 업데이트
       setData(updatedUser)
       setIsEditing(false)
-      alert('프로필이 저장되었습니다.')
+      alertSuccess({
+        title: '프로필 수정 완료',
+        text: '프로필 정보 수정되었습니다.'
+      })
     } catch (err) {
       console.error('예상치 못한 오류:', err)
-      alert('프로필 저장 중 오류가 발생했습니다.')
+      alertError({
+        title: '프로필 저장 실패',
+        text: '프로필 정보를 저장하는 데 실패했습니다. 다시 시도해주세요.'
+      })
     }
   }
 
@@ -146,7 +145,7 @@ export default function Profile() {
                 id="profile-image"
                 value={imageSrc}
                 onChange={url => {
-                  console.log('Image URL:', url) // URL이 제대로 전달되는지 확인
+                  // console.log('Image URL:', url) // URL이 제대로 전달되는지 확인
                   handleChange('profileimage', url)
                 }}
               />

@@ -3,39 +3,33 @@ import S from './Posts.module.css'
 import { useEffect, useState } from 'react'
 import supabase from '@/lib/supabaseClient'
 import { formatDate } from '@/utils/format'
-import Comments from './Comments'
-
-interface Post {
-  id: number
-  title: string
-  content: string
-  createdAt: string
-  likeCount: number
-  viewCount: number
-}
+import { usePosts } from '@/hooks/mypage/posts/usePosts'
 
 export default function Posts() {
-  const [posts, setPosts] = useState<Post[]>([])
+  const [userId, setUserId] = useState<string | null>(null)
   const navigate = useNavigate()
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchUser = async () => {
       const {
-        data: { user }
+        data: { user },
+        error: userError
       } = await supabase.auth.getUser()
-      if (!user) return
-
-      const { data } = await supabase
-        // .from('Portfolio')
-        .from('PortfolioWithLikes')
-        .select('id, title, content, createdAt, likeCount, viewCount')
-        .eq('userId', user.id)
-        .order('createdAt', { ascending: false })
-
-      setPosts(data || [])
+      if (userError || !user) {
+        console.error('사용자 인증 정보가 없습니다.')
+        return
+      }
+      setUserId(user.id)
     }
-    fetchPosts()
+
+    fetchUser()
   }, [])
+
+  const { posts, loading, error } = usePosts(userId || '')
+
+  if (!userId) return <p>사용자 정보를 불러오는 중...</p>
+  if (loading) return <p>로딩 중...</p>
+  if (error) return <p>오류 발생: {error}</p>
 
   const handlePostClick = (id: number) => {
     navigate(`/portfolios/${id}`)
@@ -65,7 +59,6 @@ export default function Posts() {
           ))
         )}
       </section>
-      <Comments />
     </div>
   )
 }
