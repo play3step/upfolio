@@ -367,8 +367,8 @@ section h4 {
   text-align: center;
 
   p {
-    color: var(--white);
-    font-weight: 500;
+    color: var(--black);
+
     line-height: 1.25rem;
   }
 }
@@ -391,3 +391,31 @@ section h4 {
 /* .urlFile {
 
 } */
+
+.frontend {
+  background-color: var(--color-interest-frontend);
+}
+.backend {
+  background-color: var(--color-interest-backend);
+}
+.fullstack {
+  background-color: var(--color-interest-fullstack);
+}
+.mobile {
+  background-color: var(--color-interest-mobile);
+}
+.embedded {
+  background-color: var(--color-interest-embedded);
+}
+.uiux {
+  background-color: var(--color-interest-uiux);
+}
+.graphic {
+  background-color: var(--color-interest-graphic);
+}
+.motion {
+  background-color: var(--color-interest-motion);
+}
+.illustration {
+  background-color: var(--color-interest-illustration);
+}

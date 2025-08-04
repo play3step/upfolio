@@ -182,6 +182,31 @@ export default function PortfolioDetail() {
     }
   }
 
+  const getInterestClass = (interest: string) => {
+    switch (interest) {
+      case '프론트엔드 개발':
+        return S.frontend
+      case '백엔드 개발':
+        return S.backend
+      case '풀스택 개발':
+        return S.fullstack
+      case '모바일 개발':
+        return S.mobile
+      case '임베디드 개발':
+        return S.embedded
+      case 'UI/UX 디자인':
+        return S.uiux
+      case '그래픽 디자인':
+        return S.graphic
+      case '모션 디자인':
+        return S.motion
+      case '일러스트':
+        return S.illustration
+      default:
+        return ''
+    }
+  }
+
   return (
     <div className={S.wrapper}>
       <aside
@@ -375,7 +400,8 @@ export default function PortfolioDetail() {
                 <p>{data.career?.label}</p>
 
                 <h3>지원 분야</h3>
-                <div className={S.interest}>
+                <div
+                  className={`${S.interest} ${getInterestClass(data.interest.label)}`}>
                   <p>{data.interest.label}</p>
                 </div>
 
