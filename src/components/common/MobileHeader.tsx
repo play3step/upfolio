@@ -5,6 +5,8 @@ import hamburger from '@/assets/icon/hamburger.svg'
 import close from '@/assets/icon/close.svg'
 import SideNavList from './SideNavList'
 import { useEffect, useRef, useState } from 'react'
+import dmIcon from '@/assets/icon/dm.svg'
+import closeIcon from '@/assets/icon/delete.svg'
 
 function MobileHeader() {
   const [showHeader, setShowHeader] = useState(true)
@@ -65,27 +67,37 @@ function MobileHeader() {
         />
       </Link>
 
-      {isSideNavOpen ? (
-        <button
-          type="button"
-          className={S['header__navBtn']}
-          onClick={handleCloseSide}>
+      <div className={S['header_right']}>
+        <button className={S['dm-button']}>
           <img
-            src={close}
-            alt="모바일 메뉴 리스트 닫기"
+            src={dmIcon}
+            alt="DM"
+            className={S['dm-button-icon']}
           />
         </button>
-      ) : (
-        <button
-          type="button"
-          className={S['header__navBtn']}
-          onClick={handleOpenSide}>
-          <img
-            src={hamburger}
-            alt="모바일 메뉴 버튼"
-          />
-        </button>
-      )}
+
+        {isSideNavOpen ? (
+          <button
+            type="button"
+            className={S['header__navBtn']}
+            onClick={handleCloseSide}>
+            <img
+              src={close}
+              alt="모바일 메뉴 리스트 닫기"
+            />
+          </button>
+        ) : (
+          <button
+            type="button"
+            className={S['header__navBtn']}
+            onClick={handleOpenSide}>
+            <img
+              src={hamburger}
+              alt="모바일 메뉴 버튼"
+            />
+          </button>
+        )}
+      </div>
 
       <SideNavList
         isOpen={isSideNavOpen}
