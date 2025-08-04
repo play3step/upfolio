@@ -1,6 +1,7 @@
 export interface Thread {
   id: string
   lastMessage: string | null
+  lastMessageTime: string | null
   name: string
   profile: string
   myId: string

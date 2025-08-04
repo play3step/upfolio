@@ -47,6 +47,7 @@ export const useThreads = () => {
           name: otherUser?.nickname,
           profile: otherUser?.profileimage,
           lastMessage: lastMessage?.[0]?.message,
+          lastMessageTime: lastMessage?.[0]?.createdat,
           myId: authData?.id ?? '',
           otherId: otherUserId,
           isUserA: isUserA
@@ -54,7 +55,17 @@ export const useThreads = () => {
       })
     )
 
-    return threadList
+    // 마지막 메시지 시간 순으로 정렬
+    const sortedThreadList = threadList.sort((a, b) => {
+      if (!a.lastMessageTime) return 1 // 메시지 없는 채팅방은 맨 뒤로
+      if (!b.lastMessageTime) return -1
+      return (
+        new Date(b.lastMessageTime).getTime() -
+        new Date(a.lastMessageTime).getTime()
+      )
+    })
+
+    return sortedThreadList
   }
 
   const handleAddThreads = async (otherUserId: string) => {
