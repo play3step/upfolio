@@ -8,7 +8,7 @@ const fetchThreads = async (userId: string) => {
   const { data, error } = await supabase
     .from('DMThread')
     .select('*')
-    .or(`useraid.eq.${userId},userbid.eq.${userId}`)
+    .or('useraid.eq.' + userId + ',userbid.eq.' + userId)
 
   if (error) {
     throw error
@@ -37,16 +37,15 @@ const addThreads = async (
     throw new Error('User not found')
   }
 
-  const { data: searchThread } = await supabase
+  const { data: existingThreads } = await supabase
     .from('DMThread')
     .select('*')
     .or(
-      `and(useraid.eq.${userA.id},userbid.eq.${userB.id}),and(useraid.eq.${userB.id},userbid.eq.${userA.id})`
+      `and(useraid.eq.${userId},userbid.eq.${otherUserId}),and(useraid.eq.${otherUserId},userbid.eq.${userId})`
     )
-    .single()
 
-  if (searchThread) {
-    return alertWarning({ text: '이미 존재하는 채팅방입니다.' })
+  if (existingThreads && existingThreads.length > 0) {
+    return existingThreads
   }
 
   const { data, error } = await supabase.from('DMThread').insert({
