@@ -31,7 +31,12 @@ const EMPTY_DATA: PortfolioData = {
   interest: { label: '', value: '' },
   techStack: [],
   linkUrl: '',
-  fileList: [],
+  fileList: [
+    {
+      name: '',
+      url: ''
+    }
+  ],
   viewCount: 0
 }
 
@@ -64,10 +69,12 @@ const EditPortfolio = () => {
 
         setPortfolioData({
           ...data,
-          fileList: data.fileList.map((url: string) => ({
-            name: url.split('/').pop() || '',
-            url
-          }))
+          fileList: data.fileList.map(
+            (file: { name: string; url: string }) => ({
+              name: file.name,
+              url: file.url
+            })
+          )
         })
       } catch (e) {
         alert('포트폴리오 정보를 불러오는 데 실패했습니다.')
