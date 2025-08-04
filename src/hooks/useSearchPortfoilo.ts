@@ -12,12 +12,29 @@ export interface SearchParams {
 
 export const useSearchPortfoilo = (portfolio?: PortfolioItem[]) => {
   const [filteredPortfolio, setFilteredPortfolio] = useState(portfolio)
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
 
   useEffect(() => {
     const interest = searchParams.get('interest') ?? 'all'
     const career = searchParams.get('career') ?? ''
     const searchKeyword = searchParams.get('searchKeyword') ?? ''
+    const newSearchParams = new URLSearchParams(searchParams)
+
+    if (searchKeyword === '') {
+      newSearchParams.delete('searchKeyword')
+    }
+    if (interest === 'all') {
+      newSearchParams.delete('interest')
+    }
+    if (career === '') {
+      newSearchParams.delete('career')
+    }
+
+    if (newSearchParams.toString() === '') {
+      setSearchParams({})
+    } else {
+      setSearchParams(newSearchParams)
+    }
 
     handleSearch({
       interest,
