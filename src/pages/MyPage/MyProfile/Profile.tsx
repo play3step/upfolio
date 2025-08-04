@@ -2,7 +2,7 @@ import ImageUploader from '@/components/common/ImageUploader'
 import S from './Profile.module.css'
 import { formatDate } from '@/utils/format'
 import Input from '@/components/common/Input'
-import defaultProfile from '../../../assets/images/default-profile.png'
+import defaultProfile from '@/assets/images/default-profile.png'
 import ProfileButton from '@/components/common/ProfileButton'
 import { useProfile } from '@/hooks/mypage/profile/useProfile'
 
@@ -20,10 +20,21 @@ export default function Profile() {
 
   if (loading) return <div className={S.loading}>로딩 중...</div>
 
-  const imageSrc =
-    profile?.profileimage && profile.profileimage.trim().length > 0
-      ? profile.profileimage
-      : defaultProfile
+  const imageSrc = (() => {
+    // 프로필 이미지가 없거나 빈 문자열인 경우
+    if (!profile?.profileimage || profile.profileimage.trim() === '') {
+      return defaultProfile
+    }
+
+    // 유효한 URL인지 확인
+    try {
+      new URL(profile.profileimage)
+      return profile.profileimage
+    } catch {
+      // 유효하지 않은 URL인 경우 기본 이미지 반환
+      return defaultProfile
+    }
+  })()
 
   return (
     <div className={S.profile}>
