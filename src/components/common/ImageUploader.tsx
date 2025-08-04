@@ -23,7 +23,7 @@ function ImageUploader({ id, value, onChange, status = 'profile' }: Props) {
 
   const handleDeleteImage = async () => {
     if (!imageSrc) return
-    const check = alertConfirm({
+    const check = await alertConfirm({
       text: '등록한 이미지를 삭제할까요?'
     })
     if (!check) return
