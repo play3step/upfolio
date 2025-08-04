@@ -1,8 +1,10 @@
 export interface Thread {
   id: string
-  name: string
   lastMessage: string | null
+  name: string
   profile: string
+  receiverid: string
+  senderid: string
 }
 
 export interface Message {

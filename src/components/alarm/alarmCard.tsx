@@ -3,12 +3,28 @@ import S from './alarmCard.module.css'
 interface AlarmCardProps {
   type: 'comment' | 'like' | 'dm'
   name: string
+  profile_image: string
+  referenceid: string
+  handleMovement: (referenceid: string) => void
 }
 
-export default function AlarmCard({ type, name }: AlarmCardProps) {
+export default function AlarmCard({
+  type,
+  name,
+  profile_image,
+  referenceid,
+  handleMovement
+}: AlarmCardProps) {
   return (
-    <div className={S['alarm-card']}>
-      <div className={S['alarm-card-left']}></div>
+    <div
+      className={S['alarm-card']}
+      onClick={() => handleMovement(referenceid)}>
+      <div className={S['alarm-card-left']}>
+        <img
+          src={profile_image}
+          alt="profile"
+        />
+      </div>
       <div className={S['alarm-card-right']}>
         <p className={S['alarm-card-right-name']}>{name}</p>
         <p className={S['alarm-card-right-content']}>

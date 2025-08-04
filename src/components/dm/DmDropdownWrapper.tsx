@@ -49,7 +49,18 @@ export default function DmDropdownWrapper() {
       return
     }
 
-    handleAddMessages(selectedThreadId, message, authData?.id, new Date())
+    const selectedThread = threads.find(
+      thread => thread.id === selectedThreadId
+    )
+    if (!selectedThread) return
+
+    handleAddMessages(
+      selectedThreadId,
+      message,
+      authData.id,
+      selectedThread.receiverid,
+      new Date()
+    )
   }
 
   return (

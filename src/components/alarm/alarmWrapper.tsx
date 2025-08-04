@@ -2,27 +2,47 @@ import S from './alarmWrapper.module.css'
 import AlarmCard from './alarmCard'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { AlarmContext } from '@/context/alarm/AlarmContext'
+import { useAlarm } from '@/hooks/alarm/useAlarm'
+import type { alarmType } from '@/types/notification'
+import { useNavigate } from 'react-router-dom'
 
 export default function AlarmWrapper() {
-  const [selected, setSelected] = useState<'comment' | 'like' | 'dm'>('comment')
+  const [selected, setSelected] = useState<alarmType>('comment')
 
-  const { alarm, toggleAlarm } = useContext(AlarmContext)
+  const { alarm } = useContext(AlarmContext)
+
+  const { alarmsData, fetchAlarms, readAllAlarms } = useAlarm()
+
+  const navigate = useNavigate()
 
   const alarmRef = useRef<HTMLDivElement>(null)
 
+  // useEffect(() => {
+  //   const clickOutside = (e: MouseEvent) => {
+  //     if (alarm && !alarmRef.current?.contains(e.target as Node)) {
+  //       toggleAlarm()
+  //     }
+  //   }
+
+  //   document.addEventListener('mousedown', clickOutside)
+
+  //   return () => {
+  //     document.removeEventListener('mousedown', clickOutside)
+  //   }
+  // }, [alarm])
+
+  const handleFetchAlarms = (type: alarmType) => {
+    setSelected(type)
+    fetchAlarms(type)
+  }
+
+  const handleMovement = (referenceid: string) => {
+    navigate(`/portfolios/${referenceid}`)
+  }
+
   useEffect(() => {
-    const clickOutside = (e: MouseEvent) => {
-      if (alarm && !alarmRef.current?.contains(e.target as Node)) {
-        toggleAlarm()
-      }
-    }
-
-    document.addEventListener('mousedown', clickOutside)
-
-    return () => {
-      document.removeEventListener('mousedown', clickOutside)
-    }
-  }, [alarm])
+    fetchAlarms(selected)
+  }, [selected])
 
   if (!alarm) return null
 
@@ -36,39 +56,34 @@ export default function AlarmWrapper() {
       <div className={S['alarm-select']}>
         <p
           className={selected === 'comment' ? S['alarm-select-active'] : ''}
-          onClick={() => setSelected('comment')}>
+          onClick={() => handleFetchAlarms('comment')}>
           댓글
         </p>
-        <p
+        {/* <p
           className={selected === 'like' ? S['alarm-select-active'] : ''}
-          onClick={() => setSelected('like')}>
+          onClick={() => handleFetchAlarms('like')}>
           좋아요
-        </p>
+        </p> */}
         <p
           className={selected === 'dm' ? S['alarm-select-active'] : ''}
-          onClick={() => setSelected('dm')}>
+          onClick={() => handleFetchAlarms('dm')}>
           DM
         </p>
       </div>
       <div className={S['alarm-content']}>
-        {selected === 'comment' && (
+        {alarmsData.map(alarm => (
           <AlarmCard
-            type="comment"
-            name="구르르르"
+            key={alarm.id}
+            type={alarm.type}
+            name={alarm.sender.name}
+            profile_image={alarm.sender.profile_image}
+            referenceid={alarm.referenceid}
+            handleMovement={handleMovement}
           />
-        )}
-        {selected === 'like' && (
-          <AlarmCard
-            type="like"
-            name="치르르르"
-          />
-        )}
-        {selected === 'dm' && (
-          <AlarmCard
-            type="dm"
-            name="삐삐삐삐"
-          />
-        )}
+        ))}
+      </div>
+      <div className={S['alarm-footer']}>
+        <p onClick={() => readAllAlarms(selected)}>알림 모두 읽음</p>
       </div>
     </div>
   )

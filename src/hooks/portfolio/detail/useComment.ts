@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { addComment, fetchComments } from '@/apis/portfolio/comment.controller'
 
 import { AuthContext } from '@/context/auth/AuthContext'
+import { sendAlarm } from '@/apis/alarm/alarm.controller'
 
 interface CommentType {
   id: string
@@ -17,7 +18,7 @@ export const useComment = (portfolioId: string) => {
   const [comments, setComments] = useState<CommentType[]>([])
   const { authData } = useContext(AuthContext)
 
-  const sendComment = async (inputValue: string) => {
+  const sendComment = async (inputValue: string, receiverid: string) => {
     if (!inputValue.trim()) return
     if (!authData?.id || !authData?.nickname) return
 
@@ -32,6 +33,17 @@ export const useComment = (portfolioId: string) => {
     }
 
     await addComment(newComment)
+
+    if (receiverid !== newComment.userid) {
+      await sendAlarm(
+        authData.id,
+        receiverid,
+        'comment',
+        portfolioId,
+        false,
+        new Date(newComment.createdat)
+      )
+    }
 
     setComments(prev => [...prev, newComment])
   }

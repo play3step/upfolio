@@ -39,6 +39,8 @@ const TempData: PortfolioData = {
 
 export const NewPortfolio = () => {
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(TempData)
+  const [tempPortfolioId, setTempPortfolioId] = useState('')
+  const lastSavedDataRef = useRef<Partial<PortfolioData | null>>(null)
 
   /* --- 로그인 시 유저정보 불러오기 --- */
   const { userInfo } = useUserInfo()
@@ -75,20 +77,38 @@ export const NewPortfolio = () => {
     handleCloseSide,
     handleSelectTempItem,
     deleteTempItem
-  } = useTempPortfolioList({ userId, setPortfolioData, setErrors })
+  } = useTempPortfolioList({
+    userId,
+    setPortfolioData,
+    setErrors,
+    setTempPortfolioId,
+    lastSavedDataRef
+  })
 
   /* --- 임시저장 --- */
   const { handleSaveTemp } = useSaveTempPortfolio({
     portfolioData,
     userInfo,
+    setTempPortfolioId,
+    tempPortfolioId,
+    lastSavedDataRef,
     onSave: fetchTempList
   })
 
   /* --- 저장 --- */
-  const { handleSave } = useSavePortfolio({ portfolioData, userInfo, validate })
+  const { handleSave } = useSavePortfolio({
+    portfolioData,
+    userInfo,
+    tempPortfolioId,
+    validate
+  })
 
   /* --- 마이페이지 임시저장글 불러오기 --- */
-  useTempPortfolioFromMyPage(setPortfolioData)
+  useTempPortfolioFromMyPage(
+    setPortfolioData,
+    lastSavedDataRef,
+    setTempPortfolioId
+  )
 
   /* --- 타이틀 및 버튼 sticky --- */
   const stickyRef = useRef<HTMLDivElement | null>(null)
@@ -149,7 +169,8 @@ export const NewPortfolio = () => {
                 id="exTitle"
                 type="text"
                 value={portfolioData.title}
-                placeholder="포트폴리오 제목을 입력해주세요."
+                maxLength={27}
+                placeholder="포트폴리오 제목 입력(25자 이내)"
                 onChange={e => handleChangeForm('title', e.target.value)}
                 error={errors.title}
                 hideLabel
@@ -158,7 +179,7 @@ export const NewPortfolio = () => {
                 <Button
                   onClick={handleSaveTemp}
                   line>
-                  임시저장
+                  {tempPortfolioId ? '임시저장 수정' : '임시저장'}
                 </Button>
                 <Button type="submit">저장</Button>
               </div>
