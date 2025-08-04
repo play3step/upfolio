@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import defaultProfile from '../../assets/images/default-profile.png'
+import defaultProfile from '@/assets/images/default-profile.png'
 import S from './ImageUploader.module.css'
 import supabase from '@/lib/supabaseClient'
 import sanitizeFileName from '@/utils/sanitizeFileName'
