@@ -16,6 +16,7 @@ import IntroInfoSection from '@/components/portfolio/IntroInfoSection'
 import DataInfoSection from '@/components/portfolio/DataInfoSection'
 import { useStickyMenu } from '@/hooks/portfolio/useStickyMenu'
 import { useEditPortfolio } from '@/hooks/portfolio/detail/useEditPortfolio'
+import { alertSuccess, alertWarning } from '@/utils/alertUtils'
 
 const EMPTY_DATA: PortfolioData = {
   id: '',
@@ -67,7 +68,7 @@ const EditPortfolio = () => {
 
         if (error || !data) throw error
 
-        setPortfolioData({
+        const formattedData = {
           ...data,
           fileList: data.fileList.map(
             (file: { name: string; url: string }) => ({
@@ -75,7 +76,9 @@ const EditPortfolio = () => {
               url: file.url
             })
           )
-        })
+        }
+        setPortfolioData(formattedData)
+        setOriginalData(formattedData)
       } catch (e) {
         alert('포트폴리오 정보를 불러오는 데 실패했습니다.')
         console.error(e)
@@ -86,7 +89,30 @@ const EditPortfolio = () => {
     fetchPortfolio()
   }, [id, navigate])
 
+  const [originalData, setOriginalData] = useState<PortfolioData>(EMPTY_DATA)
   const { handleEditPortfolio } = useEditPortfolio(portfolioData)
+
+  const handleSave = () => {
+    const hasChanges =
+      JSON.stringify(originalData) !== JSON.stringify(portfolioData)
+
+    if (!hasChanges) {
+      alertWarning({
+        title: '변경된 내용이 없습니다.',
+        text: '포트폴리오 내용을 수정해 주세요.',
+        icon: 'warning'
+      })
+      return
+    }
+
+    alertSuccess({
+      title: '포트폴리오 수정 완료',
+      text: '포트폴리오 수정이 완료되었습니다.',
+      icon: 'success'
+    })
+
+    handleEditPortfolio()
+  }
 
   const stickyRef = useRef<HTMLDivElement>(null)
   const [isSticky, setIsSticky] = useState(false)
@@ -110,7 +136,7 @@ const EditPortfolio = () => {
               error={errors.title}
               hideLabel
             />
-            <Button onClick={handleEditPortfolio}>저장</Button>
+            <Button onClick={handleSave}>저장</Button>
           </div>
         </div>
       </div>

@@ -21,6 +21,7 @@ import { AuthContext } from '@/context/auth/AuthContext'
 import { useComment } from '@/hooks/portfolio/detail/useComment'
 
 import download from '@/assets/icon/download.svg'
+import { alertConfirm, alertError, alertSuccess } from '@/utils/alertUtils'
 
 export default function PortfolioDetail() {
   const { id } = useParams<{ id: string }>()
@@ -170,7 +171,13 @@ export default function PortfolioDetail() {
   }
 
   const handleDelete = async () => {
-    const confirmDelete = window.confirm('정말로 삭제하시겠습니까?')
+    const confirmDelete = await alertConfirm({
+      title: '포트폴리오 삭제',
+      text: '정말로 삭제하시겠습니까?',
+      confirmButtonText: '삭제',
+      cancelButtonText: '취소',
+      icon: 'question'
+    })
     if (!confirmDelete) return
 
     const { error } = await supabase
@@ -179,9 +186,17 @@ export default function PortfolioDetail() {
       .eq('id', data.id)
 
     if (error) {
-      alert('삭제 실패: ' + error.message)
+      alertError({
+        title: '포트폴리오 삭제 실패',
+        text: '포트폴리오 삭제가 실패했습니다.',
+        icon: 'error'
+      })
     } else {
-      alert('삭제되었습니다.')
+      alertSuccess({
+        title: '포트폴리오 삭제 완료',
+        text: '포트폴리오 삭제가 완료되었습니다.',
+        icon: 'success'
+      })
       navigate(-1)
     }
   }
