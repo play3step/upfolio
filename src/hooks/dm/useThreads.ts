@@ -9,7 +9,8 @@ interface ThreadType {
   id: string
   name: string
   profile: string
-  lastMessage: string
+  lastMessage: string | null
+  lastMessageTime: string | null
   myId: string
   otherId: string
   isUserA: boolean
