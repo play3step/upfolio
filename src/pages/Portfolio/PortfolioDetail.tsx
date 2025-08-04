@@ -155,7 +155,7 @@ export default function PortfolioDetail() {
       return
     }
 
-    await sendComment(inputValue)
+    await sendComment(inputValue, data?.userId)
     setInputValue('')
   }
 
