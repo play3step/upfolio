@@ -1,5 +1,4 @@
 import supabase from '@/lib/supabaseClient'
-import { alertWarning } from '@/utils/alertUtils'
 
 const fetchThreads = async (userId: string) => {
   if (!userId) {
