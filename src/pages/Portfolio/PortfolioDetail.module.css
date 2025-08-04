@@ -367,8 +367,8 @@ section h4 {
   text-align: center;
 
   p {
-    color: var(--white);
-    font-weight: 500;
+    color: var(--black);
+
     line-height: 1.25rem;
   }
 }
@@ -387,7 +387,48 @@ section h4 {
   font-size: 0.875rem;
 }
 
-/* TODOS: 첨부파일 리스트 들어올 시 여기 추가 */
-/* .urlFile {
+.fileList {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
 
-} */
+  & > img {
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+
+.frontend {
+  background-color: var(--color-interest-frontend);
+}
+.backend {
+  background-color: var(--color-interest-backend);
+}
+.fullstack {
+  background-color: var(--color-interest-fullstack);
+}
+.mobile {
+  background-color: var(--color-interest-mobile);
+}
+.embedded {
+  background-color: var(--color-interest-embedded);
+}
+.uiux {
+  background-color: var(--color-interest-uiux);
+}
+.graphic {
+  background-color: var(--color-interest-graphic);
+}
+.motion {
+  background-color: var(--color-interest-motion);
+}
+.illustration {
+  background-color: var(--color-interest-illustration);
+}

@@ -3,7 +3,7 @@ export interface PortfolioItem {
   userId: string
   title: string
   content: string
-  fileList: string[]
+  fileList: { name: string; url: string }[]
   interest: { label: string; value: string }
   career: { label: string; value: string }
   isBookmarked: boolean
