@@ -104,26 +104,28 @@ export default function DmChatContainer({
             </div>
           )}
         </div>
-        <div className={S['dm-chat-input']}>
-          <textarea
-            placeholder="채팅을 입력하세요."
-            className={S['dm-chat-input-text']}
-            value={message}
-            onChange={e => setMessage(e.target.value)}
-          />
-
-          <div
-            className={S['dm-chat-input-button']}
-            onClick={() => {
-              sendMessage(message)
-              setMessage('')
-            }}>
-            <img
-              src={dmSendIcon}
-              alt="dm-send-icon"
+        {selectedThreadId !== null && selectedThreadId !== '' && (
+          <div className={S['dm-chat-input']}>
+            <textarea
+              placeholder="채팅을 입력하세요."
+              className={S['dm-chat-input-text']}
+              value={message}
+              onChange={e => setMessage(e.target.value)}
             />
+
+            <div
+              className={S['dm-chat-input-button']}
+              onClick={() => {
+                sendMessage(message)
+                setMessage('')
+              }}>
+              <img
+                src={dmSendIcon}
+                alt="dm-send-icon"
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )
