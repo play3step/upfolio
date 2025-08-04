@@ -6,7 +6,8 @@ export const fetchComments = async (userId: string): Promise<Comment[]> => {
     .from('Comment')
     .select('id, portfolioid, userid, content, createdat')
     .eq('userid', userId)
-    .order('createdat', { ascending: false })
+    .order('createdat', { ascending: true })
+    .order('id', { ascending: false })
 
   if (commentError) {
     console.error('댓글 목록을 가져오는 중 오류 발생:', commentError.message)
