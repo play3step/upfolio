@@ -5,7 +5,7 @@ const signInWith = async (provider: AuthProvider) => {
   return await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: 'http://localhost:5173/'
+      redirectTo: import.meta.env.VITE_REDIRECT_URL
     }
   })
 }
