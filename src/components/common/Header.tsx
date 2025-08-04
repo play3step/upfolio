@@ -1,6 +1,5 @@
 import MobileHeader from './MobileHeader'
 import { DesktopHeader } from './DesktopHeader'
-import { useIsMobile } from '@/hooks/header/useIsMobile'
 
 interface HeaderProps {
   isMobile: boolean
