@@ -7,6 +7,7 @@ import { AuthContext } from '@/context/auth/AuthContext'
 import DmDropdownWrapper from '@/components/dm/DmDropdownWrapper'
 import { useContext } from 'react'
 import AlarmWrapper from '@/components/alarm/alarmWrapper'
+import { useIsMobile } from '@/hooks/header/useIsMobile'
 // import { useState } from 'react'
 // import { usePortfolio, type PortfolioItem } from '@/hooks/usePortfolio'
 
@@ -29,9 +30,10 @@ export default function Layout({ children }: LayoutProps) {
   //   setFilteredPortfolio(filtered)
   // }
 
+  const isMobile = useIsMobile()
   return (
     <div className={S['wrapper']}>
-      <Header />
+      <Header isMobile={isMobile} />
       <div className={S.layout}>
         <main className={S.main}>{children}</main>
         {isAuthenticated && (

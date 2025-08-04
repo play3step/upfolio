@@ -2,8 +2,10 @@ import MobileHeader from './MobileHeader'
 import { DesktopHeader } from './DesktopHeader'
 import { useIsMobile } from '@/hooks/header/useIsMobile'
 
-export const Header = () => {
-  const isMobile = useIsMobile()
+interface HeaderProps {
+  isMobile: boolean
+}
 
+export const Header = ({ isMobile }: HeaderProps) => {
   return isMobile ? <MobileHeader /> : <DesktopHeader />
 }

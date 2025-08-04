@@ -6,34 +6,34 @@ import { useMessage } from '@/hooks/dm/useMessage'
 import { useContext } from 'react'
 import { AuthContext } from '@/context/auth/AuthContext'
 import { usePollingMessages } from '@/hooks/dm/usePollingMessages'
+import { DmContext } from '@/context/dm/DmContext'
+import { useIsMobile } from '@/hooks/header/useIsMobile'
 
 export default function DmDropdownWrapper() {
+  const { dm } = useContext(DmContext)
   const { authData } = useContext(AuthContext)
 
   const { handleFetchThreads } = useThreads()
   const { handleFetchMessages, handleAddMessages } = useMessage()
 
-  const [isOpen, setIsOpen] = useState(false)
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null)
+
+  const isMobile = useIsMobile()
 
   const { threads, messages } = usePollingMessages({
     threadId: selectedThreadId ?? '',
-    isOpen
+    isOpen: dm
   })
 
   useEffect(() => {
     handleFetchThreads()
-  }, [isOpen])
+  }, [dm])
 
   useEffect(() => {
     if (selectedThreadId) {
       handleFetchMessages(selectedThreadId)
     }
   }, [selectedThreadId])
-
-  const handleToggle = () => {
-    setIsOpen(prev => !prev)
-  }
 
   const handleSelectChatRoom = (threadId: string) => {
     setSelectedThreadId(threadId)
@@ -72,17 +72,14 @@ export default function DmDropdownWrapper() {
         gap: 'var(--sp-4)'
       }}>
       <DmChatContainer
-        isOpen={isOpen}
+        isOpen={dm}
         selectedThreadId={selectedThreadId}
         handleSelectChatRoom={handleSelectChatRoom}
         threads={threads}
         messages={messages}
         sendMessage={sendMessage}
       />
-      <DmToggleButton
-        isOpen={isOpen}
-        handleToggle={handleToggle}
-      />
+      {!isMobile && <DmToggleButton />}
     </div>
   )
 }

@@ -1,19 +1,18 @@
+import { useContext } from 'react'
 import S from './DmToggleButton.module.css'
+import { DmContext } from '@/context/dm/DmContext'
 import dmIcon from '@/assets/icon/dm.svg'
 import closeIcon from '@/assets/icon/delete.svg'
 
-interface Props {
-  isOpen: boolean
-  handleToggle: () => void
-}
+export default function DmToggleButton() {
+  const { dm, toggleDm } = useContext(DmContext)
 
-export default function DmToggleButton({ isOpen, handleToggle }: Props) {
   return (
     <button
       className={S['dm-buatton']}
-      onClick={handleToggle}>
+      onClick={toggleDm}>
       <img
-        src={isOpen ? closeIcon : dmIcon}
+        src={dm ? closeIcon : dmIcon}
         alt="DM"
         className={S['dm-button-icon']}
       />

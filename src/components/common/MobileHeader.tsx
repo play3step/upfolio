@@ -4,12 +4,15 @@ import logo from '@/assets/logo.svg'
 import hamburger from '@/assets/icon/hamburger.svg'
 import close from '@/assets/icon/close.svg'
 import SideNavList from './SideNavList'
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import dmIcon from '@/assets/icon/dm.svg'
 import closeIcon from '@/assets/icon/delete.svg'
+import { DmContext } from '@/context/dm/DmContext'
 
 function MobileHeader() {
   const [showHeader, setShowHeader] = useState(true)
+
+  const { dm, toggleDm } = useContext(DmContext)
   const lastScrollY = useRef(0)
 
   const [isSideNavOpen, setSideNavOpen] = useState(false)
@@ -68,9 +71,11 @@ function MobileHeader() {
       </Link>
 
       <div className={S['header_right']}>
-        <button className={S['dm-button']}>
+        <button
+          className={S['dm-button']}
+          onClick={toggleDm}>
           <img
-            src={dmIcon}
+            src={dm ? closeIcon : dmIcon}
             alt="DM"
             className={S['dm-button-icon']}
           />
