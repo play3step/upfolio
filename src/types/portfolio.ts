@@ -10,6 +10,7 @@ export interface PortfolioItem {
   linkUrl: string
   createdAt: string
   viewCount: number
+  likeCount?: number
   techStack: string[]
   email: string
   name: string

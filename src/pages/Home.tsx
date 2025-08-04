@@ -9,7 +9,7 @@ import { handleToggleBookmark } from '@/apis/bookmark/bookmarkUtils'
 import supabase from '@/lib/supabaseClient'
 
 import { useSearchParams } from 'react-router-dom'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 
 import {
   useSearchPortfoilo,
@@ -37,10 +37,10 @@ export const Home = () => {
   const { portfolio, setPortfolio } = usePortfolio(authData?.id ?? null)
   const { filteredPortfolio } = useSearchPortfoilo(portfolio)
 
-  console.log('filteredPortfolio:', filteredPortfolio)
-
   const [searchParams, setSearchParams] = useSearchParams()
   const [sortOption, setSortOption] = useState('좋아요 순')
+  const [visibleCount, setVisibleCount] = useState(8)
+  const observerRef = useRef<HTMLDivElement | null>(null)
 
   const handleSearch = (params: SearchParams) => {
     const newSearchParams = new URLSearchParams(searchParams)
@@ -124,6 +124,29 @@ export const Home = () => {
     return sorted
   }, [filteredPortfolio, sortOption])
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount(prev => prev + 4)
+        }
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 1.0
+      }
+    )
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [sortedPortfolio])
+
+  const visibleList = sortedPortfolio.slice(0, visibleCount)
+
   return (
     <div>
       <SearchBar onSearch={handleSearch} />
@@ -146,19 +169,27 @@ export const Home = () => {
             검색 결과가 없습니다.
           </span>
         ) : (
-          <div className={styles['portfolio-grid']}>
-            {sortedPortfolio.map((p: PortfolioItem) => (
-              <PortfolioCard
-                {...p}
-                key={p.id}
-                portfolioid={p.id}
-                name={p.name}
-                onToggleBookmark={handleBookmarkToggle}
-                onToggleLike={handleLikeToggle}
-                isMine={p.userId === authData?.id}
-              />
-            ))}
-          </div>
+          <>
+            <div className={styles['portfolio-grid']}>
+              {visibleList.map((p: PortfolioItem) => (
+                <PortfolioCard
+                  {...p}
+                  key={p.id}
+                  portfolioid={p.id}
+                  name={p.name}
+                  onToggleBookmark={handleBookmarkToggle}
+                  onToggleLike={handleLikeToggle}
+                  isMine={p.userId === authData?.id}
+                  likeCount={p.likeCount ?? 0}
+                />
+              ))}
+            </div>
+
+            <div
+              ref={observerRef}
+              style={{ height: '40px', marginTop: '2rem' }}
+            />
+          </>
         )}
       </div>
     </div>
