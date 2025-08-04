@@ -1,12 +1,17 @@
 import supabase from '@/lib/supabaseClient'
 import type { PortfolioData, UserInfo } from '@/types/portfolio'
 
+type InsertPortfolioData = Omit<
+  PortfolioData,
+  'id' | 'viewCount' | 'createdAt' | 'userId'
+>
+
 export const uploadPortfolio = async ({
   portfolioData,
   userInfo,
   tempPortfolioId
 }: {
-  portfolioData: PortfolioData
+  portfolioData: InsertPortfolioData
   userInfo: UserInfo | null
   tempPortfolioId: string
 }) => {
@@ -14,13 +19,10 @@ export const uploadPortfolio = async ({
     throw new Error('유저정보 없음')
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { id, ...rest } = portfolioData
-
   const { data, error } = await supabase
     .from('Portfolio')
     .insert({
-      ...rest,
+      ...portfolioData,
       userId: userInfo.id,
       viewCount: 0,
       createdAt: new Date().toISOString()

@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import supabase from '@/lib/supabaseClient'
 import type { PortfolioData, UserInfo } from '@/types/portfolio'
+import { omit } from 'lodash'
 
 export const uploadTempPortfolio = async ({
   portfolioData,
@@ -9,16 +9,16 @@ export const uploadTempPortfolio = async ({
   portfolioData: PortfolioData
   userInfo: UserInfo | null
 }) => {
-  const { viewCount, id: _id, userId: _userId, ...rest } = portfolioData
-
-  const safeId = _id?.trim?.()
+  const omitFields = ['viewCount', 'id', 'userId']
+  const saveTempData = omit(portfolioData, omitFields)
+  const safeId = portfolioData.id?.trim?.()
   const safeUserId = userInfo?.id?.trim?.()
 
   const { data, error } = await supabase
     .from('TempPortfolio')
     .upsert(
       {
-        ...rest,
+        ...saveTempData,
         ...(safeId ? { id: safeId } : {}),
         ...(safeUserId ? { userId: safeUserId } : {}),
         createdAt: new Date().toISOString()

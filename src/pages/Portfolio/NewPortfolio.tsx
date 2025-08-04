@@ -40,6 +40,7 @@ const TempData: PortfolioData = {
 export const NewPortfolio = () => {
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(TempData)
   const [tempPortfolioId, setTempPortfolioId] = useState('')
+  const lastSavedDataRef = useRef<Partial<PortfolioData | null>>(null)
 
   /* --- 로그인 시 유저정보 불러오기 --- */
   const { userInfo } = useUserInfo()
@@ -80,7 +81,8 @@ export const NewPortfolio = () => {
     userId,
     setPortfolioData,
     setErrors,
-    setTempPortfolioId
+    setTempPortfolioId,
+    lastSavedDataRef
   })
 
   /* --- 임시저장 --- */
@@ -88,6 +90,8 @@ export const NewPortfolio = () => {
     portfolioData,
     userInfo,
     setTempPortfolioId,
+    tempPortfolioId,
+    lastSavedDataRef,
     onSave: fetchTempList
   })
 
@@ -100,7 +104,11 @@ export const NewPortfolio = () => {
   })
 
   /* --- 마이페이지 임시저장글 불러오기 --- */
-  useTempPortfolioFromMyPage(setPortfolioData)
+  useTempPortfolioFromMyPage(
+    setPortfolioData,
+    lastSavedDataRef,
+    setTempPortfolioId
+  )
 
   /* --- 타이틀 및 버튼 sticky --- */
   const stickyRef = useRef<HTMLDivElement | null>(null)
@@ -171,7 +179,7 @@ export const NewPortfolio = () => {
                 <Button
                   onClick={handleSaveTemp}
                   line>
-                  임시저장
+                  {tempPortfolioId ? '임시저장 수정' : '임시저장'}
                 </Button>
                 <Button type="submit">저장</Button>
               </div>

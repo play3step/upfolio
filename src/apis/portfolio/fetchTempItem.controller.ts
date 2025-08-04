@@ -5,7 +5,7 @@ export const fetchTempPortfolioItem = async (id: string) => {
     .from('TempPortfolio')
     .select('*')
     .eq('id', id)
-    .single()
+    .maybeSingle()
 
   if (error) throw error
 
