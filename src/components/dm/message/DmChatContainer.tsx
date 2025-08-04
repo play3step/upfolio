@@ -2,6 +2,7 @@ import S from './DmChatContainer.module.css'
 import dmSendIcon from '@/assets/icon/dm.svg'
 import DmChatListItem from '../list/DmChatListItem'
 import DmChatMessage from './DmChatMessage'
+import DmMobileHeader from './DmMobileHeader'
 import type { Message, Thread } from '@/types/thread'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { AuthContext } from '@/context/auth/AuthContext'
@@ -53,6 +54,19 @@ export default function DmChatContainer({
         ))}
       </div>
       <div className={S['dm-chat-container-right']}>
+        {window.innerWidth <= 640 && (
+          <DmMobileHeader
+            onBackClick={() => handleSelectChatRoom('')}
+            username={
+              threads?.find(thread => thread.id === selectedThreadId)?.name ||
+              ''
+            }
+            profileImage={
+              threads?.find(thread => thread.id === selectedThreadId)
+                ?.profile || ''
+            }
+          />
+        )}
         <div
           className={S['dm-chat-conversation']}
           ref={messageRef}>
