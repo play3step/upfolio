@@ -55,7 +55,7 @@ function FormAndText() {
   }
 
   const handleError = () => {
-    alertError({ text: '실패문구를 적어주세요.' })
+    alertError({ title: '실패한항목 실패', text: '다시 시도해주세요.' })
   }
 
   const handleWarning = () => {

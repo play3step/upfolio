@@ -7,6 +7,5 @@ export const useAuth = () => {
   if (!context) {
     throw new Error('어디가 안된거야? AuthContext확인해보자.')
   }
-  console.log('useAuth 호출됨:', context)
   return context as AuthContextType
 }
