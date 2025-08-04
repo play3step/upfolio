@@ -1,11 +1,12 @@
 import supabase from '@/lib/supabaseClient'
 import type { PortfolioData, UserInfo } from '@/types/portfolio'
+import { omit } from 'lodash'
 
 type InsertPortfolioData = Omit<
   PortfolioData,
   'id' | 'viewCount' | 'createdAt' | 'userId'
 >
-/* --- 저장 --- */
+
 export const uploadPortfolio = async ({
   portfolioData,
   userInfo,
@@ -19,10 +20,17 @@ export const uploadPortfolio = async ({
     throw new Error('유저정보 없음')
   }
 
+  const filteredData = omit(portfolioData, [
+    'id',
+    'viewCount',
+    'createdAt',
+    'userId'
+  ])
+
   const { data, error } = await supabase
     .from('Portfolio')
     .insert({
-      ...portfolioData,
+      ...filteredData,
       userId: userInfo.id,
       viewCount: 0,
       createdAt: new Date().toISOString()
