@@ -1,22 +1,28 @@
-import { deleteTempPortfolioItem } from '@/apis/portfolio/deleteTempItem.controller'
-import { fetchTempPortfolioItem } from '@/apis/portfolio/fetchTempItem.controller'
-import { fetchTempPortfolioList } from '@/apis/portfolio/fetchTempList.controller'
+import { fetchTempPortfolioItem } from '@/apis/portfolio/tempPortfolio.controller'
+import { fetchTempPortfolioList } from '@/apis/portfolio/tempPortfolio.controller'
+import { deleteTempPortfolioItem } from '@/apis/portfolio/tempPortfolio.controller'
 import type {
   PortfolioData,
   TempItem,
   ValidationError
 } from '@/types/portfolio'
-import { useCallback, useEffect, useState } from 'react'
+import { alertConfirm, alertError } from '@/utils/alertUtils'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export const useTempPortfolioList = ({
   userId,
   setPortfolioData,
-  setErrors
+  setErrors,
+  setTempPortfolioId,
+  lastSavedDataRef
 }: {
   userId: string | null
   setPortfolioData: React.Dispatch<React.SetStateAction<PortfolioData>>
   setErrors: (e: ValidationError) => void
+  setTempPortfolioId: React.Dispatch<React.SetStateAction<string>>
+  lastSavedDataRef?: React.MutableRefObject<Partial<PortfolioData | null>>
 }) => {
+  const openBtnRef = useRef<HTMLButtonElement>(null)
   // 사이드 패널 열고 닫기
   const [isSideOpen, setSideOpen] = useState(false)
 
@@ -26,6 +32,9 @@ export const useTempPortfolioList = ({
 
   const handleCloseSide = () => {
     setSideOpen(false)
+    setTimeout(() => {
+      openBtnRef.current?.focus()
+    }, 0)
   }
 
   // 임시저장 목록 불러오기
@@ -54,14 +63,20 @@ export const useTempPortfolioList = ({
 
       setErrors({})
 
-      setPortfolioData(prev => ({
-        ...prev,
-        ...data,
-        id: data.id
-      }))
+      setPortfolioData(data)
+
+      setTempPortfolioId(id)
+
+      if (lastSavedDataRef) {
+        lastSavedDataRef.current = data
+      }
 
       setSideOpen(false)
     } catch (error) {
+      alertError({
+        title: '임시저장 리스트 불러오기 실패',
+        text: '다시 시도해주세요.'
+      })
       console.error('임시저장된 항목 불러오기 실패', error)
     }
   }
@@ -69,11 +84,17 @@ export const useTempPortfolioList = ({
   // 임시저장 항목 삭제하기
   const deleteTempItem = async (id: string) => {
     try {
-      const ok = confirm('정말 이 항목을 삭제할까요?')
+      const ok = await alertConfirm({
+        text: '정말 이 항목을 삭제할까요?'
+      })
       if (!ok) return
       await deleteTempPortfolioItem(id)
       setTempList(prev => prev.filter(item => item.id !== id))
     } catch (error) {
+      alertError({
+        title: '임시저장 항목 삭제 실패',
+        text: '다시 시도해주세요.'
+      })
       console.error('임시저장된 항목 삭제 실패', error)
     }
   }

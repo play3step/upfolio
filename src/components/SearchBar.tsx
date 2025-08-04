@@ -22,7 +22,7 @@ const INTEREST_SELECT = [
 
 interface SearchBarProps {
   onSearch: (params: SearchParams) => void
-  onFilterChange: (careerFilter: string) => void
+  onFilterChange?: (careerFilter: string) => void
 }
 
 export const SearchBar = ({ onSearch, onFilterChange }: SearchBarProps) => {
@@ -42,14 +42,18 @@ export const SearchBar = ({ onSearch, onFilterChange }: SearchBarProps) => {
       career: career === '전체' ? '' : career,
       searchKeyword: keyword.trim()
     }
-    onSearch(params)
-    onFilterChange(careerFilter)
+    if (onSearch) {
+      onSearch(params)
+    }
+    if (onFilterChange) {
+      onFilterChange(careerFilter)
+    }
   }
 
   useEffect(() => {
     const params = {
       interest,
-      career : career === '전체' ? '' : career,
+      career: career === '전체' ? '' : career,
       searchKeyword: debouncedKeyword
     }
     onSearch(params)
@@ -65,7 +69,9 @@ export const SearchBar = ({ onSearch, onFilterChange }: SearchBarProps) => {
               onChange={selectedCareer => {
                 setCareer(selectedCareer)
                 setCareerFilter(selectedCareer)
-                onFilterChange(selectedCareer)
+                if (onFilterChange) {
+                  onFilterChange(selectedCareer) 
+                }
               }}
             />
           </div>

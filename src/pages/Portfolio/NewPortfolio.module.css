@@ -81,6 +81,7 @@
     }
 
     .tit-withBtn {
+      width: 100%;
       .tit__input {
         input {
           font-size: var(--fs-md);

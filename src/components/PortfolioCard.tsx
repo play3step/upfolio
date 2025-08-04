@@ -1,7 +1,7 @@
 import S from './PortfolioCard.module.css'
 import bookmarkIcon from '../assets/icon/bookmark-empty.svg'
 import bookmarkFilledIcon from '../assets/icon/bookmark-fill.svg'
-import grayHeart from '../assets/icon/grayHeart.svg'
+import grayHeart from '../assets/icon/grayheart.svg'
 import redHeart from '../assets/icon/heart.fill.svg'
 import eye from '../assets/icon/eye.svg'
 import { useState, useEffect } from 'react'
@@ -99,9 +99,7 @@ export function PortfolioCard({
     navigate(`/portfolios/${portfolioid}`)
   }
 
-  const getInterestClass = (
-    interest: string | { label: string; value: string }
-  ) => {
+  const getInterestClass = () => {
     switch (parsedInterest.label) {
       case '프론트엔드 개발':
         return S.frontend
@@ -130,7 +128,7 @@ export function PortfolioCard({
     <div
       className={S.container}
       onClick={handleCardClick}>
-      <div className={`${S.interest} ${getInterestClass(interest)}`}>
+      <div className={`${S.interest} ${getInterestClass()}`}>
         {typeof interest === 'string'
           ? interest
           : parsedInterest.label || '지원분야 미지정'}

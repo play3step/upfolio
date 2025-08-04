@@ -58,28 +58,52 @@ function MobileHeader() {
   })
 
   return (
-    <header className={`${S.header} ${!showHeader ? S.hide : ''}`}>
-      <Link
-        to="/"
-        className={S['header__logo']}
-        title="Upfolio 메인 바로가기"
-        onClick={handleCloseSide}>
-        <img
-          src={logo}
-          alt="Upfolio 로고"
-        />
-      </Link>
-
-      <div className={S['header_right']}>
-        <button
-          className={S['dm-button']}
-          onClick={toggleDm}>
+    <>
+      <header className={`${S.header} ${!showHeader ? S.hide : ''}`}>
+        <Link
+          to="/"
+          className={S['header__logo']}
+          title="Upfolio 메인 바로가기"
+          onClick={handleCloseSide}>
           <img
-            src={dmIcon}
-            alt="DM"
-            className={S['dm-button-icon']}
+            src={logo}
+            alt="Upfolio 로고"
           />
-        </button>
+        </Link>
+
+        <div className={S['header_right']}>
+          <button
+            className={S['dm-button']}
+            onClick={toggleDm}>
+            <img
+              src={dmIcon}
+              alt="DM"
+              className={S['dm-button-icon']}
+            />
+          </button>
+
+          {isSideNavOpen ? (
+            <button
+              type="button"
+              className={S['header__navBtn']}
+              onClick={handleCloseSide}>
+              <img
+                src={close}
+                alt="모바일 메뉴 리스트 닫기"
+              />
+            </button>
+          ) : (
+            <button
+              type="button"
+              className={S['header__navBtn']}
+              onClick={handleOpenSide}>
+              <img
+                src={hamburger}
+                alt="모바일 메뉴 버튼"
+              />
+            </button>
+          )}
+        </div>
 
         {isSideNavOpen ? (
           <button
@@ -102,13 +126,12 @@ function MobileHeader() {
             />
           </button>
         )}
-      </div>
-
+      </header>
       <SideNavList
         isOpen={isSideNavOpen}
         isClose={handleCloseSide}
       />
-    </header>
+    </>
   )
 }
 export default MobileHeader

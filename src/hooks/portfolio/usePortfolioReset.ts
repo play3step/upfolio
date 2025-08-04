@@ -3,6 +3,7 @@ import type {
   UserInfo,
   ValidationError
 } from '@/types/portfolio'
+import { alertConfirm } from '@/utils/alertUtils'
 import { useState } from 'react'
 
 export const usePortfolioReset = ({
@@ -18,9 +19,11 @@ export const usePortfolioReset = ({
 }) => {
   const [resetKey, setResetKey] = useState(0)
 
-  const handleReset = () => {
-    const Confirm = window.confirm('작성 중인 내용을 모두 초기화할까요?')
-    if (!Confirm) return
+  const handleReset = async () => {
+    const confirm = await alertConfirm({
+      text: '작성한 내용을 초기화 할까요?'
+    })
+    if (!confirm) return
 
     setPortfolioData(prev => ({
       ...TempData,

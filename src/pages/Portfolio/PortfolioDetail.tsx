@@ -20,6 +20,9 @@ import { useThreads } from '@/hooks/dm/useThreads'
 import { AuthContext } from '@/context/auth/AuthContext'
 import { useComment } from '@/hooks/portfolio/detail/useComment'
 
+import download from '@/assets/icon/download.svg'
+import { alertConfirm, alertError, alertSuccess } from '@/utils/alertUtils'
+
 export default function PortfolioDetail() {
   const { id } = useParams<{ id: string }>()
   const decodedId = decodeURIComponent(id ?? '')
@@ -40,6 +43,8 @@ export default function PortfolioDetail() {
     likeCount,
     setLikeCount
   } = usePortfolioDetail(decodedId)
+
+  console.log(data)
 
   const basicInfoRef = useRef<HTMLDivElement>(null)
   const techStackRef = useRef<HTMLDivElement>(null)
@@ -166,7 +171,13 @@ export default function PortfolioDetail() {
   }
 
   const handleDelete = async () => {
-    const confirmDelete = window.confirm('정말로 삭제하시겠습니까?')
+    const confirmDelete = await alertConfirm({
+      title: '포트폴리오 삭제',
+      text: '정말로 삭제하시겠습니까?',
+      confirmButtonText: '삭제',
+      cancelButtonText: '취소',
+      icon: 'question'
+    })
     if (!confirmDelete) return
 
     const { error } = await supabase
@@ -175,10 +186,43 @@ export default function PortfolioDetail() {
       .eq('id', data.id)
 
     if (error) {
-      alert('삭제 실패: ' + error.message)
+      alertError({
+        title: '포트폴리오 삭제 실패',
+        text: '포트폴리오 삭제가 실패했습니다.',
+        icon: 'error'
+      })
     } else {
-      alert('삭제되었습니다.')
-      navigate('/') // 홈 또는 포트폴리오 목록으로 이동
+      alertSuccess({
+        title: '포트폴리오 삭제 완료',
+        text: '포트폴리오 삭제가 완료되었습니다.',
+        icon: 'success'
+      })
+      navigate(-1)
+    }
+  }
+
+  const getInterestClass = (interest: string) => {
+    switch (interest) {
+      case '프론트엔드 개발':
+        return S.frontend
+      case '백엔드 개발':
+        return S.backend
+      case '풀스택 개발':
+        return S.fullstack
+      case '모바일 개발':
+        return S.mobile
+      case '임베디드 개발':
+        return S.embedded
+      case 'UI/UX 디자인':
+        return S.uiux
+      case '그래픽 디자인':
+        return S.graphic
+      case '모션 디자인':
+        return S.motion
+      case '일러스트':
+        return S.illustration
+      default:
+        return ''
     }
   }
 
@@ -375,7 +419,8 @@ export default function PortfolioDetail() {
                 <p>{data.career?.label}</p>
 
                 <h3>지원 분야</h3>
-                <div className={S.interest}>
+                <div
+                  className={`${S.interest} ${getInterestClass(data.interest.label)}`}>
                   <p>{data.interest.label}</p>
                 </div>
 
@@ -411,6 +456,43 @@ export default function PortfolioDetail() {
                 </a>
 
                 <h3>첨부파일</h3>
+
+                {data.fileList.map(file => (
+                  <div className={S.fileList}>
+                    <a
+                      href={
+                        file.url?.startsWith('http')
+                          ? file.url
+                          : `https://${file.url}`
+                      }
+                      target="_blank"
+                      rel="noreferrer">
+                      {file.name}
+                    </a>
+                    <img
+                      src={download}
+                      onClick={e => {
+                        e.preventDefault()
+                        const url = file.url?.startsWith('http')
+                          ? file.url
+                          : `https://${file.url}`
+                        fetch(url)
+                          .then(response => response.blob())
+                          .then(blob => {
+                            const blobUrl = window.URL.createObjectURL(blob)
+                            const link = document.createElement('a')
+                            link.href = blobUrl
+                            link.download = file.name
+                            document.body.appendChild(link)
+                            link.click()
+                            document.body.removeChild(link)
+                            window.URL.revokeObjectURL(blobUrl)
+                          })
+                      }}
+                      alt="다운로드"
+                    />
+                  </div>
+                ))}
               </section>
             </div>
           </div>
