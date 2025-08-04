@@ -21,7 +21,7 @@
   width: 50%;
   height: 100vh;
   background-color: var(--white);
-  z-index: 9999;
+  z-index: 1000;
   transform: translateX(100%);
   transition: transform 0.4s ease-in-out;
 

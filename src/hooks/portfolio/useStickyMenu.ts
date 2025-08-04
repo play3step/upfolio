@@ -11,7 +11,7 @@ export const useStickyMenu = (
 
       const stickyPosition = stickyRef.current.getBoundingClientRect().top ?? 0
 
-      const yes = stickyPosition <= 32
+      const yes = stickyPosition <= 0
       setIsSticky(yes)
     }, 100)
 

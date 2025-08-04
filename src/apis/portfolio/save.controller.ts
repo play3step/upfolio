@@ -1,11 +1,13 @@
 import supabase from '@/lib/supabaseClient'
 import type { PortfolioData, UserInfo } from '@/types/portfolio'
+import { omit } from 'lodash'
 
 type InsertPortfolioData = Omit<
   PortfolioData,
   'id' | 'viewCount' | 'createdAt' | 'userId'
 >
 
+/* --- 저장 --- */
 export const uploadPortfolio = async ({
   portfolioData,
   userInfo,
@@ -15,14 +17,21 @@ export const uploadPortfolio = async ({
   userInfo: UserInfo | null
   tempPortfolioId: string
 }) => {
-  if (!userInfo || !userInfo.id) {
+  if (!userInfo || !userInfo.id || userInfo.id.trim() === '') {
     throw new Error('유저정보 없음')
   }
+
+  const filteredData = omit(portfolioData, [
+    'id',
+    'viewCount',
+    'createdAt',
+    'userId'
+  ]) as InsertPortfolioData
 
   const { data, error } = await supabase
     .from('Portfolio')
     .insert({
-      ...portfolioData,
+      ...filteredData,
       userId: userInfo.id,
       viewCount: 0,
       createdAt: new Date().toISOString()
@@ -31,6 +40,9 @@ export const uploadPortfolio = async ({
     .single()
 
   if (error) throw error
+  if (!data?.id) {
+    throw new Error('포트폴리오 저장 후 id를 받아오지 못했습니다.')
+  }
 
   // 임시저장한 글 저장 시 TempPortfolio 삭제
   if (tempPortfolioId && tempPortfolioId.trim() !== '') {
