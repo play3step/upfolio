@@ -9,6 +9,7 @@ export const fetchBookmarks = async (
     .select(
       `
           portfolioid,
+          createdat,
           PortfolioWithLikes(
             id,
             title,
@@ -19,6 +20,7 @@ export const fetchBookmarks = async (
         `
     )
     .eq('userid', userId)
+    .order('createdat', { ascending: false })
 
   if (bookmarkError) {
     throw new Error(
@@ -34,6 +36,7 @@ export const fetchBookmarks = async (
 
         return {
           portfolioid: item.portfolioid,
+          createdat: item.createdat,
           Portfolio: {
             id: bookmark.id,
             title: bookmark.title,
@@ -46,11 +49,11 @@ export const fetchBookmarks = async (
     : []
 
   // 최신순 정렬
-  fixedBookmarks.sort(
-    (a, b) =>
-      new Date(b.Portfolio.createdAt).getTime() -
-      new Date(a.Portfolio.createdAt).getTime()
-  )
+  // fixedBookmarks.sort(
+  //   (a, b) =>
+  //     new Date(b.Portfolio.createdAt).getTime() -
+  //     new Date(a.Portfolio.createdAt).getTime()
+  // )
 
   return fixedBookmarks
 }

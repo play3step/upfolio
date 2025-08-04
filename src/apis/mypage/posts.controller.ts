@@ -8,6 +8,7 @@ export const fetchPosts = async (userId: string): Promise<Post[]> => {
     .select('id, title, content, createdAt, likeCount, viewCount')
     .eq('userId', userId)
     .order('createdAt', { ascending: false })
+    .order('id', { ascending: false })
 
   if (postError) {
     console.error('Error fetching posts:', postError)

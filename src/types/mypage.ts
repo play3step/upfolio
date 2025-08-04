@@ -9,6 +9,7 @@ export interface UserProfile {
 
 export interface BookmarkAndLiked {
   portfolioid: string
+  createdat?: string
   Portfolio: {
     id: string
     title: string
