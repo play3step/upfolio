@@ -5,6 +5,7 @@
   gap: var(--sp-2);
   align-items: center;
   min-width: 0;
+  cursor: pointer;
 }
 
 .dm-chat-list-item-left-profile {

@@ -2,6 +2,7 @@ import S from './DmChatContainer.module.css'
 import dmSendIcon from '@/assets/icon/dm.svg'
 import DmChatListItem from '../list/DmChatListItem'
 import DmChatMessage from './DmChatMessage'
+import DmMobileHeader from './DmMobileHeader'
 import type { Message, Thread } from '@/types/thread'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { AuthContext } from '@/context/auth/AuthContext'
@@ -13,6 +14,7 @@ interface Props {
   threads: Thread[] | null
   messages: Message[] | null
   sendMessage: (message: string) => void
+  isMobile: boolean
 }
 
 export default function DmChatContainer({
@@ -22,7 +24,8 @@ export default function DmChatContainer({
 
   threads,
   messages,
-  sendMessage
+  sendMessage,
+  isMobile
 }: Props) {
   const { authData } = useContext(AuthContext)
   const [message, setMessage] = useState('')
@@ -53,45 +56,76 @@ export default function DmChatContainer({
         ))}
       </div>
       <div className={S['dm-chat-container-right']}>
+        {isMobile && selectedThreadId !== null && selectedThreadId !== '' && (
+          <DmMobileHeader
+            onBackClick={() => handleSelectChatRoom('')}
+            username={
+              threads?.find(thread => thread.id === selectedThreadId)?.name ||
+              ''
+            }
+            profileImage={
+              threads?.find(thread => thread.id === selectedThreadId)
+                ?.profile || ''
+            }
+          />
+        )}
         <div
           className={S['dm-chat-conversation']}
           ref={messageRef}>
-          {messages?.map(message => (
-            <DmChatMessage
-              key={message.id}
-              message={message.message}
-              isMine={message.senderid === authData?.id}
-              name={
-                threads?.find(thread => thread.id === message.threadid)?.name ??
-                ''
-              }
-              profile={
-                threads?.find(thread => thread.id === message.threadid)
-                  ?.profile ?? ''
-              }
-            />
-          ))}
+          {selectedThreadId &&
+            messages?.map(message => (
+              <DmChatMessage
+                key={message.id}
+                message={message.message}
+                isMine={message.senderid === authData?.id}
+                name={
+                  threads?.find(thread => thread.id === message.threadid)
+                    ?.name ?? ''
+                }
+                profile={
+                  threads?.find(thread => thread.id === message.threadid)
+                    ?.profile ?? ''
+                }
+              />
+            ))}
+          {!selectedThreadId && isMobile && (
+            <div className={S['mobile-chat-list']}>
+              {threads?.map(thread => (
+                <DmChatListItem
+                  key={thread.id}
+                  id={thread.id}
+                  isSelected={selectedThreadId === thread.id}
+                  name={thread.name}
+                  profile={thread.profile}
+                  lastMessage={thread.lastMessage ?? '내용이 없습니다.'}
+                  handleSelectChatRoom={handleSelectChatRoom}
+                />
+              ))}
+            </div>
+          )}
         </div>
-        <div className={S['dm-chat-input']}>
-          <textarea
-            placeholder="채팅을 입력하세요."
-            className={S['dm-chat-input-text']}
-            value={message}
-            onChange={e => setMessage(e.target.value)}
-          />
+        {selectedThreadId !== null && selectedThreadId !== '' && (
+          <div className={S['dm-chat-input']}>
+            <textarea
+              placeholder="채팅을 입력하세요."
+              className={S['dm-chat-input-text']}
+              value={message}
+              onChange={e => setMessage(e.target.value)}
+            />
 
-          <div
-            className={S['dm-chat-input-button']}
-            onClick={() => {
-              sendMessage(message)
-              setMessage('')
-            }}>
-            <img
-              src={dmSendIcon}
-              alt="dm-send-icon"
-            />
+            <div
+              className={S['dm-chat-input-button']}
+              onClick={() => {
+                sendMessage(message)
+                setMessage('')
+              }}>
+              <img
+                src={dmSendIcon}
+                alt="dm-send-icon"
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )
