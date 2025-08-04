@@ -14,6 +14,7 @@ interface Props {
   threads: Thread[] | null
   messages: Message[] | null
   sendMessage: (message: string) => void
+  isMobile: boolean
 }
 
 export default function DmChatContainer({
@@ -23,7 +24,8 @@ export default function DmChatContainer({
 
   threads,
   messages,
-  sendMessage
+  sendMessage,
+  isMobile
 }: Props) {
   const { authData } = useContext(AuthContext)
   const [message, setMessage] = useState('')
@@ -54,7 +56,7 @@ export default function DmChatContainer({
         ))}
       </div>
       <div className={S['dm-chat-container-right']}>
-        {window.innerWidth <= 640 && (
+        {isMobile && selectedThreadId !== null && selectedThreadId !== '' && (
           <DmMobileHeader
             onBackClick={() => handleSelectChatRoom('')}
             username={
@@ -70,21 +72,37 @@ export default function DmChatContainer({
         <div
           className={S['dm-chat-conversation']}
           ref={messageRef}>
-          {messages?.map(message => (
-            <DmChatMessage
-              key={message.id}
-              message={message.message}
-              isMine={message.senderid === authData?.id}
-              name={
-                threads?.find(thread => thread.id === message.threadid)?.name ??
-                ''
-              }
-              profile={
-                threads?.find(thread => thread.id === message.threadid)
-                  ?.profile ?? ''
-              }
-            />
-          ))}
+          {selectedThreadId &&
+            messages?.map(message => (
+              <DmChatMessage
+                key={message.id}
+                message={message.message}
+                isMine={message.senderid === authData?.id}
+                name={
+                  threads?.find(thread => thread.id === message.threadid)
+                    ?.name ?? ''
+                }
+                profile={
+                  threads?.find(thread => thread.id === message.threadid)
+                    ?.profile ?? ''
+                }
+              />
+            ))}
+          {!selectedThreadId && isMobile && (
+            <div className={S['mobile-chat-list']}>
+              {threads?.map(thread => (
+                <DmChatListItem
+                  key={thread.id}
+                  id={thread.id}
+                  isSelected={selectedThreadId === thread.id}
+                  name={thread.name}
+                  profile={thread.profile}
+                  lastMessage={thread.lastMessage ?? '내용이 없습니다.'}
+                  handleSelectChatRoom={handleSelectChatRoom}
+                />
+              ))}
+            </div>
+          )}
         </div>
         <div className={S['dm-chat-input']}>
           <textarea

@@ -9,7 +9,7 @@
 
 @media (max-width: 640px) {
   .dm-chat-container {
-    width: 100%;
+    width: calc(100vw - 4rem);
     height: 500px;
     border-radius: 0;
     box-shadow: none;

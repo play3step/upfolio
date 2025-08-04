@@ -78,6 +78,7 @@ export default function DmDropdownWrapper() {
         threads={threads}
         messages={messages}
         sendMessage={sendMessage}
+        isMobile={isMobile}
       />
       {!isMobile && <DmToggleButton />}
     </div>
