@@ -178,7 +178,7 @@ export default function PortfolioDetail() {
       alert('삭제 실패: ' + error.message)
     } else {
       alert('삭제되었습니다.')
-      navigate('/') // 홈 또는 포트폴리오 목록으로 이동
+      navigate(-1)
     }
   }
 
