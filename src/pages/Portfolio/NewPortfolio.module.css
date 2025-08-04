@@ -13,14 +13,17 @@
   transition: all 0.3s ease-in;
   margin-bottom: var(--sp-10);
   padding: 0 var(--sp-3);
-  &.sticky {
-    position: sticky;
-    top: 0;
-    left: 0;
-    padding: var(--sp-3);
-    z-index: 9999;
-    background-color: var(--white);
-    box-shadow: 0px 0px 4px 0px var(--primary-50);
+
+  @media (min-width: 40rem) {
+    &.sticky {
+      position: sticky;
+      top: 0;
+      left: 0;
+      padding: var(--sp-3);
+      z-index: 100;
+      background-color: var(--white);
+      box-shadow: 0px 0px 4px 0px var(--primary-50);
+    }
   }
 
   .head__inner {
@@ -74,7 +77,6 @@
       }
     }
   }
-
   @media (max-width: 40rem) {
     .head__btn {
       margin-bottom: var(--sp-3);
