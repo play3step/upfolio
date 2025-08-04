@@ -3,6 +3,7 @@ import { addThreads, fetchThreads } from '@/apis/dm/threads.controller'
 import { AuthContext } from '@/context/auth/AuthContext'
 
 import supabase from '@/lib/supabaseClient'
+import { alertError, alertSuccess } from '@/utils/alertUtils'
 
 interface ThreadType {
   id: string
@@ -69,11 +70,42 @@ export const useThreads = () => {
   }
 
   const handleAddThreads = async (otherUserId: string) => {
-    if (authData?.id === otherUserId) {
-      return alert('자기자신은 채팅할 수 없습니다.')
+    if (!authData?.id) {
+      alertError({
+        title: '채팅방 생성 실패',
+        text: '로그인이 필요합니다.',
+        icon: 'error'
+      })
+      return
     }
 
-    await addThreads(authData?.id ?? '', otherUserId, new Date().toISOString())
+    if (authData?.id === otherUserId) {
+      alertError({
+        title: '채팅방 생성 실패',
+        text: '자기자신은 채팅할 수 없습니다.',
+        icon: 'error'
+      })
+      return
+    }
+
+    const existingThreads = await addThreads(
+      authData?.id ?? '',
+      otherUserId,
+      new Date().toISOString()
+    )
+    if (existingThreads && existingThreads.length > 0) {
+      return alertError({
+        title: '채팅방 생성 실패',
+        text: '이미 존재하는 채팅방입니다.',
+        icon: 'error'
+      })
+    }
+
+    alertSuccess({
+      title: '채팅방 생성 완료',
+      text: '채팅방이 생성되었습니다.',
+      icon: 'success'
+    })
   }
 
   return { handleFetchThreads, handleAddThreads }

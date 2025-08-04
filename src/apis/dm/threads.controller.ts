@@ -44,7 +44,7 @@ const addThreads = async (
     )
 
   if (existingThreads && existingThreads.length > 0) {
-    return alert('이미 존재하는 채팅방입니다.')
+    return existingThreads
   }
 
   const { data, error } = await supabase.from('DMThread').insert({
