@@ -434,7 +434,7 @@ export default function PortfolioDetail() {
             <div ref={introductionRef}>
               <section className={S.description}>
                 <h3>소개</h3>
-                <p>{data.content}</p>
+                <p className={S.content}>{data.content}</p>
               </section>
             </div>
 
