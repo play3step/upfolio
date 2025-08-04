@@ -4,7 +4,7 @@ import BookmarkAndLike from '@/pages/MyPage/BookMark/BookmarkAndLike'
 import { EditProfile } from '@/pages/MyPage/EditProfile'
 
 import PostsAndComments from '@/pages/MyPage/Post/PostsAndComments'
-import Profile from '@/pages/MyPage/Profile'
+import Profile from '@/pages/MyPage/MyProfile/Profile'
 import { NotFound } from '@/pages/NotFound'
 import { NewPortfolio } from '@/pages/Portfolio/NewPortfolio'
 import PortfolioDetail from '@/pages/Portfolio/PortfolioDetail'
