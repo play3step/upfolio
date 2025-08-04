@@ -1,5 +1,4 @@
 .container {
-  /* padding: var(--sp-8); */
   display: flex;
   flex-direction: column;
   gap: var(--sp-10);
@@ -17,35 +16,57 @@
 
 .item {
   display: flex;
+  position: relative;
   justify-content: space-between;
   align-items: flex-start;
+  width: 100%;
+  gap: var(--sp-2);
   padding: var(--sp-3) 0;
-  border-bottom: 1px solid var(--black);
+  border-bottom: 1px solid var(--gray);
   transition: 0.2s ease;
 }
 
 .left {
   display: flex;
+  flex: 1;
+  align-items: flex-start;
+  gap: var(--sp-3);
   min-width: 0;
+
+  & > strong {
+    flex: 0 0 auto;
+  }
+
+  & > div {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
 }
 
 .itemTitle {
   font-weight: bold;
   color: var(--black);
+  width: auto;
+  margin-bottom: var(--sp-1);
+  word-break: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .itemContent {
   font-size: var(--fs-sm);
   color: var(--black);
-  max-width: 500px;
+  word-break: break-word;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .date {
+  flex: 0 0 auto;
   font-size: var(--fs-sm);
-  color: var(--black);
+  color: var(--gray);
 }
 
 .item:hover .itemTitle,
@@ -74,17 +95,20 @@
     flex-direction: column;
     align-items: flex-start;
     gap: var(--sp-2);
+    padding-bottom: var(--sp-7);
+  }
+  .left {
+    width: 100%;
   }
   .itemContent {
-    max-width: 350px;
+    max-width: unset;
     font-size: var(--fs-xs);
   }
   .date {
     position: absolute;
+    right: 0;
     bottom: var(--sp-1);
-    right: var(--sp-1);
-    font-size: var(--fs-xxs);
-    color: var(--black);
+    font-size: var(--fs-xs);
   }
 }
 
@@ -96,27 +120,8 @@
   .title {
     font-size: var(--fs-md);
   }
-  .item {
-    flex-direction: column;
-    align-items: flex-start;
-    padding-bottom: var(--sp-6);
-    position: relative;
-  }
 
   .left {
     width: 100%;
-  }
-
-  .itemContent {
-    max-width: 350px;
-    font-size: var(--fs-xxs);
-  }
-
-  .date {
-    position: absolute;
-    bottom: var(--sp-1);
-    right: var(--sp-1);
-    font-size: var(--fs-xxs);
-    color: var(--black);
   }
 }
