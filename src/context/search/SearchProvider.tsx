@@ -1,10 +1,5 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { SearchContext } from './SearchContext'
-
-interface SearchContextType {
-  keyword: string
-  setKeyword: (value: string) => void
-}
 
 export const SearchProvider = ({ children }: { children: React.ReactNode }) => {
   const [keyword, setKeyword] = useState('')
@@ -14,11 +9,4 @@ export const SearchProvider = ({ children }: { children: React.ReactNode }) => {
       {children}
     </SearchContext.Provider>
   )
-}
-
-export const useSearch = () => {
-  const context = useContext<SearchContextType>(SearchContext)
-  if (!context)
-    throw new Error('useSearch must be used within a SearchProvider')
-  return context
 }
