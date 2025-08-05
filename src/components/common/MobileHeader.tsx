@@ -28,8 +28,10 @@ function MobileHeader() {
   useEffect(() => {
     if (isSideNavOpen) {
       document.body.style.overflow = 'hidden'
+      document.documentElement.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
     }
 
     return () => {
@@ -104,28 +106,6 @@ function MobileHeader() {
             </button>
           )}
         </div>
-
-        {isSideNavOpen ? (
-          <button
-            type="button"
-            className={S['header__navBtn']}
-            onClick={handleCloseSide}>
-            <img
-              src={close}
-              alt="모바일 메뉴 리스트 닫기"
-            />
-          </button>
-        ) : (
-          <button
-            type="button"
-            className={S['header__navBtn']}
-            onClick={handleOpenSide}>
-            <img
-              src={hamburger}
-              alt="모바일 메뉴 버튼"
-            />
-          </button>
-        )}
       </header>
       <SideNavList
         isOpen={isSideNavOpen}

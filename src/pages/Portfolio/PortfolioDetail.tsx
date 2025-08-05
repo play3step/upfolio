@@ -155,7 +155,14 @@ export default function PortfolioDetail() {
 
   const handleSubmitComment = async () => {
     if (!authData?.id) {
-      alert('로그인이 필요합니다.')
+      const ok = await alertConfirm({
+        title: '로그인이 필요합니다.',
+        text: '로그인 페이지로 이동할까요?'
+      })
+
+      if (ok) {
+        navigate('/login')
+      }
       return
     }
 
@@ -174,8 +181,7 @@ export default function PortfolioDetail() {
       title: '포트폴리오 삭제',
       text: '정말로 삭제하시겠습니까?',
       confirmButtonText: '삭제',
-      cancelButtonText: '취소',
-      icon: 'question'
+      cancelButtonText: '취소'
     })
     if (!confirmDelete) return
 
@@ -187,14 +193,12 @@ export default function PortfolioDetail() {
     if (error) {
       alertError({
         title: '포트폴리오 삭제 실패',
-        text: '포트폴리오 삭제가 실패했습니다.',
-        icon: 'error'
+        text: '포트폴리오 삭제가 실패했습니다.'
       })
     } else {
       alertSuccess({
         title: '포트폴리오 삭제 완료',
-        text: '포트폴리오 삭제가 완료되었습니다.',
-        icon: 'success'
+        text: '포트폴리오 삭제가 완료되었습니다.'
       })
 
       const from = location.state?.from || '/'

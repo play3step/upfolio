@@ -98,8 +98,6 @@ function FormAndText() {
         <Button />
         <Button
           type="submit"
-          onClick={() => console.log('hi')}
-          onMouseEnter={() => console.log('마우스 올림')}
           line>
           라인 스타일
         </Button>

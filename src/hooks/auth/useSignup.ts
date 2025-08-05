@@ -4,7 +4,7 @@ import { AuthContext } from '@/context/auth/AuthContext'
 import { formatPhoneNumber } from '@/utils/format'
 import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { alertSuccess } from '@/utils/alertUtils'
+import { alertSuccess, alertWarning } from '@/utils/alertUtils'
 export const useSignup = () => {
   const { authData, login } = useContext(AuthContext)
 
@@ -44,7 +44,7 @@ export const useSignup = () => {
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!phone || !birthDate.year || !birthDate.month || !birthDate.day) {
-      alert('모든 필수 정보를 입력해주세요.')
+      alertWarning({ text: '모든 필수 정보를 입력해주세요.' })
       return
     }
     const signupData = {
@@ -76,8 +76,7 @@ export const useSignup = () => {
     if (userData) {
       alertSuccess({
         title: '회원가입 완료',
-        text: '회원가입이 완료되었습니다.',
-        icon: 'success'
+        text: '회원가입이 완료되었습니다.'
       })
       login(fetchData)
     }
