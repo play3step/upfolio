@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useState, useRef, useEffect, useContext } from 'react'
 import { usePortfolioDetail } from '@/hooks/portfolio/detail/usePortfolioDetail'
 import { handleToggleBookmark } from '@/apis/bookmark/bookmarkUtils'
@@ -30,6 +30,7 @@ export default function PortfolioDetail() {
   const [isCommentOpen, setIsCommentOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const navigate = useNavigate()
+  const location = useLocation()
   const { authData } = useContext(AuthContext)
 
   const { comments, sendComment } = useComment(decodedId)
@@ -43,8 +44,6 @@ export default function PortfolioDetail() {
     likeCount,
     setLikeCount
   } = usePortfolioDetail(decodedId)
-
-  console.log(data)
 
   const basicInfoRef = useRef<HTMLDivElement>(null)
   const techStackRef = useRef<HTMLDivElement>(null)
@@ -156,7 +155,14 @@ export default function PortfolioDetail() {
 
   const handleSubmitComment = async () => {
     if (!authData?.id) {
-      alert('로그인이 필요합니다.')
+      const ok = await alertConfirm({
+        title: '로그인이 필요합니다.',
+        text: '로그인 페이지로 이동할까요?'
+      })
+
+      if (ok) {
+        navigate('/login')
+      }
       return
     }
 
@@ -175,8 +181,7 @@ export default function PortfolioDetail() {
       title: '포트폴리오 삭제',
       text: '정말로 삭제하시겠습니까?',
       confirmButtonText: '삭제',
-      cancelButtonText: '취소',
-      icon: 'question'
+      cancelButtonText: '취소'
     })
     if (!confirmDelete) return
 
@@ -188,16 +193,16 @@ export default function PortfolioDetail() {
     if (error) {
       alertError({
         title: '포트폴리오 삭제 실패',
-        text: '포트폴리오 삭제가 실패했습니다.',
-        icon: 'error'
+        text: '포트폴리오 삭제가 실패했습니다.'
       })
     } else {
       alertSuccess({
         title: '포트폴리오 삭제 완료',
-        text: '포트폴리오 삭제가 완료되었습니다.',
-        icon: 'success'
+        text: '포트폴리오 삭제가 완료되었습니다.'
       })
-      navigate(-1)
+
+      const from = location.state?.from || '/'
+      navigate(from)
     }
   }
 
@@ -434,7 +439,7 @@ export default function PortfolioDetail() {
             <div ref={introductionRef}>
               <section className={S.description}>
                 <h3>소개</h3>
-                <p>{data.content}</p>
+                <p className={S.content}>{data.content}</p>
               </section>
             </div>
 

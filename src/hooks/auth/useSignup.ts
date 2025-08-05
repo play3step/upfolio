@@ -1,12 +1,12 @@
 import { signupUser } from '@/apis/user/signup.controller'
-import { useAuthLogin } from '@/hooks/auth/useAuthLogin'
+
 import { AuthContext } from '@/context/auth/AuthContext'
 import { formatPhoneNumber } from '@/utils/format'
 import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
+import { alertSuccess, alertWarning } from '@/utils/alertUtils'
 export const useSignup = () => {
-  const { authData } = useContext(AuthContext)
+  const { authData, login } = useContext(AuthContext)
 
   const [nickname, setNickname] = useState(authData?.nickname ?? '')
   const [birthDate, setBirthDate] = useState({
@@ -15,8 +15,9 @@ export const useSignup = () => {
     day: ''
   })
   const [phone, setPhone] = useState('')
-  const { getSession } = useAuthLogin()
+
   const navigate = useNavigate()
+
   const handleBirthChange = (
     field: 'year' | 'month' | 'day',
     value: string
@@ -43,7 +44,7 @@ export const useSignup = () => {
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!phone || !birthDate.year || !birthDate.month || !birthDate.day) {
-      alert('모든 필수 정보를 입력해주세요.')
+      alertWarning({ text: '모든 필수 정보를 입력해주세요.' })
       return
     }
     const signupData = {
@@ -52,14 +53,34 @@ export const useSignup = () => {
       birthDate: `${birthDate.year}.${birthDate.month}.${birthDate.day}`,
       id: authData?.id ?? ''
     }
-    await signupUser(
+    const userData = await signupUser(
       signupData.nickname,
       signupData.phone,
       signupData.birthDate,
       signupData.id
     )
-    await getSession()
-    alert('회원가입이 완료되었습니다.')
+
+    const fetchData = {
+      id: authData?.id ?? '',
+      nickname: nickname ?? '',
+      phone: phone ?? '',
+      birthDate: `${birthDate.year}.${birthDate.month}.${birthDate.day}`,
+      email: authData?.email ?? '',
+      profileimage: authData?.profileimage ?? '',
+      createdat: authData?.createdat ?? '',
+      career: authData?.career ?? '',
+      interest: authData?.interest ?? '',
+      techstack: authData?.techstack ?? []
+    }
+
+    if (userData) {
+      alertSuccess({
+        title: '회원가입 완료',
+        text: '회원가입이 완료되었습니다.'
+      })
+      login(fetchData)
+    }
+
     navigate('/', { replace: true })
   }
 

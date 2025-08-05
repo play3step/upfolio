@@ -50,7 +50,15 @@ export const useProfile = () => {
 
   // 프로필 필드 변경 핸들러
   const handleChange = (field: keyof UserProfile, value: string) => {
-    setProfile(prev => (prev ? { ...prev, [field]: value } : null))
+    let formattedValue = value
+
+    if (field === 'birthDate') {
+      const year = value.split('-')[0]
+      const validYear = year.length > 4 ? year.slice(0, 4) : year
+      formattedValue = `${validYear}-${value.split('-')[1] || ''}-${value.split('-')[2] || ''}`
+    }
+
+    setProfile(prev => (prev ? { ...prev, [field]: formattedValue } : null))
   }
 
   // 프로필 저장 핸들러
@@ -91,7 +99,7 @@ export const useProfile = () => {
       console.error('예상치 못한 오류:', err)
       alertError({
         title: '프로필 저장 실패',
-        text: '프로필 정보를 저장하는 데 실패했습니다. 다시 시도해주세요.'
+        text: '다시 시도해주세요.'
       })
     }
   }

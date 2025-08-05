@@ -48,10 +48,21 @@
       height: calc(100% - 10.625rem);
     }
     overflow-y: auto;
+    position: relative;
 
     @media (max-width: 640px) {
       height: calc(100% - 4rem);
       padding: var(--sp-2);
+    }
+
+    .no-chat-message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--gray3);
+      font-size: var(--fs-sm);
+      text-align: center;
     }
   }
 

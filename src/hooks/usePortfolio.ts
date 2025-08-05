@@ -54,7 +54,6 @@ export const usePortfolio = (userId: string | null) => {
       }))
 
       setPortfolio(mergedPortfolio)
-      console.log(portfolioData)
     }
 
     fetchData()

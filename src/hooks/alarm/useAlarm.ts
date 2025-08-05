@@ -14,7 +14,10 @@ export const useAlarm = () => {
 
   const fetchAlarms = async (type: alarmType) => {
     setIsLoading(true)
-    const newAlarms = await fetchAlarmsAPI(authData?.id ?? '', type, false)
+    if (!authData?.id) {
+      return
+    }
+    const newAlarms = await fetchAlarmsAPI(authData?.id, type, false)
     setAlarmsData(newAlarms)
 
     setIsLoading(false)

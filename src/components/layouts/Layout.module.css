@@ -38,7 +38,7 @@
   min-height: 0;
   bottom: 6rem;
   right: 2.25rem;
-  z-index: 10001;
+  z-index: 1001;
 
   @media (max-width: 48rem) {
     top: 3.25rem;

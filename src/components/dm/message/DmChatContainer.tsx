@@ -38,6 +38,22 @@ export default function DmChatContainer({
     setTimeout(() => message.scrollTo(0, message.scrollHeight))
   }, [messages, selectedThreadId])
 
+  // DM이 열릴 때 body 스크롤 막기
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+      document.documentElement.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+    }
+
+    return () => {
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+    }
+  }, [isOpen])
+
   return (
     <div
       className={S['dm-chat-container']}
@@ -72,7 +88,7 @@ export default function DmChatContainer({
         <div
           className={S['dm-chat-conversation']}
           ref={messageRef}>
-          {selectedThreadId &&
+          {selectedThreadId ? (
             messages?.map(message => (
               <DmChatMessage
                 key={message.id}
@@ -87,7 +103,12 @@ export default function DmChatContainer({
                     ?.profile ?? ''
                 }
               />
-            ))}
+            ))
+          ) : (
+            <div className={S['no-chat-message']}>
+              대화 상대를 선택해주세요.
+            </div>
+          )}
           {!selectedThreadId && isMobile && (
             <div className={S['mobile-chat-list']}>
               {threads?.map(thread => (

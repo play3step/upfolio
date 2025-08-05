@@ -11,6 +11,7 @@
 
 .sidebar--closed {
   transform: translateX(-100%);
+  display: none;
 }
 
 .toggleButton {

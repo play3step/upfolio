@@ -8,6 +8,7 @@ import { AuthContext } from '@/context/auth/AuthContext'
 import { usePollingMessages } from '@/hooks/dm/usePollingMessages'
 import { DmContext } from '@/context/dm/DmContext'
 import { useIsMobile } from '@/hooks/header/useIsMobile'
+import { alertWarning } from '@/utils/alertUtils'
 
 export default function DmDropdownWrapper() {
   const { dm } = useContext(DmContext)
@@ -41,7 +42,7 @@ export default function DmDropdownWrapper() {
 
   const sendMessage = async (message: string) => {
     if (message.trim() === '') {
-      alert('메시지를 입력해주세요.')
+      alertWarning({ text: '메세지를 입력해주세요.' })
       return
     }
 
@@ -57,8 +58,8 @@ export default function DmDropdownWrapper() {
     handleAddMessages(
       selectedThreadId,
       message,
-      authData.id,
-      selectedThread.receiverid,
+      selectedThread.myId,
+      selectedThread.otherId,
       new Date()
     )
   }

@@ -67,7 +67,6 @@ export const getLikeCount = async (portfolioId: string) => {
 }
 
 export const updatePortfolio = async (portfolioData: PortfolioData) => {
-  console.log(portfolioData)
   const { data, error } = await supabase
     .from('Portfolio')
     .update(portfolioData)

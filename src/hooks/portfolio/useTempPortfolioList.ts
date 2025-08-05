@@ -74,7 +74,7 @@ export const useTempPortfolioList = ({
       setSideOpen(false)
     } catch (error) {
       alertError({
-        title: '임시저장 리스트 불러오기 실패',
+        title: '임시저장 목록 불러오기 실패',
         text: '다시 시도해주세요.'
       })
       console.error('임시저장된 항목 불러오기 실패', error)
