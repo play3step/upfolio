@@ -110,7 +110,7 @@ export default function DmChatContainer({
                 <div className={S['no-chat-message-mobile']}></div>
               ) : (
                 <div className={S['no-chat-message-desktop']}>
-                  대화 상대를 선택해주세요.
+                  채팅이 존재하지 않습니다.
                 </div>
               )}
             </div>
