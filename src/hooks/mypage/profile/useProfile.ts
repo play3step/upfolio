@@ -8,7 +8,7 @@ import {
 import { formatPhoneNumber } from '@/utils/format'
 import { useSignup } from '@/hooks/auth/useSignup'
 import type { UserProfile } from '@/types/mypage'
-import { alertError, alertSuccess } from '@/utils/alertUtils'
+import { alertError, alertSuccess, alertWarning } from '@/utils/alertUtils'
 
 export const useProfile = () => {
   const [userId, setUserId] = useState<string | null>(null)
@@ -53,9 +53,23 @@ export const useProfile = () => {
     let formattedValue = value
 
     if (field === 'birthDate') {
-      const year = value.split('-')[0]
-      const validYear = year.length > 4 ? year.slice(0, 4) : year
-      formattedValue = `${validYear}-${value.split('-')[1] || ''}-${value.split('-')[2] || ''}`
+      const isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(value)
+      if (!isValidDate) {
+        alertWarning({
+          title: '유효하지 않은 입력',
+          text: '유효하지 않은 날짜 형식입니다. yyyy-MM-dd 형식으로 입력해주세요.',
+          confirmButtonText: '확인'
+        })
+        formattedValue = ''
+      } else {
+        const [year, month, day] = value.split('-')
+        const validYear = year.length > 4 ? year.slice(0, 4) : year
+        const validMonth =
+          parseInt(month, 10) >= 1 && parseInt(month, 10) <= 12 ? month : '01'
+        const validDay =
+          parseInt(day, 10) >= 1 && parseInt(day, 10) <= 31 ? day : '01'
+        formattedValue = `${validYear}-${validMonth}-${validDay}`
+      }
     }
 
     setProfile(prev => (prev ? { ...prev, [field]: formattedValue } : null))

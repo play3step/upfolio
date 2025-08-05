@@ -116,7 +116,7 @@ export default function Profile() {
               <Input
                 id="birthDate"
                 label="생년월일"
-                type="date"
+                type="text"
                 value={
                   profile?.birthDate &&
                   /^\d{4}-\d{2}-\d{2}$/.test(profile.birthDate)
