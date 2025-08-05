@@ -38,6 +38,19 @@ export default function DmChatContainer({
     setTimeout(() => message.scrollTo(0, message.scrollHeight))
   }, [messages, selectedThreadId])
 
+  // DM이 열릴 때 body 스크롤 막기
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto'
+    }
+  }, [isOpen])
+
   return (
     <div
       className={S['dm-chat-container']}
