@@ -70,7 +70,7 @@ const protectedRoutes: RouteItem[] = [
     element: <MyPage />,
     children: [
       {
-        path: '',
+        path: 'profile',
         element: <Profile />
       },
       {

@@ -43,6 +43,40 @@ function SideNavList({ isOpen, isClose }: Props) {
                 onClick={isClose}>
                 마이페이지
               </NavLink>
+              <ul className={S['side__nav__depth2']}>
+                <li>
+                  <NavLink
+                    to="/mypage/profile"
+                    className={({ isActive }) => (isActive ? S.selected : '')}
+                    onClick={isClose}>
+                    내 프로필
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/mypage/posts"
+                    className={({ isActive }) => (isActive ? S.selected : '')}
+                    onClick={isClose}>
+                    내가 작성한 글 / 댓글
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/mypage/edit"
+                    className={({ isActive }) => (isActive ? S.selected : '')}
+                    onClick={isClose}>
+                    북마크 / 좋아요 한 글
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/mypage/bookmarks"
+                    className={({ isActive }) => (isActive ? S.selected : '')}
+                    onClick={isClose}>
+                    임시저장 한 글
+                  </NavLink>
+                </li>
+              </ul>
             </li>
           </ul>
         </nav>
