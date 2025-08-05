@@ -37,6 +37,14 @@
   }
 }
 
+@supports (height: 100dvh) {
+  @media (max-width: 48rem) {
+    .commentContainer {
+      height: calc(100dvh - 3.25rem);
+    }
+  }
+}
+
 .commentHeader {
   display: flex;
   flex-direction: row;

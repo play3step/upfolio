@@ -9,6 +9,12 @@
   background-color: var(--gray2);
 }
 
+@supports (height: 100dvh) {
+  .not-found {
+    min-height: 100dvh;
+  }
+}
+
 .title {
   font-size: 8rem;
   font-weight: 700;

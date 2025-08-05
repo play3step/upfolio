@@ -38,6 +38,13 @@
     transform: translateX(0);
   }
 }
+
+@supports (height: 100dvh) {
+  .side {
+    height: calc(100dvh - 3.25rem);
+  }
+}
+
 .side__nav ul li {
   border-bottom: 1px solid var(--gray);
 }

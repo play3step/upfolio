@@ -9,6 +9,12 @@
   transform: translateX(0);
 }
 
+@supports (height: 100dvh) {
+  .sidebar {
+    min-height: calc(100dvh - 88px);
+  }
+}
+
 .sidebar--closed {
   transform: translateX(-100%);
   display: none;

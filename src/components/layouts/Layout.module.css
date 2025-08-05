@@ -4,6 +4,12 @@
   min-height: 100vh;
 }
 
+@supports (height: 100dvh) {
+  .wrapper {
+    height: 100dvh;
+  }
+}
+
 .layout {
   display: flex;
   justify-content: center;
@@ -31,7 +37,16 @@
 .main > * {
   min-height: calc(100vh - 10.5rem);
   @media (max-width: 48rem) {
-    min-height: calc(100vh - 10.75rem);
+    min-height: calc(100dvh - 10.75rem);
+  }
+}
+@supports (height: 100dvh) {
+  .main > * {
+    min-height: calc(100dvh - 10.5rem);
+
+    @media (max-width: 48rem) {
+      min-height: calc(100dvh - 10.75rem);
+    }
   }
 }
 
