@@ -53,7 +53,7 @@ export function MyPageSidebar() {
             <NavLink
               to="/mypage/bookmarks"
               className={({ isActive }) => (isActive ? S.active : '')}>
-              북마크한 글 / 좋아요
+              북마크 / 좋아요 한 글
             </NavLink>
           </li>
           <li onClick={() => isMobile && setOpen(false)}>
