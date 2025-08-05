@@ -85,7 +85,7 @@ export default function DmChatContainer({
         <div
           className={S['dm-chat-conversation']}
           ref={messageRef}>
-          {selectedThreadId &&
+          {selectedThreadId ? (
             messages?.map(message => (
               <DmChatMessage
                 key={message.id}
@@ -100,7 +100,12 @@ export default function DmChatContainer({
                     ?.profile ?? ''
                 }
               />
-            ))}
+            ))
+          ) : (
+            <div className={S['no-chat-message']}>
+              대화 상대를 선택해주세요.
+            </div>
+          )}
           {!selectedThreadId && isMobile && (
             <div className={S['mobile-chat-list']}>
               {threads?.map(thread => (
