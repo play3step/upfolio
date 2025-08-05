@@ -4,7 +4,7 @@ import S from './MyPageSidebar.module.css'
 
 export function MyPageSidebar() {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024)
-  const [open, setOpen] = useState(window.innerWidth > 1024)
+  const [open, setOpen] = useState(window.innerWidth > 768)
 
   useEffect(() => {
     const handleResize = () => {
@@ -17,17 +17,17 @@ export function MyPageSidebar() {
   }, [])
 
   // const handleToggle = () => setOpen(prev => !prev)
-  //       {
-  //         isMobile && (
-  //           <button
-  //             title="마이페이지 메뉴 보기"
-  //             className={S.toggleButton}
-  //             onClick={handleToggle}
-  //             aria-label="사이드바 토글">
-  //             {/* {open ? '←' : '→'} */}
-  //           </button>
-  //         )
-  //       }
+  // {
+  //   isMobile && (
+  //     <button
+  //       title="마이페이지 메뉴 보기"
+  //       className={S.toggleButton}
+  //       onClick={handleToggle}
+  //       aria-label="사이드바 토글">
+  //       {open ? '←' : '→'}
+  //     </button>
+  //   )
+  // }
 
   return (
     <>
@@ -38,9 +38,8 @@ export function MyPageSidebar() {
         <ul className={S.sidebar__list}>
           <li onClick={() => isMobile && setOpen(false)}>
             <NavLink
-              to="/mypage"
-              className={({ isActive }) => (isActive ? S.active : '')}
-              end>
+              to="/mypage/profile"
+              className={({ isActive }) => (isActive ? S.active : '')}>
               내 프로필
             </NavLink>
           </li>
