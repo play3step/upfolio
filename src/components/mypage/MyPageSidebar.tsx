@@ -26,7 +26,7 @@ export function MyPageSidebar() {
           className={S.toggleButton}
           onClick={handleToggle}
           aria-label="사이드바 토글">
-          {open ? '←' : '→'}
+          {/* {open ? '←' : '→'} */}
         </button>
       )}
       <aside
