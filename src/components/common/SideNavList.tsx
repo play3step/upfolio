@@ -62,7 +62,7 @@ function SideNavList({ isOpen, isClose }: Props) {
                 </li>
                 <li>
                   <NavLink
-                    to="/mypage/edit"
+                    to="/mypage/bookmarks"
                     className={({ isActive }) => (isActive ? S.selected : '')}
                     onClick={isClose}>
                     북마크 / 좋아요 한 글
@@ -70,7 +70,7 @@ function SideNavList({ isOpen, isClose }: Props) {
                 </li>
                 <li>
                   <NavLink
-                    to="/mypage/bookmarks"
+                    to="/mypage/edit"
                     className={({ isActive }) => (isActive ? S.selected : '')}
                     onClick={isClose}>
                     임시저장 한 글

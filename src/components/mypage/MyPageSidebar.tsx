@@ -16,19 +16,21 @@ export function MyPageSidebar() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const handleToggle = () => setOpen(prev => !prev)
+  // const handleToggle = () => setOpen(prev => !prev)
+  //       {
+  //         isMobile && (
+  //           <button
+  //             title="마이페이지 메뉴 보기"
+  //             className={S.toggleButton}
+  //             onClick={handleToggle}
+  //             aria-label="사이드바 토글">
+  //             {/* {open ? '←' : '→'} */}
+  //           </button>
+  //         )
+  //       }
 
   return (
     <>
-      {isMobile && (
-        <button
-          title="마이페이지 메뉴 보기"
-          className={S.toggleButton}
-          onClick={handleToggle}
-          aria-label="사이드바 토글">
-          {/* {open ? '←' : '→'} */}
-        </button>
-      )}
       <aside
         className={`${S.sidebar} ${isMobile && !open ? S['sidebar--closed'] : ''}`}>
         <h2 className={S.sidebar__title}>마이페이지</h2>
