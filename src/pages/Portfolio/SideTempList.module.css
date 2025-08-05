@@ -34,9 +34,9 @@
   }
 }
 
-@supports (height: 100dvh) {
+@supports (height: 100svh) {
   .side {
-    height: 100dvh;
+    height: 100svh;
   }
 }
 

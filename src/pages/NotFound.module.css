@@ -9,9 +9,9 @@
   background-color: var(--gray2);
 }
 
-@supports (height: 100dvh) {
+@supports (height: 100svh) {
   .not-found {
-    min-height: 100dvh;
+    min-height: 100svh;
   }
 }
 
