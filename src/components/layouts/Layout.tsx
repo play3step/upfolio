@@ -16,37 +16,17 @@ interface LayoutProps {
 }
 
 export default function Layout({ children }: LayoutProps) {
-  // const [userId, setUserId] = useState<string | null>(null)
-  // const { portfolio, setPortfolio } = usePortfolio(userId)
-  // const [filteredPortfolio, setFilteredPortfolio] = useState<PortfolioItem[]>(
-  //   []
-  // )
   const { isAuthenticated } = useContext(AuthContext)
-
-  // const handleSearch = (keyword: string) => {
-  //   const filtered = portfolio.filter(item =>
-  //     item.title.toLowerCase().includes(keyword.toLowerCase())
-  //   )
-  //   setFilteredPortfolio(filtered)
-  // }
 
   const isMobile = useIsMobile()
   return (
     <div className={S['wrapper']}>
+      {/* 헤더 */}
       <Header isMobile={isMobile} />
       <div className={S.layout}>
+        {/* 메인 */}
         <main className={S.main}>{children}</main>
-        {isAuthenticated && (
-          <>
-            <div className={S['alarm--button-position']}>
-              <AlarmWrapper />
-            </div>
-            <div className={S['dm--button-position']}>
-              <DmDropdownWrapper />
-            </div>
-          </>
-        )}
-
+        {/* 알림 */}
         {isAuthenticated && (
           <>
             <div className={S['alarm--button-position']}>
@@ -58,6 +38,7 @@ export default function Layout({ children }: LayoutProps) {
           </>
         )}
       </div>
+      {/* 푸터 */}
       <Footer />
     </div>
   )
