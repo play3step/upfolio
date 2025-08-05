@@ -6,7 +6,7 @@ export const fetchComments = async (userId: string): Promise<Comment[]> => {
     .from('Comment')
     .select('id, portfolioid, userid, content, createdat')
     .eq('userid', userId)
-    .order('createdat', { ascending: true })
+    .order('createdat', { ascending: false })
     .order('id', { ascending: false })
 
   if (commentError) {
