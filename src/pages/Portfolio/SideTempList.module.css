@@ -34,6 +34,12 @@
   }
 }
 
+@supports (height: 100dvh) {
+  .side {
+    height: 100dvh;
+  }
+}
+
 .side__tit {
   display: flex;
   justify-content: space-between;
