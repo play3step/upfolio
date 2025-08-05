@@ -106,7 +106,13 @@ export default function DmChatContainer({
             ))
           ) : (
             <div className={S['no-chat-message']}>
-              대화 상대를 선택해주세요.
+              {isMobile && threads && threads.length > 0 ? (
+                <div className={S['no-chat-message-mobile']}></div>
+              ) : (
+                <div className={S['no-chat-message-desktop']}>
+                  대화 상대를 선택해주세요.
+                </div>
+              )}
             </div>
           )}
           {!selectedThreadId && isMobile && (
