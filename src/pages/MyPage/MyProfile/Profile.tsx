@@ -116,13 +116,8 @@ export default function Profile() {
               <Input
                 id="birthDate"
                 label="생년월일"
-                type="text"
-                value={
-                  profile?.birthDate &&
-                  /^\d{4}-\d{2}-\d{2}$/.test(profile.birthDate)
-                    ? profile.birthDate
-                    : ''
-                }
+                type="date"
+                value={profile?.birthDate || ''}
                 readOnly={!isEditing}
                 onChange={e => handleChange('birthDate', e.target.value)}
                 className={S.profile__input}
