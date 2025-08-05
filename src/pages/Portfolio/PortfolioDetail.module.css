@@ -29,6 +29,7 @@
     top: 8.25rem;
     width: 100%;
     max-height: unset;
+    height: calc(100vh - 3.25rem);
   }
 
   @media (max-width: 40rem) {
