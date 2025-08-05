@@ -1,4 +1,5 @@
 import styles from './DmMobileHeader.module.css'
+import arrowBack from '@/assets/icon/arrow-back.svg'
 
 interface DmMobileHeaderProps {
   onBackClick: () => void
@@ -19,7 +20,7 @@ export default function DmMobileHeader({
         onClick={onBackClick}
         aria-label="뒤로 가기">
         <img
-          src="/src/assets/icon/arrow-back.svg"
+          src={arrowBack}
           alt="뒤로 가기"
         />
       </button>
