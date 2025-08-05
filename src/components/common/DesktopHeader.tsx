@@ -135,7 +135,10 @@ export const DesktopHeader = () => {
           </button>
           {isAuthenticated ? (
             <button
-              onClick={logout}
+              onClick={async () => {
+                await logout()
+                navigate('/')
+              }}
               className={Sb.btn}>
               <span className={Sb.btn__txt}>Logout</span>
             </button>

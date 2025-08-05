@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import S from './SideNavList.module.css'
 import Sb from './Button.module.css'
 import { useAuth } from '@/hooks/auth/useAuth'
@@ -10,6 +10,7 @@ interface Props {
 
 function SideNavList({ isOpen, isClose }: Props) {
   const { isAuthenticated, logout } = useAuth()
+  const navigate = useNavigate()
 
   return (
     <>
@@ -83,8 +84,9 @@ function SideNavList({ isOpen, isClose }: Props) {
 
         {isAuthenticated ? (
           <button
-            onClick={() => {
+            onClick={async () => {
               logout()
+              navigate('/')
               isClose()
             }}
             className={`${Sb.btn} ${S['side__loginBtn']}`}>
