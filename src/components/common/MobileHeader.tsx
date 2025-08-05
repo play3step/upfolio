@@ -36,6 +36,7 @@ function MobileHeader() {
 
     return () => {
       document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
     }
   }, [isSideNavOpen])
 
