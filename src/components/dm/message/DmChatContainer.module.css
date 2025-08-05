@@ -64,6 +64,16 @@
       font-size: var(--fs-sm);
       text-align: center;
     }
+
+    .no-chat-message-mobile {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--gray3);
+      font-size: var(--fs-sm);
+      text-align: center;
+    }
   }
 
   .dm-chat-input {
