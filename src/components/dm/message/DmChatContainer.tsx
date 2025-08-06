@@ -134,10 +134,20 @@ export default function DmChatContainer({
         {selectedThreadId !== null && selectedThreadId !== '' && (
           <div className={S['dm-chat-input']}>
             <textarea
-              placeholder="채팅을 입력하세요."
+              placeholder="채팅을 입력하세요. (Enter: 전송, Shift+Enter: 줄바꿈)"
               className={S['dm-chat-input-text']}
               value={message}
               onChange={e => setMessage(e.target.value)}
+              onKeyPress={e => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault()
+                  const trimmedMessage = message.trim()
+                  if (trimmedMessage) {
+                    sendMessage(trimmedMessage)
+                    setMessage('')
+                  }
+                }
+              }}
             />
 
             <div
